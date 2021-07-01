@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysMenuMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        menu_code, parent_code, parent_codes, tree_sort, tree_sorts, tree_leaf,tree_level, tree_names, menu_name, menu_type, menu_href, menu_target, menu_icon,menu_color, menu_title, permission, weight, is_show, sys_code, module_codes, deleted, version, status, create_by, create_time, update_by, update_time, remarks
+    </sql>
+
+    <sql id="Base_Column_List1">
+        menu_code,
+        parent_code,
+        module_codes,
+        menu_href,
+        tree_sort,
+        menu_name,
+        menu_type,
+        permission,
+        sys_code,
+        menu_target,
+        menu_title,
+        is_show,
+        menu_icon,
+        menu_color
+
+    </sql>
+
+    <sql id="Base_Column_List2">
+        menu_code,
+        menu_name,
+        menu_href,
+        permission
+    </sql>
+
+    <select id="getSysMenuById" resultType="com.io.yy.system.vo.SysMenuQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_menu where menu_code = #{menuCode}
+    </select>
+
+    <select id="getSysMenuPageList" resultMap="treeMenu">
+        select
+        <include refid="Base_Column_List1"/>
+        from sys_menu
+        where 1 = 1
+        <choose>
+            <when test="(param.menuName != null and param.menuName.trim() != '') or (param.permission != null and param.permission.trim()) or (param.menuType != null and param.menuType.trim() != '') or (param.moduleCodes != null and param.moduleCodes.trim() != '')">
+                <if test="param.menuName != null and param.menuName.trim() != ''">
+                    and menu_name like concat('%',#{param.menuName},'%')
+                </if>
+                <if test="param.permission != null and param.permission.trim() != ''">
+                    and permission like concat('%',#{param.permission},'%')
+                </if>
+                <if test="param.menuType != null and param.menuType.trim() != ''">
+                    and menu_type = #{param.menuType}
+                </if>
+                <if test="param.moduleCodes != null and param.moduleCodes.trim() != ''">
+                    and find_in_set(#{param.moduleCodes}, module_codes)
+                </if>
+            </when>
+            <otherwise>
+                and parent_code = '00000000'
+            </otherwise>
+        </choose>
+    </select>
+
+    <resultMap id="treeMenu" type="com.io.yy.system.vo.SysMenuQueryVo">
+        <result column="menu_code" property="menuCode" javaType="java.lang.String"/>
+        <result column="parent_code" property="parentCode" javaType="java.lang.String"/>
+        <result column="module_codes" property="moduleCodes" javaType="java.lang.String"/>
+        <result column="menu_href" property="menuHref" javaType="java.lang.String"/>
+        <result column="tree_sort" property="treeSort" javaType="java.math.BigDecimal"/>
+        <result column="menu_name" property="menuName" javaType="java.lang.String"/>
+        <result column="menu_type" property="menuType" javaType="java.lang.String"/>
+        <result column="is_show" property="isShow" javaType="java.lang.String"/>
+        <result column="sys_code" property="sysCode" javaType="java.lang.String"/>
+        <result column="menu_target" property="menuTarget" javaType="java.lang.String"/>
+        <result column="menu_title" property="menuTitle" javaType="java.lang.String"/>
+        <result column="menu_icon" property="menuIcon" javaType="java.lang.String"/>
+        <result column="menu_color" property="menuColor" javaType="java.lang.String"/>
+        <collection column="menu_code" property="children" ofType="com.io.yy.system.vo.SysMenuQueryVo"
+                    javaType="java.util.ArrayList" select="selectMenuChildren"/>
+    </resultMap>
+
+    <select id="selectMenuChildren" resultMap="treeMenu">
+        select
+        <include refid="Base_Column_List1"/>
+        from sys_menu
+        where
+        parent_code = #{menu_code}
+        order by tree_sort desc
+    </select>
+
+    <!--更改末级状态-->
+    <select id="updateTreeLeafById" resultType="java.lang.Integer">
+        update sys_menu set tree_leaf = #{value} where menu_code = #{sysMenuCode}
+    </select>
+
+
+    <select id="getSysMenuSimplifyPageList" resultMap="treeMenuSimplify">
+        select
+        <include refid="Base_Column_List2"/>
+        from sys_menu
+        where status = '1' and parent_code = '00000000'
+        <if test="param.menuType !=null and param.menuType != ''">
+            menu_type = ${param.menuType}
+        </if>
+    </select>
+
+    <resultMap id="treeMenuSimplify" type="com.io.yy.system.vo.SysMenuTreeQueryVo">
+        <result column="menu_code" property="id" javaType="java.lang.String"/>
+        <result column="menu_name" property="label" javaType="java.lang.String"/>
+        <result column="menu_href" property="menuHref" javaType="java.lang.String"/>
+        <result column="permission" property="permission" javaType="java.lang.String"/>
+        <collection column="menu_code" property="children" ofType="com.io.yy.system.vo.SysMenuTreeQueryVo"
+                    javaType="java.util.ArrayList" select="selectMenuSimplifyChildren"/>
+    </resultMap>
+
+
+    <select id="selectMenuSimplifyChildren" resultMap="treeMenuSimplify">
+        select
+        <include refid="Base_Column_List2"/>
+        from sys_menu
+        where
+        status = '1' and parent_code = #{menu_code}
+    </select>
+
+    <insert id="addRoleAndMenu">
+        insert into
+        sys_role_menu(id,role_id,menu_code,deleted,version,create_by,create_time,update_by,update_time,corp_code,corp_name)
+        VALUES
+        <foreach collection="param.idList" item="idd" separator=",">
+            (#{emp.eName},#{emp.gender},#{emp.email},#{emp.dept.id})
+        </foreach>
+
+    </insert>
+
+    <select id="getSysMenuByRoleId" resultType="com.io.yy.system.vo.SysMenuTreeQueryVo">
+        select
+        menu_code as "id"
+        from sys_role_menu
+        where role_id = #{id}
+    </select>
+
+<!--    <select id="getSysMenuListByRoleId" resultType="com.io.yy.system.entity.SysMenu">-->
+<!--        SELECT-->
+<!--        sm.menu_code, sm.parent_code, sm.parent_codes, sm.tree_sort, tree_sorts, tree_leaf,tree_level, tree_names, menu_name, menu_type, menu_href, menu_target, menu_icon,menu_color, menu_title, permission, weight, is_show, sys_code, module_codes, deleted, version, status, create_by, create_time, update_by, update_time, remarks-->
+<!--        FROM sys_menu sm-->
+<!--        LEFT JOIN sys_role_menu srm ON sm.menu_code =srm.menu_code-->
+<!--        WHERE role_id = #{roleId}-->
+<!--    </select>-->
+
+    <resultMap id="treeMenuForRoleId" type="com.io.yy.system.vo.SysMenuQueryVo">
+        <result column="menu_code" property="menuCode" javaType="java.lang.String"/>
+        <result column="parent_code" property="parentCode" javaType="java.lang.String"/>
+        <result column="module_codes" property="moduleCodes" javaType="java.lang.String"/>
+        <result column="menu_href" property="menuHref" javaType="java.lang.String"/>
+        <result column="tree_sort" property="treeSort" javaType="java.math.BigDecimal"/>
+        <result column="menu_name" property="menuName" javaType="java.lang.String"/>
+        <result column="menu_type" property="menuType" javaType="java.lang.String"/>
+        <result column="is_show" property="isShow" javaType="java.lang.String"/>
+        <result column="sys_code" property="sysCode" javaType="java.lang.String"/>
+        <result column="menu_target" property="menuTarget" javaType="java.lang.String"/>
+        <result column="menu_title" property="menuTitle" javaType="java.lang.String"/>
+        <result column="menu_icon" property="menuIcon" javaType="java.lang.String"/>
+        <result column="menu_color" property="menuColor" javaType="java.lang.String"/>
+        <result column="role_id" property="roleId" javaType="java.lang.String"/>
+        <collection column="{menuCode=menu_code,roleId=role_id}" property="children" ofType="com.io.yy.system.vo.SysMenuQueryVo"
+                    javaType="java.util.ArrayList" select="getSysMenuListByRoleId"/>
+    </resultMap>
+
+    <select id="getSysMenuListByRoleId" resultMap="treeMenuForRoleId">
+        select
+        sm.menu_code,
+        parent_code,
+        module_codes,
+        menu_href,
+        tree_sort,
+        menu_name,
+        menu_type,
+        permission,
+        sys_code,
+        menu_target,
+        menu_title,
+        is_show,
+        menu_icon,
+        menu_color,
+        srm.role_id
+        from sys_menu sm
+        LEFT JOIN sys_role_menu srm ON sm.menu_code =srm.menu_code
+        WHERE parent_code = #{menuCode} and role_id = #{roleId}
+        order by sm.tree_sort desc
+    </select>
+
+    <resultMap id="treeMenuForUserId" type="com.io.yy.system.vo.SysMenuQueryVo">
+        <result column="menu_code" property="menuCode" javaType="java.lang.String"/>
+        <result column="parent_code" property="parentCode" javaType="java.lang.String"/>
+        <result column="module_codes" property="moduleCodes" javaType="java.lang.String"/>
+        <result column="menu_href" property="menuHref" javaType="java.lang.String"/>
+        <result column="tree_sort" property="treeSort" javaType="java.math.BigDecimal"/>
+        <result column="menu_name" property="menuName" javaType="java.lang.String"/>
+        <result column="menu_type" property="menuType" javaType="java.lang.String"/>
+        <result column="is_show" property="isShow" javaType="java.lang.String"/>
+        <result column="sys_code" property="sysCode" javaType="java.lang.String"/>
+        <result column="menu_target" property="menuTarget" javaType="java.lang.String"/>
+        <result column="menu_title" property="menuTitle" javaType="java.lang.String"/>
+        <result column="menu_icon" property="menuIcon" javaType="java.lang.String"/>
+        <result column="menu_color" property="menuColor" javaType="java.lang.String"/>
+        <result column="user_id" property="userId" javaType="java.lang.String"/>
+        <collection column="{menuCode=menu_code,userId=user_id}" property="children" ofType="com.io.yy.system.vo.SysMenuQueryVo"
+                    javaType="java.util.ArrayList" select="getSysMenuListByUserId"/>
+    </resultMap>
+
+    <select id="getSysMenuListByUserId" resultMap="treeMenuForUserId">
+        SELECT
+        sm.menu_code,
+        parent_code,
+        module_codes,
+        menu_href,
+        tree_sort,
+        menu_name,
+        menu_type,
+        permission,
+        sys_code,
+        menu_target,
+        menu_title,
+        is_show,
+        menu_icon,
+        menu_color,
+        sur.user_id
+        FROM sys_menu sm
+        LEFT JOIN sys_role_menu srm ON sm.menu_code =srm.menu_code
+        LEFT JOIN sys_user_role sur ON srm.role_id=sur.role_id
+        WHERE parent_code = #{menuCode} AND sur.user_id=#{userId}
+        ORDER BY sm.tree_sort DESC
+    </select>
+
+</mapper>

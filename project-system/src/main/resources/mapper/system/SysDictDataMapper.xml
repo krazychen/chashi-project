@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysDictDataMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        dict_code, parent_code, parent_codes, tree_sort, tree_sorts, tree_leaf, tree_level, tree_names, dict_label, dict_value, dict_type, is_sys, description, css_style, css_class, deleted, version, status, create_by, create_time, update_by, update_time, remarks, corp_code, corp_name
+    </sql>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List1">
+        dict_code, parent_code,tree_sort,dict_label, dict_value, dict_type, is_sys, update_time, remarks,status
+    </sql>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List2">
+        dict_code,dict_label
+    </sql>
+
+    <!-- 缓存查询结果列 -->
+    <sql id="Base_Column_ListCache">
+        dict_label, dict_value, dict_type
+    </sql>
+
+    <select id="getSysDictDataById" resultType="com.io.yy.system.vo.SysDictDataQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_dict_data where dict_code = #{id}
+    </select>
+
+    <select id="getSysDictDataPageList" resultMap="treeSysDictData">
+        select
+        <include refid="Base_Column_List1"/>
+        from sys_dict_data
+        where dict_type = #{param.dictType}
+        <choose>
+            <when test="(param.dictLabel !=null and param.dictLabel.trim() !='') or (param.dictValue !=null and param.dictValue.trim() !='') or (param.status !=null and param.status.trim() !='') ">
+                <if test="param.dictLabel !=null and param.dictLabel.trim() !=''">
+                    and dict_label like concat('%',#{param.dictLabel},'%')
+                </if>
+                <if test="param.dictValue !=null and param.dictValue.trim() !=''">
+                    and dict_value like concat('%',#{param.dictValue},'%')
+                </if>
+                <if test="param.status !=null and param.status.trim() !=''">
+                    and status = #{param.status}
+                </if>
+            </when>
+            <otherwise>
+                and parent_code = '00000000'
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <resultMap id="treeSysDictData" type="com.io.yy.system.vo.SysDictDataQueryVo">
+        <result column="dict_code" property="dictCode" javaType="java.lang.String"/>
+        <result column="parent_code" property="parentCode" javaType="java.lang.String"/>
+        <result column="tree_sort" property="treeSort" javaType="java.math.BigDecimal"/>
+        <result column="dict_label" property="dictLabel" javaType="java.lang.String"/>
+        <result column="dict_value" property="dictValue" javaType="java.lang.String"/>
+        <result column="dict_type" property="dictType" javaType="java.lang.String"/>
+        <result column="is_sys" property="isSys" javaType="java.lang.String"/>
+        <result column="update_time" property="updateTime" javaType="java.util.Date"/>
+        <result column="remarks" property="remarks" javaType="java.lang.String"/>
+        <result column="status" property="status" javaType="java.lang.String"/>
+        <collection column="dict_code" property="children" ofType="com.io.yy.system.vo.SysDictDataQueryVo"
+                    javaType="java.util.ArrayList" select="selectSysDictDataChildren"/>
+    </resultMap>
+
+    <select id="selectSysDictDataChildren" resultMap="treeSysDictData">
+        select
+        <include refid="Base_Column_List1"/>
+        from sys_dict_data
+        where
+        parent_code = #{dict_code}
+        order by tree_sort desc
+    </select>
+
+
+    <!--更改末级状态-->
+    <select id="updateTreeLeafById" resultType="java.lang.Integer">
+        update sys_dict_data set tree_leaf = #{value} where dict_code = #{dictCode}
+    </select>
+
+
+    <select id="getSysDictDataSimplifyPageList" resultMap="treeSysDictDataSimplify">
+        select
+        <include refid="Base_Column_List2"/>
+        from sys_dict_data
+        where parent_code = '00000000' and dict_type = #{param.dictType}
+    </select>
+
+    <resultMap id="treeSysDictDataSimplify" type="com.io.yy.system.vo.SysMenuTreeQueryVo">
+        <result column="dict_code" property="id" javaType="java.lang.String"/>
+        <result column="dict_label" property="label" javaType="java.lang.String"/>
+        <collection column="dict_code" property="children" ofType="com.io.yy.system.vo.SysMenuTreeQueryVo"
+                    javaType="java.util.ArrayList" select="selectSysDictDataChildren"/>
+    </resultMap>
+
+
+    <select id="selectSysDictDataChildren" resultMap="treeSysDictDataSimplify">
+        select
+        <include refid="Base_Column_List2"/>
+        from sys_dict_data
+        where
+        parent_code = #{dict_code}
+    </select>
+
+    <select id="getSysDictDataCountByDictTypeAndDictValue" resultType="java.lang.Integer">
+        select count(*) from sys_dict_data where dict_type = #{dictType} and dict_value =#{dictValue}
+        <if test="dictCode !=null and dictCode.trim() !='' ">
+            and dict_code != #{dictCode}
+        </if>
+    </select>
+
+    <select id="getSysDictDataCountByDictTypeAndDictLabel" resultType="java.lang.Integer">
+        select count(*) from sys_dict_data where dict_type = #{dictType} and dict_label =#{dictLabel}
+        <if test="dictCode !=null and dictCode.trim() !='' ">
+            and dict_code != #{dictCode}
+        </if>
+    </select>
+
+    <update id="updateStatusById">
+        update sys_dict_data set status = #{param.status} where dict_code = #{param.id}
+    </update>
+
+    <select id="getAllSysDictData" resultType="com.io.yy.system.vo.SysDictDataRedisVo">
+        select
+        <include refid="Base_Column_ListCache"/>
+        from sys_dict_data where STATUS = 1 order by tree_sort
+    </select>
+
+    <select id="findDictCode" resultType="com.io.yy.system.entity.SysDictData">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_dict_data where dict_label = #{name}
+        and dict_type = 'sys_role_type'
+    </select>
+
+    <select id="getSysDictDataRedisVoByDictType" resultType="com.io.yy.system.vo.SysDictDataRedisVo">
+        select
+        <include refid="Base_Column_ListCache"/>
+        from sys_dict_data where STATUS = 1
+        and dict_type = #{dictType}
+        order by tree_sort
+    </select>
+
+    <select id="getDictDataByType" resultType="com.io.yy.system.vo.SysDictDataRemarksVo">
+        SELECT
+        dict_label, dict_value, dict_type,remarks
+        FROM sys_dict_data
+        WHERE dict_type = #{type}
+        ORDER BY tree_sort ASC
+    </select>
+</mapper>

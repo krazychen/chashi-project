@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.job.mapper.SysScheduleJoblogMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, job_id, bean_name, params, status, error, times, deleted, version, create_by, create_time, update_by, update_time, remarks
+    </sql>
+
+    <select id="getSysScheduleJoblogById" resultType="com.io.yy.job.vo.SysScheduleJoblogQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_schedule_joblog where id = #{id}
+    </select>
+
+    <select id="getSysScheduleJoblogPageList" resultType="com.io.yy.job.vo.SysScheduleJoblogQueryVo">
+        SELECT
+            l.*,j.job_name as jobName
+        FROM
+            sys_schedule_joblog l
+        LEFT JOIN sys_schedule_job j ON j.id = l.job_id
+        WHERE l.deleted = 0
+        <if test="param.jobId != null">
+        and j.id = #{param.jobId}
+        </if>
+        <if test="param.startTime !=null and param.startTime != null">
+            and l.create_time >= #{param.startTime}
+        </if>
+        <if test="param.endTime !=null and param.endTime != null">
+            and #{param.endTime} > l.create_time
+        </if>
+    </select>
+
+</mapper>

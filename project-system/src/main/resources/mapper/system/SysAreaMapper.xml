@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysAreaMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        area_code, parent_code, parent_codes, tree_sort, tree_sorts, tree_leaf, tree_level, tree_names, area_name, area_type, deleted, version, status, create_by, create_time, update_by, update_time, remarks
+    </sql>
+
+    <sql id="Base_Column_List1">
+        area_code,
+        parent_code,
+        tree_leaf,
+        tree_sort,
+        area_name,
+        area_type,
+        status,
+        update_time,
+        remarks
+    </sql>
+
+    <sql id="Base_Column_List2">
+        area_code,
+        area_name
+    </sql>
+
+    <select id="getSysAreaById" resultType="com.io.yy.system.vo.SysAreaQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_area where area_code = #{id}
+    </select>
+
+    <select id="getSysAreaPageListLazy" resultType="com.io.yy.system.vo.SysAreaLazyQueryVo">
+        SELECT a.area_code,a.parent_code,a.tree_leaf,a.tree_sort,a.area_name,a.area_type,a.status,a.create_time,a.update_time,a.remarks,IF(COUNT(b.area_code)>0,TRUE,FALSE) as 'has_children' FROM sys_area a
+        LEFT JOIN sys_area b ON a.area_code = b.`parent_code`
+        WHERE 1=1
+        <choose>
+            <when test="(param.areaName != null and param.areaName.trim() != '') or (param.areaCode != null and param.areaCode.trim())">
+                <if test="param.areaName != null and param.areaName.trim() != ''">
+                    and a.area_name like concat('%',#{param.areaName},'%')
+                </if>
+                <if test="param.areaCode != null and param.areaCode.trim()">
+                    and a.area_code like concat('%',#{param.areaCode},'%')
+                </if>
+            </when>
+            <otherwise>
+                <choose>
+                    <when test="param.parentCode != null and param.parentCode.trim()">
+                        and  a.`parent_code` = #{param.parentCode}
+                    </when>
+                    <otherwise>
+                        and  a.`parent_code` = '00000000'
+                    </otherwise>
+                </choose>
+            </otherwise>
+        </choose>
+        group by a.area_code
+    </select>
+
+    <select id="getSysAreaPageList" resultMap="treeArea">
+        select
+        <include refid="Base_Column_List1"/>
+        from sys_area
+        where 1 = 1
+        <choose>
+            <when test="(param.areaName != null and param.areaName.trim() != '') or (param.areaCode != null and param.areaCode.trim())">
+                <if test="param.areaName != null and param.areaName.trim() != ''">
+                    and area_name like concat('%',#{param.areaName},'%')
+                </if>
+                <if test="param.areaCode != null and param.areaCode.trim()">
+                    and area_code like concat('%',#{param.areaCode},'%')
+                </if>
+            </when>
+            <otherwise>
+                and parent_code = '00000000'
+            </otherwise>
+        </choose>
+    </select>
+
+    <resultMap id="treeArea" type="com.io.yy.system.vo.SysAreaQueryVo">
+        <result column="area_code" property="areaCode" javaType="java.lang.String"/>
+        <result column="parent_code" property="parentCode" javaType="java.lang.String"/>
+        <result column="tree_leaf" property="treeLeaf" javaType="java.lang.String"/>
+        <result column="tree_sort" property="treeSort" javaType="java.math.BigDecimal"/>
+        <result column="area_name" property="areaName" javaType="java.lang.String"/>
+        <result column="area_type" property="areaType" javaType="java.lang.String"/>
+        <result column="status" property="status" javaType="java.lang.String"/>
+        <result column="update_time" property="updateTime" javaType="java.util.Date"/>
+        <result column="remarks" property="remarks" javaType="java.lang.String"/>
+        <collection column="area_code" property="children" ofType="com.io.yy.system.vo.SysAreaQueryVo"
+                    javaType="java.util.ArrayList" select="selectAreaChildren"/>
+    </resultMap>
+
+    <select id="selectAreaChildren" resultMap="treeArea">
+        select
+        <include refid="Base_Column_List1"/>
+        from sys_area
+        where
+        parent_code = #{area_code}
+        order by tree_sort desc
+    </select>
+
+
+    <select id="getSysAreaSimplifyPageList" resultMap="treeSysAreaSimplify">
+        select
+        <include refid="Base_Column_List2"/>
+        from sys_area
+        where parent_code = '00000000'
+        <if test="param.areaName !=null and param.areaName != ''">
+            and (area_name like concat('%',${param.areaName},'%') or area_code like concat('%',${param.areaName},'%'))
+        </if>
+    </select>
+
+    <resultMap id="treeSysAreaSimplify" type="com.io.yy.system.vo.SysMenuTreeQueryVo">
+        <result column="area_code" property="id" javaType="java.lang.String"/>
+        <result column="area_name" property="label" javaType="java.lang.String"/>
+        <collection column="area_code" property="children" ofType="com.io.yy.system.vo.SysMenuTreeQueryVo"
+                    javaType="java.util.ArrayList" select="selectSysAreaSimplifyChildren"/>
+    </resultMap>
+
+
+    <select id="selectSysAreaSimplifyChildren" resultMap="treeSysAreaSimplify">
+        select
+        <include refid="Base_Column_List2"/>
+        from sys_area
+        where parent_code = #{menu_code}
+    </select>
+
+    <!--更改末级状态-->
+    <select id="updateTreeLeafById" resultType="java.lang.Integer">
+        update sys_area set tree_leaf = #{value} where area_code = #{sysAreaCode}
+    </select>
+
+    <!--修改状态-->
+    <update id="updateStatusById">
+        update sys_area set status = #{param.status} where area_code = #{param.id}
+    </update>
+
+    <select id="findByName" resultType="com.io.yy.system.vo.SysAreaQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_area where area_name = #{areaName}
+    </select>
+
+
+    <select id="getAreaByAreaType" resultType="com.io.yy.system.vo.SysAreaQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_area where area_type = #{areaType}
+        <if test="parentCode !=null and parentCode != ''">
+            and parent_code = #{parentCode}
+        </if>
+    </select>
+</mapper>

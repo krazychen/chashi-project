@@ -1,0 +1,422 @@
+# whyy-system Common Config
+
+############################# 访问路径、端口tomcat start ############################
+server:
+  port: 80
+  servlet:
+    context-path: /
+  tomcat:
+    #最小线程数
+    min-spare-threads: 500
+    #最大线程数
+    max-threads: 10000
+    #最大链接数
+    max-connections: 11000
+    #最大等待队列长度
+    accept-count: 1000
+    #    max-threads: 10000
+    #    min-spare-threads: 30
+    uri-encoding: UTF-8
+############################# 访问路径、端口tomcat end ##############################
+
+
+################################ spring config start ###############################
+spring:
+  application:
+    name: project-system-@profileActive@
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  jackson:
+    date-format: yyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  banner:
+    charset: UTF-8
+    location: classpath:config/banner.txt
+
+# 当前项目maven激活环境，例如：local/dev/test，对应pom.xml中profile设置值
+---
+spring:
+  profiles:
+    active: '@profileActive@'
+
+# logback.xml中有详细的日志配置
+logging:
+  config: classpath:config/logback.xml
+  #  方便Spring Boot Admin页面上实时查看日志
+  file:
+    name: logs/project-system-@profileActive@.log
+
+################################ spring config end #################################
+
+
+############################## whyy-system: start ##############################
+whyy-system:
+  # 是否启用ansi控制台输出有颜色的字体
+  enable-ansi: true
+  # 是否启用验证码
+  enable-verify-code: true
+  # 实现BaseEnum接口的枚举包
+  enum-packages: com.io.yy.enums
+  # 过滤器配置
+  filter:
+    # 请求路径Filter配置
+    request-path:
+      enabled: true
+      include-paths: /**
+      # 排除路径，多行字符串配置
+      exclude-paths: |
+        /applications/**,/actuator/**,/instances/**,/logfile,/sba-settings.js,/assets/img/favicon.png,
+        /swagger-ui.html,/swagger-resources/**,/webjars/springfox-swagger-ui/**,/v2/api-docs,
+        /druid/**,/favicon.ico,/sockjs-node/
+  # 拦截器配置
+  interceptor:
+    permission:
+      enabled: false
+      include-paths: /**
+      exclude-paths: /swagger-resources/**,/api-docs/**,/v2/api-docs/**,/adminLogin,/sysLogin,/login.html,/verificationCode,/doc/**,/error/**,/docs,/resource/**,/config/resource/**
+    resource:
+      enabled: true
+      include-paths: ${whyy-system:.resource-access-patterns}
+    configResource:
+      enabled: true
+      include-paths: ${whyy-system.config-access-patterns}
+    upload:
+      enabled: true
+      include-paths: /upload/**
+    download:
+      enabled: true
+      include-paths: /download/**
+
+
+  # AOP配置
+  aop:
+    # Aop日志配置
+    log:
+      # 是否启用
+      enable: true
+      # 是否启用requestId
+      enable-request-id: true
+      # requestId生成规则: UUID/IDWORK
+      request-id-type: IDWORK
+      # NONE：不打印日志
+      # ORDER：请求和响应日志，按照执行顺序分开打印
+      # LINE：方法执行结束时，连续分开打印请求和响应日志
+      # MERGE：方法执行结束时，合并请求和响应日志，同时打印
+      log-print-type: ORDER
+      # 请求日志在控制台是否格式化输出，local环境建议开启，服务器环境设置为false
+      request-log-format: true
+      # 响应日志在控制台是否格式化输出，local环境建议开启，服务器环境设置为false
+      response-log-format: true
+      # 排除的路径
+      exclude-paths: /,/csrf
+    # 操作日志配置
+    operation-log:
+      # 是否启用
+      enable: true
+      # 排除的路径
+      exclude-paths:
+    # 登录日志配置
+    login-log:
+      # 是否启用
+      enable: true
+      # 登录地址
+      login-path: login,wx/login
+      # 登出地址
+      logout-path: logout
+
+  # 文件上传下载配置
+  # 上传路径配置
+  upload-path: /opt/upload/
+  # 资源访问路径
+  resource-access-path: /resource/
+  # 资源访问路径匹配：/resource/**
+  resource-access-patterns: ${whyy-system.resource-access-path}**
+  # 资源访问全路径前缀：http://localhost:8888/resource/
+  resource-access-url: http://localhost:${server.port}${server.servlet.context-path}${whyy-system.resource-access-path}
+  # 全局允许上传的类型
+  allow-upload-file-extensions: jpg,png,docx,xlsx,pptx,pdf
+  allow-download-file-extensions: jpg,png,docx,xlsx,pptx,pdf
+
+  # 配置分享二维码图片上传路径配置
+  config-upload-path: /opt/config/image/
+  # 资源访问路径
+  config-access-path: config/resource/
+  # 资源访问路径匹配：/resource/**
+  config-access-patterns: ${whyy-system.config-access-path}**
+  # 资源访问全路径前缀：http://localhost:8888/resource/
+  config-access-url: http://localhost:${server.port}${server.servlet.context-path}${whyy-system.config-access-path}
+
+
+  ############################ CORS start ############################
+  # CORS跨域配置，默认允许跨域
+  cors:
+    # 是否启用跨域，默认启用
+    enable: true
+    # CORS过滤的路径，默认：/**
+    path: /**
+    # 允许访问的源
+    allowed-origins: '*'
+    # 允许访问的请求头
+    allowed-headers: x-requested-with,content-type,token
+    # 是否允许发送cookie
+    allow-credentials: true
+    # 允许访问的请求方式
+    allowed-methods: OPTION,GET,POST
+    # 允许响应的头
+    exposed-headers: token
+    # 该响应的有效时间默认为30分钟，在有效时间内，浏览器无须为同一请求再次发起预检请求
+    max-age: 3600
+
+  ############################ CORS end ##############################
+
+  ########################## Resource start ##########################
+  # 静态资源访问配置
+  resource-handlers: |
+    /static/**=classpath:/static/
+    /templates/**=classpath:/templates/
+    swagger-ui.html=classpath:/META-INF/resources/
+    /webjars/**=classpath:/META-INF/resources/webjars/
+  ########################## Resource end ############################
+
+  ######################## Spring Shiro start ########################
+  shiro:
+    # 是否启用
+    enable: true
+    # shiro ini 多行字符串配置
+    filter-chain-definitions: |
+      /=anon
+      /static/**=anon
+      /templates/**=anon
+      /druid/**=anon
+      /sysLog/**=anon
+      /verificationCode/**=anon
+      /resource/**=anon
+      /config/resource/**=anon
+      /sysUser/getRoleList=anon
+      /sysUser/checkUserName=anon
+      /index=anon
+      /enum=anon
+      /wx/callback/**=anon
+      /wx/getQRCode/**=anon
+      /wx/checkLoginQr/**=anon
+    # 权限配置
+    permission:
+      # 排除登陆登出相关
+      - urls: /login,/logout,/wxlogin,/wxlogin1
+        permission: anon
+        # 排除静态资源
+      - urls: /static/**,/templates/**
+        permission: anon
+        # 排除Swagger
+      - urls: /docs,/swagger-ui.html,/webjars/springfox-swagger-ui/**,/swagger-resources/**,/v2/api-docs
+        permission: anon
+        # 排除SpringBootAdmin
+      - urls: /,/favicon.ico,/actuator/**,/instances/**,/assets/**,/sba-settings.js,/applications/**
+        permission: anon
+  ######################## Spring Shiro end ##########################
+
+  ############################ JWT start #############################
+  jwt:
+    # token请求头名称
+    token-name: token
+    # jwt密钥
+    secret: 666666
+    # 发行人
+    issuer: kris
+    # 观众
+    audience: web
+    # 默认过期时间1小时，单位：秒
+    expire-second: 43200
+    # 是否刷新token
+    refresh-token: true
+    # 刷新token的时间间隔，默认10分钟，单位：秒
+    refresh-token-countdown: 10800
+    # redis校验jwt token是否存在,可选
+    redis-check: true
+    # true: 同一个账号只能是最后一次登陆token有效，false：同一个账号可多次登陆
+    single-login: false
+    # 盐值校验，如果不加自定义盐值，则使用secret校验
+    salt-check: true
+  ############################ JWT end ###############################
+
+  #################################### 租户过滤表 ###################################
+  tentTables: sys_schedule_job,sys_schedule_joblog,sys_msg,sys_msg_record,sys_dict_type,sys_dict_data,sys_menu,sys_role,sys_role_menu,sys_area,sys_config,sys_log,QRTZ_BLOB_TRIGGERS,QRTZ_CALENDARS,QRTZ_CRON_TRIGGERS,QRTZ_FIRED_TRIGGERS,QRTZ_JOB_DETAILS,QRTZ_LOCKS,QRTZ_PAUSED_TRIGGER_GRPS,QRTZ_SCHEDULER_STATE,QRTZ_SIMPLE_TRIGGERS,QRTZ_SIMPROP_TRIGGERS,QRTZ_TRIGGERS,cctalk_sales_order_corp,hw_stu_homework_audit_teacher,get_monitor_exe_time
+
+  #################################### 租户过滤表 ###################################
+  #################################### 租户过滤sql ###################################
+  tentSqls:
+    com.io.yy.system.mapper.SysUserMapper.getSysUserById
+    com.io.yy.system.mapper.SysUserMapper.selectList
+    com.io.yy.system.mapper.SysUserMapper.selectBatchIds
+    com.io.yy.system.mapper.SysUserMapper.getUserByRoleIds
+    com.io.yy.system.mapper.SysOfficeMapper.selectOne
+    com.io.yy.system.mapper.SysUserMapper.selectCount
+
+
+  #################################### 租户过滤表 ###################################
+
+############################### whyy-system end ###############################
+
+
+############################### mybatis-plus start #################################
+mybatis-plus:
+  # 启动时是否检查MyBatis XML文件是否存在
+  check-config-location: true
+  # MyBatis原生配置
+  configuration:
+    # 字段名称下划线转驼峰命名
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      # 全局默认主键类型
+      id-type: id_worker
+      # 逻辑已删除值(默认为 1)
+      logic-delete-value: 1
+      # 逻辑未删除值(默认为 0)
+      logic-not-delete-value: 0
+  # mapper xml映射路径
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+################################ mybatis-plus end #################################
+
+
+############################### DRUID数据源配置 start ##############################
+---
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    druid:
+      filter:
+        slf4j:
+          enabled: true
+        stat:
+          log-slow-sql: true
+          merge-sql: true
+          slow-sql-millis: 3000
+        wall:
+          config:
+            delete-allow: true
+            drop-table-allow: false
+          enabled: true
+      filters: stat,wall,slf4j
+      initial-size: 10
+      max-active: 5000
+      max-pool-prepared-statement-per-connection-size: 100
+      max-wait: 60000
+      min-evictable-idle-time-millis: 300000
+      min-idle: 10
+      pool-prepared-statements: true
+      stat-view-servlet:
+        enabled: true
+        login-password: druid123
+        login-username: druid
+        url-pattern: /druid/*
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000
+      validation-query: SELECT 1
+      validation-query-timeout: 60000
+    type: com.alibaba.druid.pool.DruidDataSource
+############################### DRUID数据源配置 end ################################
+
+
+############################### Redis 公共配置 start ###############################
+---
+spring:
+  redis:
+    timeout: 10s
+    lettuce:
+      pool:
+        max-active: 10000
+        max-idle: 1000
+        max-wait: 10s
+        min-idle: 2
+      shutdown-timeout: 3s
+############################### Redis 公共配置 end ##################################
+
+
+#################################### Swagger start #################################
+# swagger配置
+swagger:
+  base:
+    package: com.io.yy
+  contact:
+    email: 37485345@qq.com
+    name: kris
+    url: ''
+  description: ''
+  title: project-homework-@profileActive@
+  url: ''
+  version: 1.0
+#################################### Swagger end ###################################
+
+
+############################## Spring boot admin start ##############################
+---
+spring:
+  boot:
+    admin:
+      client:
+        url: http://localhost:7676/${server.servlet.context-path}
+        username: root
+        password: krisroot
+
+# 开启和暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+    logfile:
+      enabled: true         #可在线查看日志
+
+# 自定义项目信息，Spring Boot Admin展示使用
+info:
+  project-groupId: '@project.groupId@'
+  project-artifactId: '@project.artifactId@'
+  project-name: '@project.name@'
+  project-finalName: '@project.build.finalName@'
+  project-author: ${swagger.contact.name}
+  project-description: '@project.description@'
+  project-sourceEncoding: '@project.build.sourceEncoding@'
+  project-spring-boot-version: '@spring-boot.version@'
+  project-mybatis-plus-version: '@mybatis-plus-boot-starter.version@'
+  project-version: '@project.version@'
+############################## Spring boot admin end ###############################
+
+#################################### Spring boot quartz start #################################
+# quartz
+---
+spring:
+  quartz:
+    job-store-type: jdbc #資料庫方式
+    jdbc:
+      initialize-schema: never #不初始化表結構
+    auto-startup: true
+    overwrite-existing-jobs: true
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceId: AUTO #預設主機名和時間戳生成例項ID,可以是任何字串，但對於所有排程程式來說，必須是唯一的 對應qrtz_scheduler_state INSTANCE_NAME欄位
+            #instanceName: clusteredScheduler #quartzScheduler
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX #持久化配置
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate #我們僅為資料庫製作了特定於資料庫的代理
+            useProperties: false #以指示JDBCJobStore將JobDataMaps中的所有值都作為字串，因此可以作為名稱 - 值對儲存而不是在BLOB列中以其序列化形式儲存更多複雜的物件。從長遠來看，這是更安全的，因為您避免了將非String類序列化為BLOB的類版本問題。
+            tablePrefix: QRTZ_  #資料庫表字首
+            misfireThreshold: 60000 #在被認為“失火”之前，排程程式將“容忍”一個Triggers將其下一個啟動時間通過的毫秒數。預設值（如果您在配置中未輸入此屬性）為60000（60秒）。
+            clusterCheckinInterval: 5000 #設定此例項“檢入”*與群集的其他例項的頻率（以毫秒為單位）。影響檢測失敗例項的速度。
+            isClustered: true #開啟群集功能
+          threadPool: #連線池
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 150
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+#################################### Spring boot quartz end ###################################

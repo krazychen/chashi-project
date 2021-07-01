@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysConfigMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, config_name, config_key, config_text_value, config_pic_value,config_pic_name,config_content_value,config_type, is_sys, remarks, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getSysConfigById" resultType="com.io.yy.system.vo.SysConfigQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_config where id = #{id}
+    </select>
+
+    <select id="getSysConfigPageList" resultType="com.io.yy.system.vo.SysConfigQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_config
+        where deleted = 0
+        <if test="param.configName != null and param.configName.trim() != ''">
+            and config_name like concat('%', #{param.configName}, '%')
+        </if>
+        <if test="param.configKey != null and param.configKey.trim() != ''">
+            and config_key like concat('%', #{param.configKey}, '%')
+        </if>
+        <if test="param.isSys != null and param.isSys.trim() != ''">
+            and is_sys = #{param.isSys}
+        </if>
+    </select>
+
+    <!-- 缓存查询结果列 -->
+    <sql id="Base_Column_ListCache">
+        config_key,config_name,
+        CASE config_type
+        WHEN '0' THEN config_text_value
+        WHEN '1' THEN config_pic_value
+        ELSE config_content_value
+        END AS config_value
+    </sql>
+
+    <select id="getAllSysConfigData" resultType="com.io.yy.system.vo.SysConfigDataRedisVo">
+        select
+        <include refid="Base_Column_ListCache"/>
+        FROM sys_config WHERE is_sys = '1'
+    </select>
+
+    <select id="getConfigListByLists" resultType="com.io.yy.system.vo.SysConfigDataRedisVo">
+        select
+        <include refid="Base_Column_ListCache"/>
+        FROM sys_config
+        where id in
+        <foreach collection="idList" item="configData" open="(" separator="," close=")">
+            #{configData}
+        </foreach>
+    </select>
+
+</mapper>

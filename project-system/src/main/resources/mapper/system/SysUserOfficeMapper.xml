@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysUserOfficeMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, office_code, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getSysUserOfficeById" resultType="com.io.yy.system.vo.SysUserOfficeQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user_office where id = #{id}
+    </select>
+
+    <select id="getSysUserOfficePageList" resultType="com.io.yy.system.vo.SysUserOfficeQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user_office
+    </select>
+
+    <delete id="deleteByUser" >
+            DELETE from sys_user_office
+    WHERE
+        user_id  in
+        <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+          #{item}
+          </foreach>
+    </delete>
+
+</mapper>

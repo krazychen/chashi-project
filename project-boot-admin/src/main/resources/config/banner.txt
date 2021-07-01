@@ -1,0 +1,6 @@
+${AnsiColor.BLUE}
+
+
+${AnsiColor.YELLOW}      :: Spring Boot ::             ${AnsiColor.WHITE}(v${spring-boot.version})
+${AnsiColor.YELLOW}      :: project admin boot ::        ${AnsiColor.WHITE}(v${project.version})
+

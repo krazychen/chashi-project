@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysOfficeMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        office_code, parent_code, parent_codes, tree_sort, tree_sorts, tree_leaf, tree_level, tree_names, view_code, office_name, full_name, office_type, leader, phone, address, zip_code, email, deleted, version, status, create_by, create_time, update_by, update_time, remarks, corp_code, corp_name,default_account_rules
+    </sql>
+
+    <select id="getSysOfficeById" resultType="com.io.yy.system.vo.SysOfficeQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_office where office_code = #{id}
+    </select>
+
+    <select id="getSysOfficePageList" resultMap="treeOffice">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_office
+        where deleted = '0'
+        <choose>
+            <when test="(param.officeName != null and param.officeName.trim() != '') or (param.officeType != null and param.officeType.trim() != '') or (param.officeCode != null and param.officeCode.trim() != '')">
+                <if test="param.officeName != null and param.officeName.trim() != ''">
+                    and office_name like concat('%', #{param.officeName}, '%')
+                </if>
+                <if test="param.officeType != null and param.officeType.trim() != ''">
+                    and office_type like concat('%', #{param.officeType}, '%')
+                </if>
+                <if test="param.officeCode != null and param.officeCode.trim() != ''">
+                    and office_code = #{param.officeCode}
+                </if>
+            </when>
+            <otherwise>
+                and parent_code = #{param.parentCode}
+            </otherwise>
+        </choose>
+    </select>
+
+    <resultMap id="treeOffice" type="com.io.yy.system.vo.SysOfficeQueryVo">
+        <result column="parent_code" property="parentCode" />
+        <result column="office_code" property="officeCode" />
+        <result column="office_name" property="officeName" />
+        <result column="full_name" property="fullName" />
+        <result column="tree_sort" property="treeSort" />
+        <result column="office_type" property="officeType" />
+        <result column="update_time" property="updateTime" />
+        <result column="remarks" property="remarks" />
+        <result column="status" property="status" />
+        <collection column="office_code" property="children" ofType="com.io.yy.system.vo.SysOfficeQueryVo" javaType="java.util.ArrayList" select="selectOfficeChildren"/>
+    </resultMap>
+
+    <select id="selectOfficeChildren" resultMap="treeOffice">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_office
+        where
+        deleted = '0' and parent_code = #{office_code}
+    </select>
+
+    <select id="findChildNode" resultType="com.io.yy.system.vo.SysOfficeQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_office where parent_code = #{id}
+    </select>
+
+    <select id="getParentCodeTree" resultMap="parentTree">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_office
+        where deleted = '0' and parent_code = '00000000'
+        order by update_time desc
+    </select>
+
+    <resultMap id="parentTree" type="com.io.yy.system.vo.SysOfficeTreeQueryVo">
+        <result column="office_code" property="id" javaType="java.lang.String"/>
+        <result column="office_name" property="label" javaType="java.lang.String"/>
+        <collection column="office_code" property="children" ofType="com.io.yy.system.vo.SysOfficeTreeQueryVo"
+                    javaType="java.util.ArrayList" select="selectParentChildren"/>
+    </resultMap>
+
+    <select id="selectParentChildren" resultMap="parentTree">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_office
+        where
+        deleted = '0' and parent_code = #{office_code}
+    </select>
+
+    <!--更改末级状态-->
+    <select id="updateTreeLeafById" resultType="java.lang.Integer">
+        update sys_office set tree_leaf = #{value} where office_code = #{officeCode}
+    </select>
+
+    <select id="getParentCodeUserTree" resultMap="parentUserTree">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_office
+        where deleted = '0' and parent_code = '00000000'
+        order by update_time desc
+    </select>
+
+    <resultMap id="parentUserTree" type="com.io.yy.system.vo.SysOfficeUserTreeQueryVo">
+        <result column="office_code" property="id" javaType="java.lang.String"/>
+        <result column="office_name" property="label" javaType="java.lang.String"/>
+        <result column="id" property="userId" javaType="java.lang.String"/>
+        <result column="username" property="username" javaType="java.lang.String"/>
+        <collection column="office_code" property="children" ofType="com.io.yy.system.vo.SysOfficeUserTreeQueryVo"
+                    javaType="java.util.ArrayList" select="selectParentUserChildren"/>
+    </resultMap>
+
+    <select id="selectParentUserChildren" resultMap="parentUserTree">
+        SELECT
+        u.id,u.username,o.office_code,o.office_name
+        FROM
+            sys_office o
+        LEFT JOIN sys_user_office uo ON uo.office_code = o.office_code
+        LEFT JOIN sys_user u ON u.id = uo.user_id
+        WHERE
+            o.deleted = '0'
+        AND o.parent_code = #{office_code}
+        or o.office_code = #{office_code}
+    </select>
+</mapper>

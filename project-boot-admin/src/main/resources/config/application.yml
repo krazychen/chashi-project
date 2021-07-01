@@ -1,0 +1,70 @@
+# whyy-system Common Config
+
+############################# 访问路径、端口tomcat start ############################
+server:
+  port: 7676
+  servlet:
+    context-path: /
+  tomcat:
+    max-threads: 1000
+    min-spare-threads: 30
+    uri-encoding: UTF-8
+
+
+############################# 访问路径、端口tomcat end ##############################
+
+
+################################ spring config start ###############################
+spring:
+  application:
+    name: project-boot-admin
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  jackson:
+    date-format: yyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  banner:
+    charset: UTF-8
+    location: classpath:config/banner.txt
+
+# logback.xml中有详细的日志配置
+logging:
+  config: classpath:config/logback.xml
+  #  方便Spring Boot Admin页面上实时查看日志
+  file:
+    name: logs/project-boot-admin.log
+
+# 当前项目maven激活环境，例如：local/dev/test，对应pom.xml中profile设置值
+---
+spring:
+  profiles:
+    active: '@profileActive@'
+
+################################ spring config end #################################
+
+############################## Spring boot admin start ##############################
+
+---
+spring:
+  security:
+    user:
+      # 配置默认用户
+      name: root
+      password: krisroot
+
+# 自定义项目信息，Spring Boot Admin展示使用
+info:
+  project-groupId: '@project.groupId@'
+  project-artifactId: '@project.artifactId@'
+  project-name: '@project.name@'
+  project-finalName: '@project.build.finalName@'
+  project-author: ${swagger.contact.name}
+  project-description: '@project.description@'
+  project-sourceEncoding: '@project.build.sourceEncoding@'
+  project-spring-boot-version: '@spring-boot.version@'
+  project-mybatis-plus-version: '@mybatis-plus-boot-starter.version@'
+  project-version: '@project.version@'
+############################## Spring boot admin end ###############################

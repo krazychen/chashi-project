@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.job.mapper.SysScheduleJobMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, job_name, job_group, job_type, bean_name, params, cron_expression, simple_repeat_count, simple_unit, simple_time, start_time, end_time, status, deleted, version, create_by, create_time, update_by, update_time, remarks
+    </sql>
+
+    <select id="getSysScheduleJobById" resultType="com.io.yy.job.vo.SysScheduleJobQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_schedule_job where id = #{id}
+    </select>
+
+    <select id="getSysScheduleJobPageList" resultType="com.io.yy.job.vo.SysScheduleJobQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_schedule_job
+        where deleted = 0
+        <if test="param.jobName != null and param.jobName.trim() != ''">
+            and job_name like concat('%', #{param.jobName}, '%')
+        </if>
+        <if test="param.jobGroup != null and param.jobGroup.trim() != ''">
+            and job_group like concat('%', #{param.jobGroup}, '%')
+        </if>
+        <if test="param.status != null">
+            and status = #{param.status}
+        </if>
+    </select>
+
+    <select id="getJobByJobName" resultType="com.io.yy.job.entity.SysScheduleJob">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_schedule_job
+        where job_name = #{jobName}
+    </select>
+
+</mapper>

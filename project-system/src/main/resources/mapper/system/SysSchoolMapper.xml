@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysSchoolMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, school_code, school_name, province_code, province_name, city_code, city_name, district_code, province_name, address, school_info, remarks, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getSysSchoolById" resultType="com.io.yy.system.vo.SysSchoolQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_school where id = #{id}
+    </select>
+
+    <select id="getSysSchoolPageList" resultType="com.io.yy.system.vo.SysSchoolQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_school
+        where 1 = 1
+        <if test="param.schoolCode != null and param.schoolCode.trim() != ''">
+            and school_code like concat('%',#{param.schoolCode},'%')
+        </if>
+        <if test="param.schoolName != null and param.schoolName.trim() != ''">
+            and school_name like concat('%',#{param.schoolName},'%')
+        </if>
+    </select>
+
+    <select id="getSchoolList" resultType="com.io.yy.system.vo.SchoolListQueryVo">
+        select
+        id as schoolId,
+        school_code as label,
+        school_name as value
+        from sys_school  where deleted = 0 and status = 1
+    </select>
+
+    <select id="getSchoolListByCode" resultType="com.io.yy.system.vo.SchoolListQueryVo">
+        select
+        id as schoolId,
+        school_code as label,
+        school_name as value
+        from sys_school where deleted = 0 and status = 1
+        <if test="param.provinceCode != null and param.provinceCode !=''">
+            and province_code = #{param.provinceCode}
+        </if>
+        <if test="param.cityCode != null and param.cityCode !=''">
+            and city_code = #{param.cityCode}
+        </if>
+        <if test="param.districtCode != null and param.districtCode !=''">
+            and district_code = #{param.districtCode}
+        </if>
+    </select>
+
+    <select id="findByName" resultType="com.io.yy.system.vo.SysSchoolQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_school where deleted = 0
+        and school_name = #{schoolName}
+    </select>
+
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into sys_school ( school_code, school_name, school_info, create_time, create_by, city_name, city_code,
+        district_code, district_name, province_code, province_name, status,address,remarks)
+        values
+        <foreach collection="listSchool" item="school" separator=",">
+            ( #{school.schoolCode}, #{school.schoolName}, #{school.schoolInfo}, #{school.createTime}, #{school.createBy}, #{school.cityName}, #{school.cityCode}, #{school.districtCode}, #{school.districtName},
+            #{school.provinceCode}, #{school.provinceName}, #{school.status},#{school.address},#{school.remarks} )
+        </foreach>
+
+    </insert>
+
+    <select id="getSysSchoolBySchoolCodeList" resultType="com.io.yy.system.entity.SysSchool">
+        select <include refid="Base_Column_List"/>  from sys_school
+        where school_code in
+        <foreach collection="schoolCodeList" item="schoolCode" open="(" separator="," close=")">
+            #{schoolCode}
+        </foreach>
+    </select>
+</mapper>

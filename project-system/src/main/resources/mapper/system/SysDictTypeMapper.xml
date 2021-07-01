@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysDictTypeMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, dict_name, dict_type, is_sys, deleted, version, status, create_by, create_time, update_by, update_time, remarks
+    </sql>
+
+    <select id="getSysDictTypeById" resultType="com.io.yy.system.vo.SysDictTypeQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_dict_type where id = #{id}
+    </select>
+
+    <select id="getSysDictTypePageList" resultType="com.io.yy.system.vo.SysDictTypeQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_dict_type
+        where 1=1
+        <if test="param.dictName !=null and param.dictName.trim() !='' ">
+           and dict_name like concat('%',#{param.dictName},'%')
+        </if>
+        <if test="param.remarks !=null and param.remarks.trim() !='' ">
+            and remarks like concat('%',#{param.remarks},'%')
+        </if>
+        <if test="param.dictType !=null and param.dictType.trim() !='' ">
+            and dict_type like concat('%',#{param.dictType},'%')
+        </if>
+        <if test="param.status !=null and param.status.trim() !='' ">
+            and status = #{param.status}
+        </if>
+    </select>
+
+    <select id="getSysDictTypeCountByDictType" resultType="java.lang.Integer">
+        SELECT count(*) from sys_dict_type where dict_type =#{dictType} and id !=#{id}
+    </select>
+
+    <update id="updateStatusById">
+        update sys_dict_type set status = #{param.status} where id = #{param.id}
+    </update>
+
+    <select id="SysDictTypesByidList" resultType="java.lang.String">
+        SELECT * FROM sys_dict_type
+        WHERE id in
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>

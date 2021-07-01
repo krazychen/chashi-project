@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2019-2029 kris(https://github.com/kris)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysUserMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, username, nickname, password, salt, email, mobile, phone, gender, avatar, signtext, wx_openid, mobile_imei, user_type, ref_code, ref_name, mgr_type, pwd_security_level, pwd_update_date, pwd_update_record, pwd_question, pwd_question_answer, pwd_question2, pwd_question_answer2, pwd_question3, pwd_question_answer3, pwd_quest_update_date, last_login_ip, last_login_date, freeze_date, freeze_cause, user_weight, remarks, state, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <sql id="Base_Column_List1">
+        a.id, a.username, a.nickname, a.password, a.salt, a.email, a.mobile, a.phone, a.gender, a.avatar, a.signtext, a.wx_openid, a.mobile_imei, a.user_type, a.ref_code, a.ref_name, a.mgr_type, a.pwd_security_level, a.pwd_update_date, a.pwd_update_record, a.pwd_question, a.pwd_question_answer, a.pwd_question2, a.pwd_question_answer2, a.pwd_question3, a.pwd_question_answer3, a.pwd_quest_update_date, a.last_login_ip, a.last_login_date, a.freeze_date, a.freeze_cause, a.user_weight, a.remarks, a.state, a.deleted, a.version, a.create_by, a.create_time, a.update_by, a.update_time, a.corp_code, a.corp_name,a.is_wx
+    </sql>
+
+    <select id="getSysUserById" resultType="com.io.yy.system.vo.SysUserVo">
+        SELECT
+        <include refid="Base_Column_List1"/>
+        FROM sys_user a
+        where a.deleted = 0 and a.id = #{id}
+        GROUP BY a.`id`
+    </select>
+
+    <select id="getSysUserByOpenid" resultType="com.io.yy.shiro.vo.WxOpenQueryVo">
+        select
+        id,wx_openid,is_wx
+        from sys_user
+        where deleted = 0 and wx_openid = #{openid}
+    </select>
+
+    <select id="getSysUserByOpenidTwo" resultType="com.io.yy.shiro.vo.WxOpenQueryVo">
+        select
+        id,wx_openid
+        from sys_user
+        where deleted = 0 and wx_openid_two = #{openid}
+    </select>
+
+    <update id="updateSysUserOpenidById">
+        update sys_user set wx_openid = #{openid} where id  = #{id} and deleted = 0
+    </update>
+
+    <update id="updateSysUserUnionidOpenidById">
+        update sys_user set wx_openid = #{unionid},wx_openid_two = #{openid},is_wx = '1' where id  = #{id} and deleted = 0 and wx_openid is null
+    </update>
+
+    <update id="updateSysUserUnionidByOpenid">
+        update sys_user set wx_openid = #{unionid},is_wx = '1'  where wx_openid_two = #{openid} and deleted = 0
+    </update>
+
+    <!--update sys_user set wx_openid = null where wx_openid_two  = #{openid}-->
+    <update id="updateIsWxByOpenid">
+        update sys_user set is_wx = #{isWx} where wx_openid_two  = #{openid}
+    </update>
+    <select id="getMsgSysUserList" resultType="com.io.yy.system.vo.SysUserQueryVo">
+        select
+        DISTINCT u.*,s.office_code as 'office_id'
+        from sys_user u
+        LEFT JOIN sys_user_office s ON u.id=s.user_id
+        where u.deleted = 0
+        and u.id in
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </select>
+
+    <select id="getSysUserPageList" resultType="com.io.yy.system.vo.SysUserQueryVo">
+        select
+        DISTINCT u.*,s.office_code as 'office_id'
+        from sys_user u
+        LEFT JOIN sys_user_office s ON u.id=s.user_id
+        where u.deleted = 0
+        <if test="param.username != null and param.username.trim() != ''">
+            and u.username like concat('%', #{param.username}, '%')
+        </if>
+        <if test="param.nickname != null and param.nickname.trim() != ''">
+            and u.nickname like concat('%', #{param.nickname}, '%')
+        </if>
+        <if test="param.phone != null ">
+            and u.phone like concat('%', #{param.phone}, '%')
+        </if>
+        <if test="param.state != null ">
+            and u.state = #{param.state}
+        </if>
+        <if test="param.officeId != null ">
+            and s.office_code = #{param.officeId}
+        </if>
+    </select>
+
+    <update id="updateStatus">
+        update sys_user
+        set state = #{status}
+        WHERE
+        id in
+        <foreach collection="idList" index="index" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="getSysRoleAndUserList" resultType="com.io.yy.system.vo.SysUserQueryVo">
+        select
+        u.*
+        from sys_user u
+        inner JOIN sys_user_office o ON o.user_id = u.id
+        inner join sys_user_role f on u.id = f.user_id
+        where f.role_id = #{id}
+    </select>
+
+    <select id="getSysRoleAndUserPageList" resultType="com.io.yy.system.vo.SysUserQueryVo">
+        select
+        u.*
+        from sys_user u
+        inner JOIN sys_user_office o ON o.user_id = u.id
+        inner join sys_user_role f on u.id = f.user_id
+        where f.role_id = #{param.roleId}
+    </select>
+
+    <select id="getUserByRoleIds" resultType="com.io.yy.system.entity.SysUser">
+        SELECT
+            u.id,u.username
+            FROM
+            sys_user u
+            LEFT JOIN sys_user_role ur ON ur.user_id = u.id
+            LEFT JOIN sys_role r ON r.id = ur.role_id
+            WHERE
+            r.id in (${_parameter})
+    </select>
+
+    <select id="findUserListByOfficeCode" resultType="com.io.yy.system.vo.SysUserQueryVo">
+        SELECT
+        u.id,u.username
+        FROM sys_user u
+        LEFT JOIN sys_user_office uo ON uo.user_id = u.id
+        WHERE uo.office_code = #{id}
+    </select>
+
+    <update id="noWx">
+        update sys_user set wx_openid = NULL,wx_openid_two = NULL ,is_wx = '0' where id = #{id}
+    </update>
+
+    <update id="nowxs">
+        update sys_user set wx_openid = NULL,wx_openid_two = NULL ,is_wx = '0' where id in
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updatePasswordById">
+        update sys_user set password = #{param.pass},salt = #{param.salt} where id = #{param.id}
+    </update>
+
+    <select id="getSysUserByStudentOn" resultType="com.io.yy.system.entity.SysUser">
+        SELECT
+            b.id,
+            b.`username`
+        FROM
+            cctalk_sales_order_reg a
+            JOIN sys_user b ON a.student_user_id = b.id
+	        JOIN cctalk_salse_order c ON a.sales_order_id = c.order_id
+        WHERE
+	        c.student_no = #{id}
+        GROUP BY
+        b.id
+    </select>
+
+    <select id="getMsgListUser" resultType="com.io.yy.system.entity.SysUser">
+        SELECT
+            c.id,
+            c.username,
+            wx_openid,
+            wx_openid_two
+        FROM
+            hw_teacher_class a
+            JOIN hw_teacher_subtype b ON a.teacher_id = b.teacher_id
+            AND a.teacher_role_id = #{roleId}
+            AND b.teacher_role_id = #{roleId}
+        JOIN sys_user c ON a.teacher_id = c.id
+            where a.class_id in
+            <foreach collection="classIds" item="classId" open="(" separator="," close=")">
+                #{classId}
+            </foreach>
+            and b.subject_type_id in
+            <foreach collection="classSubjectIds" item="subjectId" open="(" separator="," close=")">
+                #{subjectId}
+            </foreach>
+            and c.state = 1
+            group by c.id
+    </select>
+
+    <select id="getStudentListUserByClassIds" resultType="com.io.yy.system.entity.SysUser">
+        SELECT
+            b.id,
+            b.username,
+            wx_openid,
+            wx_openid_two
+        FROM
+            hw_student_class a
+            JOIN sys_user b ON a.student_id = b.id
+        WHERE
+            a.join_state = '0'
+            and a.class_id in
+            <foreach collection="classIds" item="classId" open="(" separator="," close=")">
+                #{classId}
+            </foreach>
+            and b.state = 1
+        group by b.id
+    </select>
+
+    <select id="getListUserByRoleId" resultType="com.io.yy.system.entity.SysUser">
+        SELECT
+            a.id,
+            a.username,
+            wx_openid,
+            wx_openid_two
+        FROM
+            sys_user a
+            JOIN sys_user_role b ON a.id = b.user_id
+            JOIN sys_role c ON b.role_id = c.id
+        WHERE c.id = #{roleId}
+        and a.state = 1
+        group by a.id
+    </select>
+
+    <select id="getTeacherListUserByClassIds" resultType="com.io.yy.system.entity.SysUser">
+        SELECT
+            b.id,
+            b.username,
+            wx_openid,
+            wx_openid_two
+        FROM
+            hw_teacher_class a
+            JOIN sys_user b ON a.teacher_id = b.id
+        WHERE a.class_id in
+        <foreach collection="classIds" item="classId" open="(" separator="," close=")">
+            #{classId}
+        </foreach>
+        and b.state = 1
+        group by b.id
+    </select>
+
+    <select id="getlistUserByHomeworkIds" resultType="com.io.yy.system.entity.SysUser">
+        SELECT
+            b.id,
+            b.username,
+            wx_openid,
+            wx_openid_two
+        FROM
+            hw_stu_homework a
+            JOIN sys_user b ON a.student_id = b.id
+        WHERE
+        a.homework_id in
+        <foreach collection="homeworkIds" item="homeworkId" open="(" separator="," close=")">
+            #{homeworkId}
+        </foreach>
+        and b.state = 1
+    </select>
+</mapper>

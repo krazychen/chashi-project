@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2019-2029 kris(https://github.com/kris)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysRoleMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, code, type, state, remark, version, create_time, update_time
+    </sql>
+
+    <select id="getSysRoleById" resultType="com.io.yy.system.vo.SysRoleQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_role where id = #{id}
+    </select>
+
+    <select id="getSysRolePageList" resultType="com.io.yy.system.vo.SysRoleQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_role
+        where 1=1
+        <if test="param.name !=null and param.name.trim() != ''">
+            and name like concat('%',#{param.name},'%')
+        </if>
+        <if test="param.code !=null and param.code.trim() != ''">
+            and code like concat('%',#{param.code},'%')
+        </if>
+        <if test="param.remark !=null and param.remark.trim() != ''">
+            and remark like concat('%',#{param.remark},'%')
+        </if>
+        <if test="param.type !=null and param.type.trim() != ''">
+            and type = #{param.type}
+        </if>
+        <if test="param.state !=null and param.state.trim() != ''">
+            and state = #{param.state}
+        </if>
+    </select>
+
+    <update id="updateStateById">
+        update sys_role set state = #{param.state} where id = #{param.id}
+    </update>
+
+    <!--关联删除角色，角色和菜单，角色和用户-->
+    <delete id="deleteRole">
+        delete a,b,c
+        from sys_role a
+        left join sys_role_menu b on a.id = b.role_id
+        left join sys_user_role c on a.id = c.role_id
+        where a.id = #{id}
+    </delete>
+
+    <select id="findByRoleName" resultType="com.io.yy.system.entity.SysRole">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_role where name = #{name}
+    </select>
+
+    <select id="findByRoleType" resultType="java.lang.Long">
+        select
+        id
+        from sys_role where type = #{type}
+    </select>
+
+    <select id="getRoleList" resultType="com.io.yy.system.vo.SysRoleQueryVo">
+        SELECT
+            r.*
+        FROM
+            sys_role r
+        LEFT JOIN sys_user_role u ON u.role_id = r.id
+        WHERE
+            u.user_id = #{param.id}
+    </select>
+
+    <select id="getSysRoleByType" resultType="com.io.yy.system.entity.SysRole">
+        select
+        <include refid="Base_Column_List"/>
+         from
+         sys_role
+         where type = #{type} and state = 1
+    </select>
+
+
+    <select id="getSysRoleQueryByType" resultType="com.io.yy.system.vo.SysRoleQueryVo">
+        select
+        *
+        from
+        sys_role
+        where type = #{type} and state = 1
+    </select>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysCollegeExamscopeMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, college_id, sub_one_ordinal, sub_one_code, sub_one_name, sub_one_remarks, sub_two_ordinal, sub_two_code, sub_two_name, sub_two_remarks, sub_three_ordinal, sub_three_code, sub_three_name, sub_three_remarks, sub_four_ordinal, sub_four_code, sub_four_name, sub_four_remarks, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getSysCollegeExamscopeById" resultType="com.io.yy.system.vo.SysCollegeExamscopeQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_college_examscope where id = #{id}
+    </select>
+
+    <select id="getSysCollegeExamscopePageList" resultType="com.io.yy.system.vo.SysCollegeExamscopeQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_college_examscope
+    </select>
+
+    <delete id="deleteCollegeIds" >
+        DELETE from sys_college_examscope
+        WHERE
+        college_id  in
+        <foreach item="item" collection="collegeIds" separator="," open="(" close=")" index="">
+            #{item}
+        </foreach>
+    </delete>
+
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into sys_college_examscope
+        (college_id,sub_one_name,sub_two_name,sub_three_name,sub_four_name,create_by,create_time,status)
+        values
+        <foreach collection="listCollegeExamscope" item="coll" separator=",">
+            (#{coll.college.id},#{coll.subOneName},#{coll.subTwoName},#{coll.subThreeName},#{coll.subFourName},#{coll.createBy},#{coll.createTime},#{coll.status})
+        </foreach>
+    </insert>
+
+</mapper>

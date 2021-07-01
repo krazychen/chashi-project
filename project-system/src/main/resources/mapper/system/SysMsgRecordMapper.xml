@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysMsgRecordMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, msg_id, msg_notify_type_code, receive_user_id, receive_user_name, msg_level_code, msg_type_code, status, read_time, is_star, deleted, version, create_by, create_time, update_by, update_time, remarks, corp_code, corp_name
+    </sql>
+
+    <select id="getSysMsgRecordById" resultType="com.io.yy.system.vo.SysMsgRecordQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_msg_record where id = #{id}
+    </select>
+
+    <select id="getSysMsgRecordPageList" resultType="com.io.yy.system.vo.SysMsgRecordQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_msg_record
+        where deleted = 0
+        <if test="param.msgId != null and param.msgId != ''">
+            and msg_id = #{param.msgId}
+        </if>
+        <if test="param.status != null and param.status.trim() != ''">
+            and status = #{param.status}
+        </if>
+    </select>
+
+    <delete id="deleteSysMsgRecordByMsgId" >
+        delete
+        from  sys_msg_record
+        where msg_id = #{id}
+    </delete>
+
+    <delete id="deleteSysMsgRecordByMsgIds" >
+        delete
+        from  sys_msg_record
+        where msg_id in
+        <foreach collection="listMsgId" item="msgId" open="(" separator="," close=")" >
+            #{msgId}
+        </foreach>
+    </delete>
+
+    <select id="getWxTemplate" resultMap="wxTemplateMap">
+        SELECT
+        a.id,a.`wx_config_id`,a.`wx_config_template`,b.id as 'tem_id',b.config_id,b.template_field ,b.teimplate_filed_obj,b.teimplate_filed_obj_name,b.type
+        FROM hw_message_config a
+        JOIN hw_message_wx_template b ON a.`id` = b.`config_id`
+        WHERE a.`deleted`='0' AND a.id = #{configId}
+    </select>
+    <resultMap type="com.io.yy.system.vo.SysMessageAndWxTemplateQueryVo" id="wxTemplateMap">
+        <id column="id" property="id"/>
+        <result column="wx_config_id" property="wxConfigId"/>
+        <result column="wx_config_template" property="configTemplate"/>
+        <collection property="tableData" ofType="com.io.yy.system.vo.SysMessageWxTemplateQueryVo"
+                    javaType="java.util.ArrayList">
+            <id column="tem_id" property="id"/>
+            <result column="config_id" property="configId"/>
+            <result column="template_field" property="templateField"/>
+            <result column="teimplate_filed_obj" property="teimplateFiledObj"/>
+            <result column="teimplate_filed_obj_name" property="teimplateFiledObjName"/>
+            <result column="type" property="type"/>
+        </collection>
+    </resultMap>
+</mapper>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysSchoolCollegeMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, school_id, college_code, college_name, college_info, remarks, faculty_department_code, faculty_department_name, research_direction_code, research_direction_name, subject_category,subject_category_name, degree_type,degree_type_name, study_method,study_method_name, exam_method,exam_method_name, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getSysSchoolCollegeById" resultType="com.io.yy.system.vo.SysSchoolCollegeQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_school_college where id = #{id}
+    </select>
+
+    <select id="getSysSchoolCollegePageList" resultType="com.io.yy.system.vo.SysSchoolCollegeQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_school_college
+        where school_id = #{param.schoolId}
+        <if test="param.collegeCode != null and param.collegeCode.trim() != ''">
+            and college_code like concat('%',#{param.collegeCode},'%')
+        </if>
+        <if test="param.collegeName != null and param.collegeName.trim() != ''">
+            and college_name like concat('%',#{param.collegeName},'%')
+        </if>
+    </select>
+
+    <select id="getSchooCollegelList" resultType="com.io.yy.system.vo.SchoolCollegeListQueryVo">
+        select
+        id,
+        college_code as label,
+        CONCAT(college_name,'/',faculty_department_name,'/',research_direction_name,'/',subject_category_name,'/',degree_type_name,'/',study_method_name,'/',exam_method_name) AS value
+        from sys_school_college  where
+         deleted = 0
+         and status = 1
+         and school_id = #{schoolId}
+    </select>
+
+    <select id="findByCollegeName" resultType="com.io.yy.system.vo.SysSchoolCollegeQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_school_college where
+        deleted = 0
+        and school_id = #{schoolId}
+        and college_name = #{collegeName}
+    </select>
+
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_school_college
+        ( school_id, college_code, college_name, faculty_department_name, faculty_department_code, research_direction_name, research_direction_code,
+                                exam_method_name, exam_method, degree_type_name, degree_type, study_method_name, study_method, subject_category, subject_category_name, create_by, create_time)
+        values
+        <foreach collection="listCollege" item="college" separator=",">
+            (#{college.sysSchool.id},#{college.collegeCode},#{college.collegeName},#{college.facultyDepartmentName},#{college.facultyDepartmentCode},#{college.researchDirectionName},#{college.researchDirectionCode},#{college.examMethodName},#{college.examMethod},#{college.degreeTypeName},#{college.degreeType}
+            ,#{college.studyMethodName},#{college.studyMethod},#{college.subjectCategory},#{college.subjectCategoryName},#{college.createBy},#{college.createTime})
+        </foreach>
+    </insert>
+
+    <select id="getSimpleCollegeListBySchoolId" resultType="com.io.yy.system.vo.SchoolCollegeListQueryVo">
+        select
+        id,
+        college_code as label,
+        college_name AS value
+        from sys_school_college  where deleted = 0 and status = 1
+         and school_id = #{schoolId}
+    </select>
+
+
+    <!-- 根据学校查找院校-->
+    <select id="getSimpleFacultyListBySchoolId" resultType="com.io.yy.system.vo.SchoolCollegeListQueryVo">
+        select
+        distinct faculty_department_code as label,
+        faculty_department_name AS value
+        from sys_school_college
+        where deleted = 0 and status = 1
+         and school_id = #{schoolId}
+    </select>
+
+    <!-- 根据 学校id 院校代码 获取专业-->
+    <select id="getSimpleCollegeListBySchoolIdAndFacultyCode" resultType="com.io.yy.system.vo.SchoolCollegeListQueryVo">
+        select
+        distinct
+        college_code as label,
+        college_name AS value
+        from sys_school_college  where deleted = 0 and status = 1
+         and school_id = #{schoolId}
+         and faculty_department_code = #{facultyCode}
+    </select>
+
+</mapper>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.system.mapper.SysMsgMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, msg_title, msg_content, send_user_id, send_user_name, msg_level_code, msg_type_code, msg_notify_type_code, msg_notify_obj_code, user_ids, role_ids, class_type_ids, class_ids, class_subject_ids,homework_ids,notified_number,notified_type,notified_time,must_read,must_read_time,must_read_due_time, status, publish_time, cancel_time, deleted, version, create_by, create_time, update_by, update_time, remarks, corp_code, corp_name,config_id,hyper_links
+    </sql>
+
+    <select id="getSysMsgById" resultType="com.io.yy.system.vo.SysMsgQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_msg where id = #{id}
+    </select>
+
+    <select id="getSysMsgPageList" resultType="com.io.yy.system.vo.SysMsgQueryVo">
+<!--        select
+        <include refid="Base_Column_List"/>
+        from sys_msg
+        where deleted = 0-->
+        SELECT
+        *
+        FROM
+        (
+        SELECT
+        a.*,
+        count( b.receive_user_id ) AS msg_number,
+        IF
+        ( a.msg_type_code = '1', '', GROUP_CONCAT( c.username ) ) AS 'msg_notify_obj',
+        SUM( IF ((b.id is not null and  b.STATUS is null) or (b.STATUS is not null  and b.STATUS &lt;&gt; '1'), 1, 0 ) ) AS no_read_number
+        FROM
+        sys_msg a
+        left JOIN sys_msg_record b ON a.id = b.msg_id
+        LEFT JOIN sys_user c ON b.receive_user_id = c.id
+        GROUP BY
+        a.id
+        ) a
+        WHERE
+        a.deleted = 0
+        <if test="param.msgTitle != null and param.msgTitle.trim() != ''">
+            and a.msg_title like concat('%', #{param.msgTitle}, '%')
+        </if>
+        <if test="param.msgContent != null and param.msgContent.trim() != ''">
+            and a.msg_content like concat('%', #{param.msgContent}, '%')
+        </if>
+        <if test="param.mustRead !=null and param.mustRead !=''">
+            and a.must_read = #{param.mustRead}
+        </if>
+        <if test="param.sendUserName != null and param.sendUserName.trim() != ''">
+            and a.send_user_name like concat('%', #{param.sendUserName}, '%')
+        </if>
+       <if test="param.msgTypeCode != null and param.msgTypeCode.trim() != ''">
+            and a.msg_type_code = #{param.msgTypeCode}
+        </if>
+        <!--       <if test="param.msgNotifyTypeCode != null and param.msgNotifyTypeCode.trim() != ''">
+                  and msg_notify_type_code like concat('%', #{param.msgNotifyTypeCode}, '%')
+              </if>
+              <if test="param.msgNotifyObjCode != null and param.msgNotifyObjCode.trim() != ''">
+                  and msg_notify_obj_code = #{param.msgNotifyObjCode}
+              </if>-->
+    </select>
+
+    <select id="getStudentPageList" resultType="com.io.yy.system.vo.SysMsgQueryVo">
+        SELECT
+            m.*,r.id as msgRecordId,r.status as redStatus
+        FROM
+            sys_msg m
+        JOIN sys_msg_record r ON m.id = r.msg_id
+        WHERE m.deleted = 0
+        <if test="param.status != null and param.status.trim() != ''">
+            and r.status  = #{param.status}
+        </if>
+        <if test="param.msgTypeCode != null and param.msgTypeCode.trim() != ''">
+            and m.msg_type_code  = #{param.msgTypeCode}
+        </if>
+        <if test="param.receiveUserId != null and param.receiveUserId.trim() != ''">
+            and r.receive_user_id  = #{param.receiveUserId}
+        </if>
+        ORDER BY m.msg_type_code DESC,redStatus desc
+    </select>
+
+    <select id="getSysMsgsByHomeworkId" resultType="java.lang.Long">
+        SELECT
+            id
+        FROM
+            sys_msg
+        WHERE
+            FIND_IN_SET( #{homeworkId}, homework_ids )
+    </select>
+
+</mapper>
