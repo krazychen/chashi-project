@@ -5,7 +5,6 @@ import com.io.yy.common.service.BaseService;
 import com.io.yy.merchant.param.CsMerchantQueryParam;
 import com.io.yy.merchant.vo.CsMerchantQueryVo;
 import com.io.yy.common.vo.Paging;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -102,4 +101,12 @@ public interface CsMerchantService extends BaseService<CsMerchant> {
      */
     Paging<CsMerchantQueryVo> getCsMerchantPageList(CsMerchantQueryParam csMerchantQueryParam) throws Exception;
 
+    /**
+     * 通过ID更新status
+     *
+     * @param csMerchantQueryParam
+     * @return
+     * @throws Exception
+     */
+    public Boolean updateStatusById(CsMerchantQueryParam csMerchantQueryParam);
 }

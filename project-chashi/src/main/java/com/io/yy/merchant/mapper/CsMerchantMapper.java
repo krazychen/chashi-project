@@ -39,4 +39,5 @@ public interface CsMerchantMapper extends BaseMapper<CsMerchant> {
      */
     IPage<CsMerchantQueryVo> getCsMerchantPageList(@Param("page") Page page, @Param("param") CsMerchantQueryParam csMerchantQueryParam);
 
+    Integer updateStatusById(@Param("param") CsMerchantQueryParam csMerchantQueryParam);
 }

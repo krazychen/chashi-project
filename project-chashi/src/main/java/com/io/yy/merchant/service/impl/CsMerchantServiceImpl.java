@@ -193,4 +193,16 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
         return new Paging(iPage);
     }
 
+    /**
+     * 通过ID更新status
+     *
+     * @param csMerchantQueryParam
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Boolean updateStatusById(CsMerchantQueryParam csMerchantQueryParam) {
+        return csMerchantMapper.updateStatusById(csMerchantQueryParam) > 0;
+    }
+
 }

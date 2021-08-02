@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, merchant_name, merchant_account, merchant_password, order_fee, city, address, longitude, latitude, logo_url_value, logo_url_name, carousel_url_value, carousel_url_name, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, merchant_name, merchant_account, merchant_password, order_fee, city, address, longitude, latitude, logo_url_value, logo_url_name, carousel_url_value, carousel_url_name, office_code, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <select id="getCsMerchantById" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
@@ -25,5 +25,9 @@
             and merchant_account like concat('%', #{param.merchantAccount}, '%')
         </if>
     </select>
+
+    <update id="updateStatusById">
+        update cs_merchant set status = #{param.status} where id = #{param.id}
+    </update>
 
 </mapper>

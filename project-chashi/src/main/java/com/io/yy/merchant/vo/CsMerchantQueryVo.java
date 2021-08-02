@@ -61,6 +61,9 @@ public class CsMerchantQueryVo implements Serializable {
     @ApiModelProperty(value = "商家轮播图 name")
     private String carouselUrlName;
 
+    @ApiModelProperty(value = "officeCode")
+    private String officeCode;
+
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
 

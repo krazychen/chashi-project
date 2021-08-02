@@ -8,6 +8,7 @@ import com.io.yy.merchant.vo.CsMerchantQueryVo;
 import com.io.yy.common.api.ApiResult;
 import com.io.yy.common.controller.BaseController;
 import com.io.yy.system.entity.SysConfig;
+import com.io.yy.system.param.SysDictTypeStatusQueryParam;
 import com.io.yy.util.UploadUtil;
 import com.io.yy.util.lang.StringUtils;
 import io.swagger.annotations.Api;
@@ -242,6 +243,14 @@ public class CsMerchantController extends BaseController {
         return ApiResult.result(flag);
     }
 
-
+    /**
+     * 修改status状态
+     */
+    @PostMapping("/updateStatus")
+    @RequiresPermissions("cs:merchant:update")
+    @ApiOperation(value = "修改status状态", notes = "修改status状态", response = Boolean.class)
+    public ApiResult<Boolean> updateStatusById(@Valid @RequestBody CsMerchantQueryParam csMerchantQueryParam){
+        return ApiResult.ok(csMerchantService.updateStatusById(csMerchantQueryParam));
+    }
 }
 

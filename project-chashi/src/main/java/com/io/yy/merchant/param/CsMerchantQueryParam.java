@@ -1,5 +1,7 @@
 package com.io.yy.merchant.param;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -9,6 +11,7 @@ import lombok.experimental.Accessors;
 import com.io.yy.common.param.OrderQueryParam;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * <pre>
@@ -30,4 +33,10 @@ public class CsMerchantQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "账户")
     private String merchantAccount;
+
+    @ApiModelProperty(value = "主键")
+    private Long id;
+
+    @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
+    private String status;
 }
