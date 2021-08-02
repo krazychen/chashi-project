@@ -188,4 +188,13 @@ public interface SysUserService extends BaseService<SysUser> {
      * @return
      */
     Boolean checkUserNameValid(CheckUserNameParam checkUserNameParam);
+
+    /**
+     * 保存
+     *
+     * @param sysUser
+     * @return
+     * @throws Exception
+     */
+    boolean saveSysUserNotCheckOffice(SysUser sysUser) throws Exception;
 }

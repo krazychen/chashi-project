@@ -1,0 +1,25 @@
+whyy-system:
+  # 是否启用ansi控制台输出有颜色的字体，local环境建议开启，服务器环境设置为false
+  enable-ansi: true
+
+server:
+  port: 1111
+  servlet:
+    context-path: /
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/whyy-system?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: Chashi666!
+
+  # Redis配置
+  redis:
+    database: 0
+    host: localhost
+    password:
+    port: 6378
+
+# 打印SQL语句和结果集，本地开发环境可开启，线上注释掉
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

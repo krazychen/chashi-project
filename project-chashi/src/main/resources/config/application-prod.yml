@@ -1,0 +1,33 @@
+whyy-system:
+  # 是否启用ansi控制台输出有颜色的字体，local环境建议开启，服务器环境设置为false
+  enable-ansi: false
+  # 是否启用验证码
+  enable-verify-code: true
+  # 是否学员扫描微信登陆
+  enable-hw-xueyuan-wx: true
+
+  # AOP配置
+  aop:
+    # Aop日志配置
+    log:
+      request-log-format: false
+      # 响应日志在控制台是否格式化输出，local环境建议开启，服务器环境设置为false
+      response-log-format: false
+
+server:
+  port: 1111
+  servlet:
+    context-path: /
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/whyy-system?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+
+  # Redis配置
+  redis:
+    database: 0
+    host: localhost
+    password:
+    port: 6379
+

@@ -497,5 +497,46 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUser> 
         return sysUserMapper.nowxs(idList);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean saveSysUserNotCheckOffice(SysUser sysUser) throws Exception {
+        // 校验用户名是否存在
+        boolean isExists = isExistsByUsername(sysUser.getUsername());
+        if (isExists) {
+            throw new BusinessException("用户名已存在");
+        }
+//        // 校验机构
+//        if (sysUser.getOfficeId() != null) {
+//            checkOffice(sysUser.getOfficeId());
+//        }
+        // 生成盐值
+        String salt = SaltUtil.generateSalt();
+        sysUser.setSalt(salt);
+        sysUser.setId(null);
+
+        // 密码加密
+        String newPassword = PasswordUtil.encrypt(sysUser.getPassword(), salt);
+        sysUser.setPassword(newPassword);
+
+        // 设置用户的租户
+        sysUser.setCorpCode(sysUser.getOfficeId());
+        sysUser.setCorpName(sysUser.getOfficeName());
+
+        // 保存系统用户
+        boolean flag = super.save(sysUser);
+        if (flag) {
+            //新建用户成功如果用户选择了机构则同时向sys_user_office插入数据
+            if (sysUser.getOfficeId() != null) {
+                SysUserOffice suo = new SysUserOffice();
+                suo.setOfficeCode(sysUser.getOfficeId().toString());
+                suo.setUserId(sysUser.getId());
+                suo.setDeleted(0);//未删除
+                suo.setCorpCode(sysUser.getOfficeId());
+                suo.setCorpName(sysUser.getOfficeName());
+                sysUserOfficeService.saveSysUserOffice(suo);
+            }
+        }
+        return flag;
+    }
 
 }

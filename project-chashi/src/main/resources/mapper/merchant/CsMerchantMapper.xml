@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.merchant.mapper.CsMerchantMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, merchant_name, merchant_account, merchant_password, order_fee, city, address, longitude, latitude, logo_url_value, logo_url_name, carousel_url_value, carousel_url_name, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getCsMerchantById" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_merchant where id = #{id}
+    </select>
+
+    <select id="getCsMerchantPageList" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_merchant
+        where deleted = 0
+        <if test="param.merchantName != null and param.merchantName.trim() != ''">
+            and merchant_name like concat('%', #{param.merchantName}, '%')
+        </if>
+        <if test="param.merchantAccount != null and param.merchantAccount.trim() != ''">
+            and merchant_account like concat('%', #{param.merchantAccount}, '%')
+        </if>
+    </select>
+
+</mapper>

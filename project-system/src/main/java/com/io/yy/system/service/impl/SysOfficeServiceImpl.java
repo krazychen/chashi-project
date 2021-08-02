@@ -58,7 +58,7 @@ public class SysOfficeServiceImpl extends BaseServiceImpl<SysOfficeMapper, SysOf
         //根据父级id获取父级的信息
         if (StrUtil.isNotBlank(sysOffice.getParentCode()) && !sysOffice.getParentCode().equals(parentCode)) {
            parent = sysOfficeMapper.getSysOfficeById(sysOffice.getParentCode());
-            }
+        }
         if (ObjectUtil.isNull(parent)) {
             throw new BusinessException("父级菜单不存在");
         }

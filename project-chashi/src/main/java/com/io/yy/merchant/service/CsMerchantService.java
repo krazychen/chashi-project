@@ -1,0 +1,105 @@
+package com.io.yy.merchant.service;
+
+import com.io.yy.merchant.entity.CsMerchant;
+import com.io.yy.common.service.BaseService;
+import com.io.yy.merchant.param.CsMerchantQueryParam;
+import com.io.yy.merchant.vo.CsMerchantQueryVo;
+import com.io.yy.common.vo.Paging;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+
+/**
+ * <pre>
+ * 商家管理 服务类
+ * </pre>
+ *
+ * @author kris
+ * @since 2021-07-23
+ */
+public interface CsMerchantService extends BaseService<CsMerchant> {
+
+    /**
+     * 保存
+     *
+     * @param csMerchant
+     * @return
+     * @throws Exception
+     */
+    boolean saveCsMerchant(CsMerchant csMerchant) throws Exception;
+
+    /**
+     * 保存商店、租户和用户信息
+     *
+     * @param csMerchant
+     * @return
+     * @throws Exception
+     */
+    boolean saveCsMerchantAOffice (CsMerchant csMerchant) throws Exception;
+
+    /**
+     * 修改
+     *
+     * @param csMerchant
+     * @return
+     * @throws Exception
+     */
+    boolean updateCsMerchant(CsMerchant csMerchant) throws Exception;
+
+
+    /**
+     * 修改商店、租户和用户信息
+     *
+     * @param csMerchant
+     * @return
+     * @throws Exception
+     */
+    boolean updateCsMerchantAOffice(CsMerchant csMerchant) throws Exception;
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    boolean deleteCsMerchant(Long id) throws Exception;
+
+    /**
+     * 删除商店、租户和用户信息
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    boolean deleteCsMerchantAOffice(Long id) throws Exception;
+
+    /**
+     * 批量删除
+     *
+     * @param idList
+     * @return
+     * @throws Exception
+     */
+    boolean deleteCsMerchants(List<String> idList) throws Exception;
+
+    /**
+     * 根据ID获取查询对象
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    CsMerchantQueryVo getCsMerchantById(Long id) throws Exception;
+
+    /**
+     * 获取分页对象
+     *
+     * @param csMerchantQueryParam
+     * @return
+     * @throws Exception
+     */
+    Paging<CsMerchantQueryVo> getCsMerchantPageList(CsMerchantQueryParam csMerchantQueryParam) throws Exception;
+
+}

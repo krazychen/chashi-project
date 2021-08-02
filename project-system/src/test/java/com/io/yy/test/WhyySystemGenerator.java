@@ -30,9 +30,9 @@ public class WhyySystemGenerator {
         // 数据库配置
         codeGenerator
                 .setUserName("root")
-                .setPassword("Springboot666!")
+                .setPassword("123456")
                 .setDriverName("com.mysql.jdbc.Driver")
-                .setDriverUrl("jdbc:mysql://47.105.218.228:3306/whyy-search?useUnicode=true&characterEncoding=UTF-8&useSSL=false");
+                .setDriverUrl("jdbc:mysql://localhost:3306/chashi-system?useUnicode=true&characterEncoding=UTF-8&useSSL=false");
 
         // 包信息
         codeGenerator
@@ -41,7 +41,7 @@ public class WhyySystemGenerator {
 
         // 组件作者等配置
         codeGenerator
-                .setModuleName("search")
+                .setModuleName("merchant")
                 .setAuthor("kris");
 
         // 生成策略
@@ -77,7 +77,7 @@ public class WhyySystemGenerator {
         // 需要生成的表数组
         // xxx,yyy,zzz为需要生成代码的表名称
         String[] tables = {
-                "ws_video","ws_tag_video_link"
+                "cs_merchant"
         };
 
         // 循环生成
