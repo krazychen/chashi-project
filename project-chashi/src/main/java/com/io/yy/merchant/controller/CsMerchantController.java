@@ -10,6 +10,7 @@ import com.io.yy.common.controller.BaseController;
 import com.io.yy.system.entity.SysConfig;
 import com.io.yy.system.param.SysDictTypeStatusQueryParam;
 import com.io.yy.util.UploadUtil;
+import com.io.yy.util.codec.EncodeUtils;
 import com.io.yy.util.lang.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -100,6 +101,17 @@ public class CsMerchantController extends BaseController {
     @ApiOperation(value = "获取CsMerchant对象详情", notes = "查看商家管理", response = CsMerchantQueryVo.class)
     public ApiResult<CsMerchantQueryVo> getCsMerchant(@PathVariable("id") Long id) throws Exception {
         CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(id);
+        return ApiResult.ok(csMerchantQueryVo);
+    }
+
+    /**
+     * 获取商家管理
+     */
+    @GetMapping("/infoByOffice/{id}")
+    @RequiresPermissions("cs:merchant:info")
+    @ApiOperation(value = "根据office code获取CsMerchant对象详情", notes = "查看商家管理", response = CsMerchantQueryVo.class)
+    public ApiResult<CsMerchantQueryVo> getCsMerchantByOfficeCode(@PathVariable("id") String officeCode) throws Exception {
+        CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantByOfficeCode(officeCode);
         return ApiResult.ok(csMerchantQueryVo);
     }
 
@@ -238,7 +250,8 @@ public class CsMerchantController extends BaseController {
             csMerchant.setCarouselUrlValue(bannerFileNames);
             csMerchant.setCarouselUrlName(bannerFileOriNames);
         }
-
+        csMerchant.setMerchantInfo(EncodeUtils.decodeHtml(csMerchant.getMerchantInfo()));
+        csMerchant.setUsageNotice(EncodeUtils.decodeHtml(csMerchant.getUsageNotice()));
         boolean flag = csMerchantService.updateCsMerchantAOffice(csMerchant);
         return ApiResult.result(flag);
     }

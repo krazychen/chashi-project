@@ -32,6 +32,7 @@ import com.io.yy.util.reflect.ReflectUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
+import net.sf.jsqlparser.expression.StringValue;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
@@ -116,7 +117,7 @@ public class MybatisPlusConfig {
                 LoginSysUserRedisVo userInfo = LoginUtil.getLoginSysUserRedisVo();
                 if (ObjectUtil.isNotNull(userInfo) && ObjectUtil.isNotNull(userInfo.getOfficeCode())) {
                     log.debug("corpcode"+ userInfo.getOfficeCode()+":"+userInfo);
-                    return new LongValue(userInfo.getOfficeCode());
+                    return new StringValue(userInfo.getOfficeCode());
                 }
                 return null;
             }

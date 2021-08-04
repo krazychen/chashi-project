@@ -64,6 +64,36 @@ public class CsMerchantQueryVo implements Serializable {
     @ApiModelProperty(value = "officeCode")
     private String officeCode;
 
+    @ApiModelProperty(value = "联系手机(客服电话)")
+    private String contactPhonse;
+
+    @ApiModelProperty(value = "标签id（多个，隔开）")
+    private String labelId;
+
+    @ApiModelProperty(value = "标签name（多个，隔开）")
+    private String labelName;
+
+    @ApiModelProperty(value = "设施id（多个，隔开）")
+    private String facilitiesId;
+
+    @ApiModelProperty(value = "设施名（多个，隔开）")
+    private String facilitiesName;
+
+    @ApiModelProperty(value = "服务项目id（多个，隔开）")
+    private String servicesId;
+
+    @ApiModelProperty(value = "服务项目名（多个，隔开）")
+    private String servicesName;
+
+    @ApiModelProperty(value = "订单退款手续费")
+    private int orderRefundFee;
+
+    @ApiModelProperty(value = "商户简介")
+    private String merchantInfo;
+
+    @ApiModelProperty(value = "使用须知")
+    private String usageNotice;
+
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
 

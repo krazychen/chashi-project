@@ -93,6 +93,15 @@ public interface CsMerchantService extends BaseService<CsMerchant> {
     CsMerchantQueryVo getCsMerchantById(Long id) throws Exception;
 
     /**
+     * 根据office code获取查询对象
+     *
+     * @param officeCode
+     * @return
+     * @throws Exception
+     */
+    CsMerchantQueryVo getCsMerchantByOfficeCode(String officeCode) throws Exception;
+
+    /**
      * 获取分页对象
      *
      * @param csMerchantQueryParam

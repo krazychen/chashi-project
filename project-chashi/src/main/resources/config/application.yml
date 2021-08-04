@@ -115,13 +115,13 @@ whyy-system:
     # 操作日志配置
     operation-log:
       # 是否启用
-      enable: true
+      enable: false
       # 排除的路径
       exclude-paths:
     # 登录日志配置
     login-log:
       # 是否启用
-      enable: true
+      enable: false
       # 登录地址
       login-path: login,wx/login
       # 登出地址
@@ -243,7 +243,7 @@ whyy-system:
   ############################ JWT end ###############################
 
   #################################### 租户过滤表 ###################################
-  tentTables: sys_schedule_job,sys_schedule_joblog,sys_msg,sys_msg_record,sys_dict_type,sys_dict_data,sys_menu,sys_role,sys_role_menu,sys_area,sys_config,sys_log,QRTZ_BLOB_TRIGGERS,QRTZ_CALENDARS,QRTZ_CRON_TRIGGERS,QRTZ_FIRED_TRIGGERS,QRTZ_JOB_DETAILS,QRTZ_LOCKS,QRTZ_PAUSED_TRIGGER_GRPS,QRTZ_SCHEDULER_STATE,QRTZ_SIMPLE_TRIGGERS,QRTZ_SIMPROP_TRIGGERS,QRTZ_TRIGGERS
+  tentTables: cs_label,sys_schedule_job,sys_schedule_joblog,sys_msg,sys_msg_record,sys_dict_type,sys_dict_data,sys_menu,sys_role,sys_role_menu,sys_area,sys_config,sys_log,QRTZ_BLOB_TRIGGERS,QRTZ_CALENDARS,QRTZ_CRON_TRIGGERS,QRTZ_FIRED_TRIGGERS,QRTZ_JOB_DETAILS,QRTZ_LOCKS,QRTZ_PAUSED_TRIGGER_GRPS,QRTZ_SCHEDULER_STATE,QRTZ_SIMPLE_TRIGGERS,QRTZ_SIMPROP_TRIGGERS,QRTZ_TRIGGERS
 
   #################################### 租户过滤表 ###################################
 

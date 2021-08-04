@@ -17,6 +17,10 @@
         select
         <include refid="Base_Column_List"/>
         from cs_advertise
+        where deleted = 0
+        <if test="param.sort != null">
+            and sort = param.sort
+        </if>
     </select>
 
     <update id="updateStatusById">

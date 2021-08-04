@@ -66,6 +66,8 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
         Boolean flag;
         String code = UUIDUtil.getUUID();
         csMerchant.setOfficeCode(code);
+        csMerchant.setCorpCode(code);
+        csMerchant.setCorpName(csMerchant.getMerchantName());
 
         flag = super.save(csMerchant);
 
@@ -120,7 +122,7 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
     public boolean updateCsMerchantAOffice(CsMerchant csMerchant) throws Exception {
 
         Boolean flag;
-
+        csMerchant.setCorpName(csMerchant.getMerchantName());
         flag = super.updateById(csMerchant);
 
         // 商店保存成功
@@ -184,6 +186,11 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
     @Override
     public CsMerchantQueryVo getCsMerchantById(Long id) throws Exception {
         return csMerchantMapper.getCsMerchantById(id);
+    }
+
+    @Override
+    public CsMerchantQueryVo getCsMerchantByOfficeCode(String officeCode) throws Exception {
+        return csMerchantMapper.getCsMerchantByOfficeCode(officeCode);
     }
 
     @Override
