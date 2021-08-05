@@ -47,5 +47,12 @@
         from ${table.name}
     </select>
 
+    <update id="updateStatus">
+        update ${table.name} set status = #{param.status}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
 #end
 </mapper>

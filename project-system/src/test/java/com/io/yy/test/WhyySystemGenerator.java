@@ -77,7 +77,7 @@ public class WhyySystemGenerator {
         // 需要生成的表数组
         // xxx,yyy,zzz为需要生成代码的表名称
         String[] tables = {
-                "cs_merchant"
+                "cs_tearoom"
         };
 
         // 循环生成

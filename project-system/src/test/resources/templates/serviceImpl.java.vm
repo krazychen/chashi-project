@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -76,6 +77,11 @@ public class ${table.serviceImplName} extends BaseServiceImpl<${table.mapperName
         Page page = setPageParam(${cfg.entityObjectName}QueryParam, OrderItem.desc("create_time"));
         IPage<${entity}QueryVo> iPage = ${cfg.mapperObjectName}.get${entity}PageList(page, ${cfg.entityObjectName}QueryParam);
         return new Paging(iPage);
+    }
+
+    @Override
+    public boolean updateStatus(${entity}QueryParam ${cfg.entityObjectName}QueryParam) {
+        return ${cfg.mapperObjectName}.updateStatus(${cfg.entityObjectName}QueryParam) > 0;
     }
 #end
 

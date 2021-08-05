@@ -156,8 +156,6 @@ public class CsMerchantController extends BaseController {
                 }
             }
         }
-        System.out.println(logoFileNames);
-        System.out.println(logoFileOriNames);
         csMerchant.setLogoUrlValue(logoFileNames);
         csMerchant.setLogoUrlName(logoFileOriNames);
 
@@ -227,9 +225,9 @@ public class CsMerchantController extends BaseController {
                     logoFileNames += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
-            csMerchant.setLogoUrlValue(logoFileNames);
-            csMerchant.setLogoUrlName(logoFileOriNames);
         }
+        csMerchant.setLogoUrlValue(logoFileNames);
+        csMerchant.setLogoUrlName(logoFileOriNames);
 
         //banner
         MultipartFile[] bannerUploadfiles=csMerchant.getBannerUploadFileAdd();
@@ -247,9 +245,9 @@ public class CsMerchantController extends BaseController {
                     bannerFileNames += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
-            csMerchant.setCarouselUrlValue(bannerFileNames);
-            csMerchant.setCarouselUrlName(bannerFileOriNames);
         }
+        csMerchant.setCarouselUrlValue(bannerFileNames);
+        csMerchant.setCarouselUrlName(bannerFileOriNames);
         csMerchant.setMerchantInfo(EncodeUtils.decodeHtml(csMerchant.getMerchantInfo()));
         csMerchant.setUsageNotice(EncodeUtils.decodeHtml(csMerchant.getUsageNotice()));
         boolean flag = csMerchantService.updateCsMerchantAOffice(csMerchant);

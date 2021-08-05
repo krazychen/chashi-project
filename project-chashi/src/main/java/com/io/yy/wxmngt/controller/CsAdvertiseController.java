@@ -171,7 +171,7 @@ public class CsAdvertiseController extends BaseController {
      */
     @PostMapping("/updateStatus")
     @RequiresPermissions("cs:advertise:update")
-    @ApiOperation(value = "修改status状态", notes = "修改status状态", response = Boolean.class)
+    @ApiOperation(value = "修改status状态", notes = "修改status状态", response = ApiResult.class)
     public ApiResult<Boolean> updateStatusById(@Valid @RequestBody CsAdvertiseQueryParam csAdvertiseQueryPara){
         return ApiResult.ok(csAdvertiseService.updateStatusById(csAdvertiseQueryPara));
     }

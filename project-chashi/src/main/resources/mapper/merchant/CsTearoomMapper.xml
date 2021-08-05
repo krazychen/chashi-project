@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.merchant.mapper.CsTearoomMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, room_name, facilities_id, facilities_name, hours_amount, start_time, recom_num_users, room_logo_url, room_logo_name, room_banner_url, room_banner_name, door_open_method, sort, merchant_id, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <resultMap id="csTearoom" type="com.io.yy.merchant.vo.CsTearoomQueryVo">
+        <result column="id" property="id" javaType="java.lang.Long"/>
+        <result column="room_name" property="roomName" javaType="java.lang.String"/>
+        <result column="facilities_id" property="facilitiesId" javaType="java.lang.String"/>
+        <result column="facilities_name" property="facilitiesName" javaType="java.lang.String"/>
+        <result column="hours_amount" property="hoursAmount" javaType="java.lang.Integer"/>
+        <result column="start_time" property="startTime" javaType="java.lang.String"/>
+        <result column="recom_num_users" property="recomNumUsers" javaType="java.lang.Integer"/>
+        <result column="room_logo_url" property="roomLogoUrl" javaType="java.lang.String"/>
+        <result column="room_logo_name" property="roomLogoName" javaType="java.lang.String"/>
+        <result column="room_banner_url" property="roomBannerUrl" javaType="java.lang.String"/>
+        <result column="room_banner_name" property="roomBannerName" javaType="java.lang.String"/>
+        <result column="door_open_method" property="doorOpenMethod" javaType="java.lang.Integer"/>
+        <result column="sort" property="sort" javaType="java.lang.Integer"/>
+        <result column="merchant_id" property="merchantId" javaType="java.lang.Long"/>
+        <result column="status" property="status" javaType="java.lang.String"/>
+        <result column="create_time" property="createTime" javaType="java.util.Date"/>
+        <association property="merchant" javaType="com.io.yy.merchant.vo.CsMerchantQueryVo">
+            <result column="m_id" property="id" javaType="java.lang.Long"/>
+            <result column="m_logo_url_value" property="logoUrlValue" javaType="java.lang.String"/>
+            <result column="m_logo_url_name" property="logoUrlName" javaType="java.lang.String"/>
+        </association>
+    </resultMap>
+
+    <select id="getCsTearoomById" resultType="com.io.yy.merchant.vo.CsTearoomQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_tearoom where id = #{id}
+    </select>
+
+    <select id="getCsTearoomObjPageList" resultMap="csTearoom">
+        select
+        ct.id, ct.room_name, ct.facilities_id, ct.facilities_name, ct.hours_amount, ct.start_time, ct.recom_num_users, ct.room_logo_url,
+        ct.room_logo_name, ct.room_banner_url, ct.room_banner_name, ct.door_open_method, ct.sort, ct.merchant_id, ct.status, ct.create_time,
+        cm.id as m_id, cm.logo_url_value as m_logo_url_value, cm.logo_url_name as m_logo_url_name
+        from cs_tearoom ct
+        left join cs_merchant cm on ct.merchant_id = cm.id
+    </select>
+
+    <select id="getCsTearoomPageList" resultType="com.io.yy.merchant.vo.CsTearoomQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_tearoom
+    </select>
+
+    <update id="updateStatus">
+        update cs_tearoom set status = #{param.status}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
+</mapper>

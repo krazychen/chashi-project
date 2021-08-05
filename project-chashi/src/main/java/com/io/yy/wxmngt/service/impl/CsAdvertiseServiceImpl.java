@@ -79,7 +79,7 @@ public class CsAdvertiseServiceImpl extends BaseServiceImpl<CsAdvertiseMapper, C
      * @throws Exception
      */
     @Override
-    public Boolean updateStatusById(CsAdvertiseQueryParam csAdvertiseQueryParam) {
+    public boolean updateStatusById(CsAdvertiseQueryParam csAdvertiseQueryParam) {
         return csAdvertiseMapper.updateStatusById(csAdvertiseQueryParam) > 0;
     }
 }

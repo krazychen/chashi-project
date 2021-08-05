@@ -6,6 +6,7 @@ import ${cfg.queryParamPath};
 import ${cfg.queryVoPath};
 import ${cfg.paging};
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -78,6 +79,15 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
      * @throws Exception
      */
     Paging<${entity}QueryVo> get${entity}PageList(${entity}QueryParam ${cfg.entityObjectName}QueryParam) throws Exception;
+
+    /**
+     * 更新状态
+     *
+     * @param ${cfg.entityObjectName}QueryParam
+     * @return
+     */
+     boolean updateStatus(${entity}QueryParam ${cfg.entityObjectName}QueryParam);
+
 #end
 
 }

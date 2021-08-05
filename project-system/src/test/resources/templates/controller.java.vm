@@ -149,6 +149,19 @@ public class ${table.controllerName} {
         Paging<${entity}QueryVo> paging = ${cfg.entityObjectName}Service.get${entity}PageList(${cfg.entityObjectName}QueryParam);
         return ApiResult.ok(paging);
     }
+
+    /**
+     * $!{table.comment}修改状态
+     */
+    @PostMapping("/updateStatus")
+#if(${cfg.requiresPermissions})
+    @RequiresPermissions("$!{cfg.colonTableName}:update")
+#end
+    @ApiOperation(value = "修改${entity}状态", notes = "$!{table.comment}修改状态", response = ApiResult.class)
+    public ApiResult<Boolean> updateStatus(#if(${cfg.paramValidation})@Valid#end @RequestBody ${entity}QueryParam ${cfg.entityObjectName}QueryParam) throws Exception {
+        return ApiResult.ok(${cfg.entityObjectName}Service.updateStatus(${cfg.entityObjectName}QueryParam));
+    }
+
 #end
 
 }

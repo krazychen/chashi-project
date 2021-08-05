@@ -75,11 +75,11 @@ public interface CsAdvertiseService extends BaseService<CsAdvertise> {
     Paging<CsAdvertiseQueryVo> getCsAdvertisePageList(CsAdvertiseQueryParam csAdvertiseQueryParam) throws Exception;
 
     /**
-     * 通过ID更新status
+     * 根据ID更新状态
      *
      * @param csAdvertiseQueryParam
      * @return
      * @throws Exception
      */
-    public Boolean updateStatusById(CsAdvertiseQueryParam csAdvertiseQueryParam);
+    boolean updateStatusById(CsAdvertiseQueryParam csAdvertiseQueryParam);
 }
