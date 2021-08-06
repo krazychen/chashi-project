@@ -413,7 +413,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 /*Data for the table `qrtz_scheduler_state` */
 
 insert  into `qrtz_scheduler_state`(`SCHED_NAME`,`INSTANCE_NAME`,`LAST_CHECKIN_TIME`,`CHECKIN_INTERVAL`) values 
-('quartzScheduler','krislaptop1628152569486',1628160075492,5000);
+('quartzScheduler','krislaptop1628244090224',1628244933591,5000);
 
 /*Table structure for table `qrtz_simple_triggers` */
 
@@ -4331,7 +4331,7 @@ insert  into `sys_config`(`id`,`config_name`,`config_key`,`config_text_value`,`c
 ('4fbe1062-927f-45c4-b0bc-8862b0822d1d','小程序appid','appid','wxee67bc9ae0ead50b','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:02:39','88888888','2021-08-05 18:02:39','0','whyy'),
 ('88a7a9a4-8ce3-48b7-b18c-f10e0d04648b','小程序登录URL','loginUrl','https://api.weixin.qq.com/sns/jscode2session','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:05:28','88888888','2021-08-05 18:05:28','0','whyy'),
 ('8ccd0296-1d4e-4e99-a323-d83bf274644b','微信登陆提醒消息','wx_login_infor_message','舰长，你已经成功登录！','',NULL,'','0','1','',0,0,'1','2020-05-24 23:38:13','1','2020-05-31 23:38:39','0','whyy'),
-('b30c7ee3-a871-4206-b06a-89abfc9540ce','小程序密钥','AppSecret','3b855156e3d5f17885d62c30ee313555','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:02:57','88888888','2021-08-05 18:02:57','0','whyy');
+('b30c7ee3-a871-4206-b06a-89abfc9540ce','小程序密钥','appSecret','3b855156e3d5f17885d62c30ee313555','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:02:57','88888888','2021-08-05 18:02:57','0','whyy');
 
 /*Table structure for table `sys_dict_data` */
 
@@ -10119,6 +10119,40 @@ insert  into `sys_user_role`(`id`,`user_id`,`role_id`,`deleted`,`version`,`creat
 (1350022367748833282,1350022207962628098,1342036257152827394,0,0,'88888888','2021-01-15 18:09:49','88888888','2021-01-15 18:09:49',NULL,NULL),
 (1350022662138642434,1350022545897701378,1342036257152827394,0,0,'88888888','2021-01-15 18:11:00','88888888','2021-01-15 18:11:00',NULL,NULL),
 (1422138530739531777,1422138530651451393,1,0,0,'88888888','2021-08-02 18:13:42','88888888','2021-08-02 18:13:42',NULL,NULL);
+
+/*Table structure for table `wx_user` */
+
+DROP TABLE IF EXISTS `wx_user`;
+
+CREATE TABLE `wx_user` (
+  `id` bigint NOT NULL COMMENT '主键',
+  `nickname` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '昵称',
+  `password` varchar(100) COLLATE utf8mb4_general_ci NOT NULL COMMENT '登录密码',
+  `salt` varchar(32) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '盐值',
+  `email` varchar(300) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '电子邮箱',
+  `phone` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '手机号码',
+  `gender` int NOT NULL DEFAULT '1' COMMENT '性别，0：女，1：男，默认1',
+  `avatar` varchar(1000) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '头像路径',
+  `signtext` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '个性签名',
+  `open_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信公众号openid',
+  `union_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '绑定的微信号unionid',
+  `menber_type` int DEFAULT NULL COMMENT '会员类型',
+  `integral` int DEFAULT NULL COMMENT '积分',
+  `balance` int DEFAULT NULL COMMENT '余额',
+  `remarks` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注信息',
+  `state` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
+  `deleted` int NOT NULL DEFAULT '0' COMMENT '逻辑删除，0：未删除，1：已删除',
+  `version` int NOT NULL DEFAULT '0' COMMENT '版本',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改者',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  `corp_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户代码',
+  `corp_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='微信用户';
+
+/*Data for the table `wx_user` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
