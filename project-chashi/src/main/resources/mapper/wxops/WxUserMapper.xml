@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, nickname, password, salt, email, phone, gender, avatar, signtext, open_id, union_id, menber_type, integral, balance, remarks, state, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, nickname, password, salt, email, phone, gender, avatar, signtext, open_id, union_id, menber_type, integral, balance, remarks, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <select id="getWxUserById" resultType="com.io.yy.wxops.vo.WxUserQueryVo">
@@ -17,6 +17,12 @@
         select
         <include refid="Base_Column_List"/>
         from wx_user
+        <if test="param.nickname != null and param.nickname.trim() != ''">
+            and u.nickname like concat('%', #{param.nickname}, '%')
+        </if>
+        <if test="param.phone != null ">
+            and u.phone like concat('%', #{param.phone}, '%')
+        </if>
     </select>
 
     <update id="updateStatus">

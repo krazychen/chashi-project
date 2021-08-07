@@ -71,7 +71,7 @@ public class WxUserQueryVo implements Serializable {
     private String remarks;
 
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
-    private Integer state;
+    private String status;
 
     @ApiModelProperty(value = "逻辑删除，0：未删除，1：已删除")
     private Integer deleted;
