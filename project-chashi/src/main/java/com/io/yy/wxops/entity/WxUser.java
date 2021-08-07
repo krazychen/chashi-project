@@ -37,7 +37,6 @@ public class WxUser extends BaseEntity {
     private String nickname;
 
     @ApiModelProperty(value = "登录密码")
-    @NotBlank(message = "登录密码不能为空")
     private String password;
 
     @ApiModelProperty(value = "盐值")
@@ -53,16 +52,16 @@ public class WxUser extends BaseEntity {
     private Integer gender;
 
     @ApiModelProperty(value = "头像路径")
-    private String avatar;
+    private String avatarUrl;
 
     @ApiModelProperty(value = "个性签名")
     private String signtext;
 
     @ApiModelProperty(value = "微信公众号openid")
-    private String openId;
+    private String openid;
 
     @ApiModelProperty(value = "绑定的微信号unionid")
-    private String unionId;
+    private String unionid;
 
     @ApiModelProperty(value = "会员类型")
     private Integer menberType;
