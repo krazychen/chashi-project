@@ -1,5 +1,7 @@
 package com.io.yy.merchant.controller;
 
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.io.yy.core.properties.WhyySystemProperties;
 import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.merchant.entity.CsTearoom;
@@ -269,6 +271,18 @@ public class CsTearoomController extends BaseController {
     @ApiOperation(value = "导出", notes = "导出")
     public void exportStudentList(@Valid @RequestBody CsTearoomQueryParam csTearoomQueryParam) throws Exception {
         csTearoomService.exportList(csTearoomQueryParam);
+    }
+
+    /**
+     * 通过商户ID获取茶室管理小程序分页列表
+     */
+    @PostMapping("/getRoomListForWx")
+    @ApiOperation(value = "通过商户ID获取茶室管理小程序分页列表", notes = "通过商户ID获取茶室管理小程序分页列表", response = CsTearoomQueryVo.class)
+    public ApiResult<Paging<CsTearoomQueryVo>> getRoomListForWx(@PathVariable("merchantId") Long merchantId) throws Exception {
+        CsTearoomQueryParam csTearoomQueryParam = new CsTearoomQueryParam();
+        csTearoomQueryParam.setMerchantId(merchantId);
+        Paging<CsTearoomQueryVo> paging = csTearoomService.getCsTearoomPageListOrderBySort(csTearoomQueryParam);
+        return ApiResult.ok(paging);
     }
 }
 

@@ -263,5 +263,15 @@ public class CsMerchantController extends BaseController {
     public ApiResult<Boolean> updateStatusById(@Valid @RequestBody CsMerchantQueryParam csMerchantQueryParam){
         return ApiResult.ok(csMerchantService.updateStatusById(csMerchantQueryParam));
     }
+
+    /**
+     * 商家管理wx分页列表
+     */
+    @PostMapping("/getPageListForWw")
+    @ApiOperation(value = "获取wx CsMerchant分页列表", notes = "商家管理wx分页列表", response = CsMerchantQueryVo.class)
+    public ApiResult<Paging<CsMerchantQueryVo>> getCsMerchantPageListForWx(@Valid @RequestBody CsMerchantQueryParam csMerchantQueryParam) throws Exception {
+        Paging<CsMerchantQueryVo> paging = csMerchantService.getCsMerchantPageList(csMerchantQueryParam);
+        return ApiResult.ok(paging);
+    }
 }
 

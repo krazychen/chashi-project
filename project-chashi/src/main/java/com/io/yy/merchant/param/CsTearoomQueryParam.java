@@ -8,6 +8,8 @@ import lombok.experimental.Accessors;
 
 import com.io.yy.common.param.OrderQueryParam;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * <pre>
  * 茶室管理 查询参数对象
@@ -31,4 +33,7 @@ public class CsTearoomQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
+
+    @ApiModelProperty(value = "商店id")
+    private Long merchantId;
 }

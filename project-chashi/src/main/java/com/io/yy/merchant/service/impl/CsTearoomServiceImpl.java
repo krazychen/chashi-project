@@ -91,6 +91,13 @@ public class CsTearoomServiceImpl extends BaseServiceImpl<CsTearoomMapper, CsTea
     }
 
     @Override
+    public Paging<CsTearoomQueryVo> getCsTearoomPageListOrderBySort(CsTearoomQueryParam csTearoomQueryParam) throws Exception {
+        Page page = setPageParam(csTearoomQueryParam, OrderItem.desc("sort"));
+        IPage<CsTearoomQueryVo> iPage = csTearoomMapper.getCsTearoomPageList(page, csTearoomQueryParam);
+        return new Paging(iPage);
+    }
+
+    @Override
     public boolean updateStatus(CsTearoomQueryParam csTearoomQueryParam) {
         return csTearoomMapper.updateStatus(csTearoomQueryParam) > 0;
     }

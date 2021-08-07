@@ -84,6 +84,15 @@ public interface CsTearoomService extends BaseService<CsTearoom> {
     Paging<CsTearoomQueryVo> getCsTearoomObjPageList(CsTearoomQueryParam csTearoomQueryParam) throws Exception;
 
     /**
+     * 获取分页根据sort排序
+     *
+     * @param csTearoomQueryParam
+     * @return
+     * @throws Exception
+     */
+    Paging<CsTearoomQueryVo> getCsTearoomPageListOrderBySort(CsTearoomQueryParam csTearoomQueryParam) throws Exception;
+
+    /**
      * 更新状态
      *
      * @param csTearoomQueryParam
