@@ -110,7 +110,9 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
         System.out.println(userInfo);
         if(userInfo!=null){
             WxUser wxUser =  JSONObject.toJavaObject(userInfo, WxUser.class);
-            WxUser userExist = wxUserMapper.getWxUserByOpenId(wxUser.getOpenId());
+            wxUser.setOpenid(wxLoginQueryVo.getOpenid());
+            wxUser.setUnionid(wxLoginQueryVo.getUnionid());
+            WxUser userExist = wxUserMapper.getWxUserByOpenId(wxUser.getOpenid());
             if(ObjectUtil.isNull(userExist)){
                 wxUser.setDeleted(TrueFlagEnum.NO_FLAG.getCode());
                 super.save(wxUser);

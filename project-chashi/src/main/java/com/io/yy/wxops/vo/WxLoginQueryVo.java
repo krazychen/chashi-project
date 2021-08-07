@@ -23,10 +23,10 @@ public class WxLoginQueryVo implements Serializable {
     private String session_key;
 
     @ApiModelProperty(value = "用户唯一标识")
-    private String openId;
+    private String openid;
 
     @ApiModelProperty(value = "用户在开放平台的唯一标识符")
-    private String unionId;
+    private String unionid;
 
     @ApiModelProperty(value = "errcode")
     private String errcode;
