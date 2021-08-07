@@ -33,6 +33,6 @@
         from cs_advertise
         WHERE STATUS = 1
         ORDER BY sort
-        LIMIT 0,3
+        LIMIT 0,4
     </select>
 </mapper>
