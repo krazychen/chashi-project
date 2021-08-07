@@ -82,4 +82,15 @@ public class CsAdvertiseServiceImpl extends BaseServiceImpl<CsAdvertiseMapper, C
     public boolean updateStatusById(CsAdvertiseQueryParam csAdvertiseQueryParam) {
         return csAdvertiseMapper.updateStatusById(csAdvertiseQueryParam) > 0;
     }
+
+    /**
+     * 获取小程序的banners
+     *
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<CsAdvertiseQueryVo> getCsAdvertiseForWx() throws Exception {
+        return csAdvertiseMapper.getCsAdvertiseForWx();
+    }
 }

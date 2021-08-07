@@ -82,4 +82,12 @@ public interface CsAdvertiseService extends BaseService<CsAdvertise> {
      * @throws Exception
      */
     boolean updateStatusById(CsAdvertiseQueryParam csAdvertiseQueryParam);
+
+    /**
+     * 获取小程序的banners
+     *
+     * @return
+     * @throws Exception
+     */
+    List<CsAdvertiseQueryVo> getCsAdvertiseForWx() throws Exception;
 }

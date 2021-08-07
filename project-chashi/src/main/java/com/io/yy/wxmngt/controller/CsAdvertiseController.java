@@ -175,5 +175,15 @@ public class CsAdvertiseController extends BaseController {
     public ApiResult<Boolean> updateStatusById(@Valid @RequestBody CsAdvertiseQueryParam csAdvertiseQueryPara){
         return ApiResult.ok(csAdvertiseService.updateStatusById(csAdvertiseQueryPara));
     }
+
+    /**
+     * 广告设置分页列表
+     */
+    @PostMapping("/getBannerListForWx")
+    @ApiOperation(value = "获取小程序banner列表", notes = "获取小程序banner列表", response = CsAdvertiseQueryVo.class)
+    public ApiResult<List<CsAdvertiseQueryVo>> getCsAdvertiseForWx() throws Exception {
+        List<CsAdvertiseQueryVo> list = csAdvertiseService.getCsAdvertiseForWx();
+        return ApiResult.ok(list);
+    }
 }
 

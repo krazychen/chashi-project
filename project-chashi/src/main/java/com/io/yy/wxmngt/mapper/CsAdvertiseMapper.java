@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <pre>
@@ -41,4 +42,6 @@ public interface CsAdvertiseMapper extends BaseMapper<CsAdvertise> {
     IPage<CsAdvertiseQueryVo> getCsAdvertisePageList(@Param("page") Page page, @Param("param") CsAdvertiseQueryParam csAdvertiseQueryParam);
 
     Integer updateStatusById(@Param("param") CsAdvertiseQueryParam csAdvertiseQueryParam);
+
+    List<CsAdvertiseQueryVo> getCsAdvertiseForWx();
 }

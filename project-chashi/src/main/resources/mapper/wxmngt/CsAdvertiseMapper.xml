@@ -26,4 +26,13 @@
     <update id="updateStatusById">
         update cs_advertise set status = #{param.status} where id = #{param.id}
     </update>
+
+    <select id="getCsAdvertiseForWx" resultType="com.io.yy.wxmngt.vo.CsAdvertiseQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_advertise
+        WHERE STATUS = 1
+        ORDER BY sort
+        LIMIT 0,3
+    </select>
 </mapper>

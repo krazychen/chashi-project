@@ -413,7 +413,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 /*Data for the table `qrtz_scheduler_state` */
 
 insert  into `qrtz_scheduler_state`(`SCHED_NAME`,`INSTANCE_NAME`,`LAST_CHECKIN_TIME`,`CHECKIN_INTERVAL`) values 
-('quartzScheduler','krislaptop1628244090224',1628244933591,5000);
+('quartzScheduler','krislaptop1628327888202',1628328071377,5000);
 
 /*Table structure for table `qrtz_simple_triggers` */
 
@@ -4331,7 +4331,8 @@ insert  into `sys_config`(`id`,`config_name`,`config_key`,`config_text_value`,`c
 ('4fbe1062-927f-45c4-b0bc-8862b0822d1d','小程序appid','appid','wxee67bc9ae0ead50b','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:02:39','88888888','2021-08-05 18:02:39','0','whyy'),
 ('88a7a9a4-8ce3-48b7-b18c-f10e0d04648b','小程序登录URL','loginUrl','https://api.weixin.qq.com/sns/jscode2session','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:05:28','88888888','2021-08-05 18:05:28','0','whyy'),
 ('8ccd0296-1d4e-4e99-a323-d83bf274644b','微信登陆提醒消息','wx_login_infor_message','舰长，你已经成功登录！','',NULL,'','0','1','',0,0,'1','2020-05-24 23:38:13','1','2020-05-31 23:38:39','0','whyy'),
-('b30c7ee3-a871-4206-b06a-89abfc9540ce','小程序密钥','appSecret','3b855156e3d5f17885d62c30ee313555','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:02:57','88888888','2021-08-05 18:02:57','0','whyy');
+('b30c7ee3-a871-4206-b06a-89abfc9540ce','小程序密钥','appSecret','3b855156e3d5f17885d62c30ee313555','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:02:57','88888888','2021-08-05 18:02:57','0','whyy'),
+('c7d69cb2-1fdd-4ea4-b6de-4c2207fed5c5','首页图片','wx_homepage_static',NULL,'http://localhost:1111/config/resource/9b286c2a31e24d519f6301f5b95b350b202108071719M0FyYWJpYyBMYW5ndWFnZSBDb3Vyc2UgLSBHcmFtbWFyLmpwZw==.jpg','3Arabic Language Course - Grammar.jpg',NULL,'1','1','',0,0,'88888888','2021-08-07 17:19:14','88888888','2021-08-07 17:19:14','0','whyy');
 
 /*Table structure for table `sys_dict_data` */
 
@@ -4969,7 +4970,10 @@ insert  into `sys_menu`(`menu_code`,`parent_code`,`parent_codes`,`tree_sort`,`tr
 ('61000','60000','00000000,60000',100,'1,100','1',3,'首级节点,茶室管理','更新茶室','2','','','','#409EFF','','cs:tearoom:update',NULL,'0','1','2',0,0,'1','88888888','2021-08-04 23:40:41','88888888','2021-08-04 23:40:41',''),
 ('62000','60000','00000000,60000',110,'1,100','1',3,'首级节点,茶室管理','添加茶室','2','','','','#409EFF','','cs:tearoom:add',NULL,'0','1','2',0,0,'1','88888888','2021-08-04 23:41:08','88888888','2021-08-04 23:41:08',''),
 ('63000','60000','00000000,60000',120,'1,100','1',3,'首级节点,茶室管理','删除茶室','2','','','','#409EFF','','cs:tearoom:delete',NULL,'0','1','2',0,0,'1','88888888','2021-08-04 23:41:32','88888888','2021-08-04 23:41:32',''),
-('64000','60000','00000000,60000',130,'1,100','1',3,'首级节点,茶室管理','茶室信息','2','','','','#409EFF','','cs:tearoom:info',NULL,'0','1','2',0,0,'1','88888888','2021-08-04 23:42:06','88888888','2021-08-04 23:42:06','');
+('64000','60000','00000000,60000',130,'1,100','1',3,'首级节点,茶室管理','茶室信息','2','','','','#409EFF','','cs:tearoom:info',NULL,'0','1','2',0,0,'1','88888888','2021-08-04 23:42:06','88888888','2021-08-04 23:42:06',''),
+('70000','00000000','00000000',130,'1','2',2,'首级节点','用户管理','1','','','','#409EFF','','wx:user:page',NULL,'1','1','1',0,0,'1','88888888','2021-08-06 22:56:35','88888888','2021-08-06 22:57:30',''),
+('71000','70000','00000000,70000',100,'1,130','1',3,'首级节点,用户管理','更新用户','2','','','','#409EFF','','wx:user:update',NULL,'0','1','1',0,0,'1','88888888','2021-08-06 22:58:03','88888888','2021-08-06 22:58:54',''),
+('72000','70000','00000000,70000',110,'1,130','1',3,'首级节点,用户管理','用户信息','2','','','','#409EFF','','wx:user:info',NULL,'0','1','1',0,0,'1','88888888','2021-08-06 22:58:40','88888888','2021-08-06 22:58:40','');
 
 /*Table structure for table `sys_msg` */
 
@@ -5330,7 +5334,10 @@ insert  into `sys_role_menu`(`id`,`role_id`,`menu_code`,`deleted`,`version`,`cre
 (1422947532595568643,'1','12010',0,0,'88888888','2021-08-04 23:48:24','88888888','2021-08-04 23:48:24','0','whyy'),
 (1422947532595568644,'1','12011',0,0,'88888888','2021-08-04 23:48:24','88888888','2021-08-04 23:48:24','0','whyy'),
 (1422947532595568645,'1','12012',0,0,'88888888','2021-08-04 23:48:24','88888888','2021-08-04 23:48:24','0','whyy'),
-(1422947532595568646,'1','14005',0,0,'88888888','2021-08-04 23:48:24','88888888','2021-08-04 23:48:24','0','whyy');
+(1422947532595568646,'1','14005',0,0,'88888888','2021-08-04 23:48:24','88888888','2021-08-04 23:48:24','0','whyy'),
+(1423659985956564994,'1288762228375416834','70000',0,0,'88888888','2021-08-06 22:59:26','88888888','2021-08-06 22:59:26','0','whyy'),
+(1423659985981730818,'1288762228375416834','71000',0,0,'88888888','2021-08-06 22:59:26','88888888','2021-08-06 22:59:26','0','whyy'),
+(1423659985981730819,'1288762228375416834','72000',0,0,'88888888','2021-08-06 22:59:26','88888888','2021-08-06 22:59:26','0','whyy');
 
 /*Table structure for table `sys_schedule_job` */
 
@@ -10132,15 +10139,15 @@ CREATE TABLE `wx_user` (
   `email` varchar(300) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '电子邮箱',
   `phone` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '手机号码',
   `gender` int NOT NULL DEFAULT '1' COMMENT '性别，0：女，1：男，默认1',
-  `avatar_url` varchar(1000) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '头像路径',
+  `avatar_url` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '头像路径',
   `signtext` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '个性签名',
-  `openid` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信公众号openid',
-  `unionid` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '绑定的微信号unionid',
+  `open_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信公众号openid',
+  `union_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '绑定的微信号unionid',
   `menber_type` int DEFAULT NULL COMMENT '会员类型',
   `integral` int DEFAULT NULL COMMENT '积分',
   `balance` int DEFAULT NULL COMMENT '余额',
   `remarks` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注信息',
-  `state` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
+  `status` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
   `deleted` int NOT NULL DEFAULT '0' COMMENT '逻辑删除，0：未删除，1：已删除',
   `version` int NOT NULL DEFAULT '0' COMMENT '版本',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
@@ -10153,6 +10160,9 @@ CREATE TABLE `wx_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='微信用户';
 
 /*Data for the table `wx_user` */
+
+insert  into `wx_user`(`id`,`nickname`,`password`,`salt`,`email`,`phone`,`gender`,`avatar_url`,`signtext`,`open_id`,`union_id`,`menber_type`,`integral`,`balance`,`remarks`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
+(1,'testUser','1',NULL,NULL,'13950019129',1,NULL,NULL,NULL,NULL,1,11,11,NULL,1,0,0,'1','2021-08-06 22:47:47',NULL,NULL,NULL,NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

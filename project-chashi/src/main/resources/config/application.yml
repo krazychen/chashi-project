@@ -202,6 +202,8 @@ whyy-system:
       /wx/callback/**=anon
       /wx/getQRCode/**=anon
       /wx/checkLoginQr/**=anon
+      /wxUser/wxLogin=anon
+      /csAdvertise/getBannerListForWx=anon
     # 权限配置
     permission:
       # 排除登陆登出相关
