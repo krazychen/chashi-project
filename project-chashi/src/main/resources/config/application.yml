@@ -204,7 +204,7 @@ whyy-system:
       /wx/checkLoginQr/**=anon
       /wxUser/wxLogin=anon
       /csAdvertise/getBannerListForWx=anon
-      /cwMerchant/getPageListForWw=anon
+      /csMerchant/getPageListForWx=anon
       /csTearoom/getRoomListForWx=anon
     # 权限配置
     permission:

@@ -10141,8 +10141,8 @@ CREATE TABLE `wx_user` (
   `gender` int NOT NULL DEFAULT '1' COMMENT '性别，0：女，1：男，默认1',
   `avatar_url` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '头像路径',
   `signtext` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '个性签名',
-  `open_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信公众号openid',
-  `union_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '绑定的微信号unionid',
+  `openid` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信公众号openid',
+  `unionid` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '绑定的微信号unionid',
   `menber_type` int DEFAULT NULL COMMENT '会员类型',
   `integral` int DEFAULT NULL COMMENT '积分',
   `balance` int DEFAULT NULL COMMENT '余额',
@@ -10161,7 +10161,7 @@ CREATE TABLE `wx_user` (
 
 /*Data for the table `wx_user` */
 
-insert  into `wx_user`(`id`,`nickname`,`password`,`salt`,`email`,`phone`,`gender`,`avatar_url`,`signtext`,`open_id`,`union_id`,`menber_type`,`integral`,`balance`,`remarks`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
+insert  into `wx_user`(`id`,`nickname`,`password`,`salt`,`email`,`phone`,`gender`,`avatar_url`,`signtext`,`openid`,`unionid`,`menber_type`,`integral`,`balance`,`remarks`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values
 (1,'testUser','1',NULL,NULL,'13950019129',1,NULL,NULL,NULL,NULL,1,11,11,NULL,1,0,0,'1','2021-08-06 22:47:47',NULL,NULL,NULL,NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
