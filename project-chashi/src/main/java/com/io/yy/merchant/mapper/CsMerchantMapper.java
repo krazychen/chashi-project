@@ -49,4 +49,24 @@ public interface CsMerchantMapper extends BaseMapper<CsMerchant> {
      * @throws Exception
      */
     CsMerchantQueryVo getCsMerchantByOfficeCode(String officeCode) throws Exception;
+
+    /**
+     * 获取分页对象
+     *
+     * @param page
+     * @param csMerchantQueryParam
+     * @return
+     */
+    IPage<CsMerchantQueryVo> getCsMerchantPageListOrderByPriceASC(@Param("page") Page page, @Param("param") CsMerchantQueryParam csMerchantQueryParam);
+
+    /**
+     * 获取分页对象
+     *
+     * @param page
+     * @param csMerchantQueryParam
+     * @return
+     */
+    IPage<CsMerchantQueryVo> getCsMerchantPageListOrderByPriceDESC(@Param("page") Page page, @Param("param") CsMerchantQueryParam csMerchantQueryParam);
+
+
 }

@@ -41,7 +41,7 @@ public class CsTearoomExportQueryVo implements Serializable {
 
     @ApiModelProperty(value = "建议使用人数")
     @ExcelField(title="建议使用人数", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=5)
-    private Integer recomNumUsers;
+    private String recomNumUsers;
 
     @ApiModelProperty(value = "茶室封面url")
     @ExcelField(title="茶室封面", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=6)

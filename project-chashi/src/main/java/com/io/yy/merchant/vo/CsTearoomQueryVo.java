@@ -38,11 +38,11 @@ public class CsTearoomQueryVo implements Serializable {
     @ApiModelProperty(value = "小时金额")
     private Integer hoursAmount;
 
-    @ApiModelProperty(value = "起订时间")
+    @ApiModelProperty(value = "起订时间，值为1到10,1是1个小时，2个2个小时，以此类推")
     private String startTime;
 
     @ApiModelProperty(value = "建议使用人数")
-    private Integer recomNumUsers;
+    private String recomNumUsers;
 
     @ApiModelProperty(value = "茶室封面url")
     private String roomLogoUrl;
@@ -58,6 +58,15 @@ public class CsTearoomQueryVo implements Serializable {
 
     @ApiModelProperty(value = "订单开门方式")
     private Integer doorOpenMethod;
+
+    @ApiModelProperty(value = "茶室星级，默认值5,1~5星，固定显示")
+    private int rate = 5;
+
+    @ApiModelProperty(value = "已购买次数, 为空界面显示0，固定显示")
+    private int buyRecord;
+
+    @ApiModelProperty(value = "会员起订金额，若有值显示会员金额，若为0或者空，则界面不显示")
+    private int menberAccount = 5;
 
     @ApiModelProperty(value = "排序")
     private Integer sort;

@@ -121,4 +121,10 @@ public interface SysAreaService extends BaseService<SysArea> {
      * @return
      */
     List<SysAreaQueryVo> getAreaByAreaType(String areaType,String parentCode);
+
+    /**
+     * 获取发布状态的城市列表
+     * @return
+     */
+    List<SysAreaQueryVo> getReleaseCity();
 }

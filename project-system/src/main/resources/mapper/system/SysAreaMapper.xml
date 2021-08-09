@@ -151,4 +151,8 @@
             and parent_code = #{parentCode}
         </if>
     </select>
+
+    <select id="getReleaseCity" resultType="com.io.yy.system.vo.SysAreaQueryVo">
+        SELECT * FROM sys_area WHERE STATUS =1 AND tree_level=2
+    </select>
 </mapper>

@@ -262,4 +262,15 @@ public class SysAreaServiceImpl extends BaseServiceImpl<SysAreaMapper, SysArea> 
         List<SysAreaQueryVo> list = sysAreaMapper.getAreaByAreaType(areaType,parentCode);
         return list;
     }
+
+    /**
+     * 获取发布状态的城市列表
+     *
+     * @return
+     */
+    @Override
+    public List<SysAreaQueryVo> getReleaseCity() {
+        List<SysAreaQueryVo> list = sysAreaMapper.getReleaseCity();
+        return list;
+    }
 }

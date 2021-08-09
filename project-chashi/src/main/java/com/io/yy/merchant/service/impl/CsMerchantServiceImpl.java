@@ -16,6 +16,9 @@ import com.io.yy.system.service.SysOfficeService;
 import com.io.yy.system.service.SysUserRoleService;
 import com.io.yy.system.service.SysUserService;
 import com.io.yy.util.UUIDUtil;
+import com.spatial4j.core.context.SpatialContext;
+import com.spatial4j.core.distance.DistanceUtils;
+import com.spatial4j.core.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +55,8 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
 
     @Autowired
     private SysUserRoleService sysUserRoleService;
+
+    private SpatialContext spatialContext = SpatialContext.GEO;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -200,6 +205,26 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
         return new Paging(iPage);
     }
 
+    @Override
+    public Paging<CsMerchantQueryVo> getCsMerchantPageListForWx(CsMerchantQueryParam csMerchantQueryParam) throws Exception {
+        IPage<CsMerchantQueryVo> iPage = null;
+        Page page = setPageParam(csMerchantQueryParam, null);
+        switch (csMerchantQueryParam.getSize()){
+            case 2:
+                break;
+            case 3:
+                iPage = csMerchantMapper.getCsMerchantPageListOrderByPriceASC(page, csMerchantQueryParam);
+                break;
+            case 4:
+                iPage = csMerchantMapper.getCsMerchantPageListOrderByPriceDESC(page, csMerchantQueryParam);
+                break;
+            default:
+        }
+//        Page page = setPageParam(csMerchantQueryParam, OrderItem.desc("create_time"));
+//        IPage<CsMerchantQueryVo> iPage = csMerchantMapper.getCsMerchantPageList(page, csMerchantQueryParam);
+        return new Paging(iPage);
+    }
+
     /**
      * 通过ID更新status
      *
@@ -212,4 +237,9 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
         return csMerchantMapper.updateStatusById(csMerchantQueryParam) > 0;
     }
 
+    private Rectangle getRectangle(double distance, double userLng, double userLat) {
+        return spatialContext.getDistCalc()
+                .calcBoxByDistFromPt(spatialContext.makePoint(userLng, userLat),
+                        distance * DistanceUtils.KM_TO_DEG, spatialContext, null);
+    }
 }

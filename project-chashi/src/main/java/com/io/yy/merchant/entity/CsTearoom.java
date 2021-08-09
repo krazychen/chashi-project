@@ -54,7 +54,7 @@ public class CsTearoom extends BaseEntity {
     private String startTime;
 
     @ApiModelProperty(value = "建议使用人数")
-    private Integer recomNumUsers;
+    private String recomNumUsers;
 
     @ApiModelProperty(value = "茶室封面url")
     private String roomLogoUrl;

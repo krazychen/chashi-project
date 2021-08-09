@@ -78,4 +78,10 @@ public interface SysAreaMapper extends BaseMapper<SysArea> {
      * @return
      */
     List<SysAreaQueryVo> getAreaByAreaType(@Param("areaType") String areaType,@Param("parentCode") String parentCode);
+
+    /**
+     * 获取发布状态的城市列表
+     * @return
+     */
+    List<SysAreaQueryVo> getReleaseCity();
 }

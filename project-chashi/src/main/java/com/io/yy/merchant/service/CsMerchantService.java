@@ -111,6 +111,16 @@ public interface CsMerchantService extends BaseService<CsMerchant> {
     Paging<CsMerchantQueryVo> getCsMerchantPageList(CsMerchantQueryParam csMerchantQueryParam) throws Exception;
 
     /**
+     * 获取分页对象
+     *
+     * @param csMerchantQueryParam
+     * @return
+     * @throws Exception
+     */
+    Paging<CsMerchantQueryVo> getCsMerchantPageListForWx(CsMerchantQueryParam csMerchantQueryParam) throws Exception;
+
+
+    /**
      * 通过ID更新status
      *
      * @param csMerchantQueryParam

@@ -54,6 +54,14 @@
         </dependency>
         <!--微信解密-->
 
+        <!--附近的商家正方形计算库 -->
+        <dependency>
+            <groupId>com.spatial4j</groupId>
+            <artifactId>spatial4j</artifactId>
+            <version>0.5</version>
+        </dependency>
+        <!--附近的商家正方形计算库 -->
+
     </dependencies>
 
     <build>

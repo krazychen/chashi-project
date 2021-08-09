@@ -176,5 +176,14 @@ public class SysAreaController extends BaseController {
         return ApiResult.ok(list);
     }
 
+    /**
+     * 根据类型 跟父节点 查询直属下级
+     */
+    @GetMapping("/getReleaseCity")
+    @ApiOperation(value = "获取发布状态的城市列表", notes = "获取发布状态的城市列表", response = SysAreaQueryVo.class)
+    public ApiResult<List<SysAreaQueryVo>> getReleaseCity() throws Exception {
+        List<SysAreaQueryVo> list = sysAreaService.getReleaseCity();
+        return ApiResult.ok(list);
+    }
 }
 

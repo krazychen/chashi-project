@@ -14,7 +14,7 @@
         <result column="facilities_name" property="facilitiesName" javaType="java.lang.String"/>
         <result column="hours_amount" property="hoursAmount" javaType="java.lang.Integer"/>
         <result column="start_time" property="startTime" javaType="java.lang.String"/>
-        <result column="recom_num_users" property="recomNumUsers" javaType="java.lang.Integer"/>
+        <result column="recom_num_users" property="recomNumUsers" javaType="java.lang.String"/>
         <result column="room_logo_url" property="roomLogoUrl" javaType="java.lang.String"/>
         <result column="room_logo_name" property="roomLogoName" javaType="java.lang.String"/>
         <result column="room_banner_url" property="roomBannerUrl" javaType="java.lang.String"/>

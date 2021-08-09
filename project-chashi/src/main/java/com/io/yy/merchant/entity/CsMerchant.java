@@ -53,6 +53,9 @@ public class CsMerchant extends BaseEntity {
     @ApiModelProperty(value = "订单手续费")
     private Integer orderFee;
 
+    @ApiModelProperty(value = "所在城市code")
+    private String cityCode;
+
     @ApiModelProperty(value = "所在城市")
     private String city;
 

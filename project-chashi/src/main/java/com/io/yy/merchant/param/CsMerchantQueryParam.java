@@ -39,4 +39,16 @@ public class CsMerchantQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
+
+    @ApiModelProperty(value = "排序方式，1：智能、按照距离、价格、时间，2：最近距离，默认5公里，3：按照价格从小到大，4：按照价格从大到小")
+    private String sortType;
+
+    @ApiModelProperty(value = "用户精度")
+    private String userLng;
+
+    @ApiModelProperty(value = "用户维度")
+    private String userLat;
+
+    @ApiModelProperty(value = "附近的商店的默认公里数10KM")
+    private int distance = 10;
 }
