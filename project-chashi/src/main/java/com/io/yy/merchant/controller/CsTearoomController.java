@@ -276,7 +276,7 @@ public class CsTearoomController extends BaseController {
     /**
      * 通过商户ID获取茶室管理小程序分页列表
      */
-    @PostMapping("/getRoomListForWx")
+    @PostMapping("/getRoomListForWx/{merchantId}")
     @ApiOperation(value = "通过商户ID获取茶室管理小程序分页列表", notes = "通过商户ID获取茶室管理小程序分页列表", response = CsTearoomQueryVo.class)
     public ApiResult<Paging<CsTearoomQueryVo>> getRoomListForWx(@PathVariable("merchantId") Long merchantId) throws Exception {
         CsTearoomQueryParam csTearoomQueryParam = new CsTearoomQueryParam();
