@@ -270,7 +270,7 @@ public class CsMerchantController extends BaseController {
     @PostMapping("/getPageListForWx")
     @ApiOperation(value = "获取wx CsMerchant分页列表", notes = "商家管理wx分页列表", response = CsMerchantQueryVo.class)
     public ApiResult<Paging<CsMerchantQueryVo>> getCsMerchantPageListForWx(@Valid @RequestBody CsMerchantQueryParam csMerchantQueryParam) throws Exception {
-        Paging<CsMerchantQueryVo> paging = csMerchantService.getCsMerchantPageList(csMerchantQueryParam);
+        Paging<CsMerchantQueryVo> paging = csMerchantService.getCsMerchantPageListForWx(csMerchantQueryParam);
         return ApiResult.ok(paging);
     }
 }

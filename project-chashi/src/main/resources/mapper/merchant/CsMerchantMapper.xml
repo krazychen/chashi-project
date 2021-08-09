@@ -39,6 +39,9 @@
     <select id="getCsMerchantPageListOrderByPriceASC" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
         SELECT cm.* FROM cs_merchant cm
         LEFT JOIN cs_tearoom ct ON cm.id=ct.merchant_id
+        <if test="param.cityCode != null and param.cityCode.trim() != ''">
+        where cm.city_code = #{param.cityCode}
+        </if>
         GROUP BY cm.id
         ORDER BY ct.hours_amount ASC
     </select>
@@ -46,9 +49,38 @@
     <select id="getCsMerchantPageListOrderByPriceDESC" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
         SELECT cm.* FROM cs_merchant cm
         LEFT JOIN cs_tearoom ct ON cm.id=ct.merchant_id
+        <if test="param.cityCode != null and param.cityCode.trim() != ''">
+            where cm.city_code = #{param.cityCode}
+        </if>
         GROUP BY cm.id
         ORDER BY ct.hours_amount DESC
     </select>
 
+    <select id="getCsMerchantPageListOrderByNear" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
+        SELECT cm.* FROM cs_merchant cm
+        WHERE 1 = 1
+        <if test="param.minlng != null and param.minlng != 0">
+            and (longitude BETWEEN ${param.minlng} AND ${param.maxlng})
+        </if>
+        <if test="param.minlat != null and param.minlat != 0">
+            and (latitude BETWEEN ${param.minlat} AND ${param.maxlat})
+        </if>
+    </select>
 
+    <select id="getCsMerchantPageListOrderByDefault" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
+        SELECT cm.* FROM cs_merchant cm
+        LEFT JOIN cs_tearoom ct ON cm.id=ct.merchant_id
+        where 1=1
+        <if test="param.cityCode != null and param.cityCode.trim() != ''">
+            and cm.city_code = #{param.cityCode}
+        </if>
+        <if test="param.minlng != null and param.minlng != 0">
+            and (cm.longitude BETWEEN ${param.minlng} AND ${param.maxlng})
+        </if>
+        <if test="param.minlat != null and param.minlat != 0">
+            and (cm.latitude BETWEEN ${param.minlat} AND ${param.maxlat})
+        </if>
+        GROUP BY cm.id
+        ORDER BY ct.hours_amount ASC
+    </select>
 </mapper>

@@ -16,9 +16,11 @@ import com.io.yy.system.service.SysOfficeService;
 import com.io.yy.system.service.SysUserRoleService;
 import com.io.yy.system.service.SysUserService;
 import com.io.yy.util.UUIDUtil;
+import com.io.yy.util.lang.StringUtils;
 import com.spatial4j.core.context.SpatialContext;
 import com.spatial4j.core.distance.DistanceUtils;
 import com.spatial4j.core.shape.Rectangle;
+import com.spatial4j.core.shape.impl.RectangleImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -208,9 +211,27 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
     @Override
     public Paging<CsMerchantQueryVo> getCsMerchantPageListForWx(CsMerchantQueryParam csMerchantQueryParam) throws Exception {
         IPage<CsMerchantQueryVo> iPage = null;
+        Rectangle rectangle = null;
         Page page = setPageParam(csMerchantQueryParam, null);
         switch (csMerchantQueryParam.getSize()){
             case 2:
+                //1.获取外接正方形, 经纬度为空，以厦门市的经纬度为准
+                if(StringUtils.isNotEmpty(csMerchantQueryParam.getUserLng())&&StringUtils.isNotEmpty(csMerchantQueryParam.getUserLat())){
+                    rectangle = getRectangle(csMerchantQueryParam.getDistance(),Double.valueOf(csMerchantQueryParam.getUserLng()), Double.valueOf(csMerchantQueryParam.getUserLat()));
+                }else{
+                    rectangle = getRectangle(csMerchantQueryParam.getDistance(),Double.valueOf("118.0894"), Double.valueOf("24.4798"));
+                }
+                //2.获取位置在正方形内的所有用户
+                csMerchantQueryParam.setMinlng(rectangle.getMinX());
+                csMerchantQueryParam.setMaxlng(rectangle.getMaxX());
+                csMerchantQueryParam.setMinlat(rectangle.getMinY());
+                csMerchantQueryParam.setMaxlat(rectangle.getMaxY());
+                iPage = csMerchantMapper.getCsMerchantPageListOrderByNear(page,csMerchantQueryParam);
+//                //3.剔除半径超过指定距离的多余用户
+//                List<CsMerchantQueryVo> csMerchantQueryVos = iPage.getRecords().stream()
+//                        .filter(a -> getDistance(Double.valueOf(a.getLongitude()), Double.valueOf(a.getLatitude()), Double.valueOf(csMerchantQueryParam.getUserLng()), Double.valueOf(csMerchantQueryParam.getUserLat())    ) <= csMerchantQueryParam.getDistance())
+//                        .collect(Collectors.toList());
+//                iPage.setRecords(csMerchantQueryVos);
                 break;
             case 3:
                 iPage = csMerchantMapper.getCsMerchantPageListOrderByPriceASC(page, csMerchantQueryParam);
@@ -219,6 +240,23 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
                 iPage = csMerchantMapper.getCsMerchantPageListOrderByPriceDESC(page, csMerchantQueryParam);
                 break;
             default:
+                //1.获取外接正方形, 经纬度为
+                if(StringUtils.isNotEmpty(csMerchantQueryParam.getUserLng())&&StringUtils.isNotEmpty(csMerchantQueryParam.getUserLat())){
+                    rectangle = getRectangle(csMerchantQueryParam.getDistance(),Double.valueOf(csMerchantQueryParam.getUserLng()), Double.valueOf(csMerchantQueryParam.getUserLat()));
+                    csMerchantQueryParam.setMinlng(rectangle.getMinX());
+                    csMerchantQueryParam.setMaxlng(rectangle.getMaxX());
+                    csMerchantQueryParam.setMinlat(rectangle.getMinY());
+                    csMerchantQueryParam.setMaxlat(rectangle.getMaxY());
+                }else{
+                    csMerchantQueryParam.setMinlng(0);
+                    csMerchantQueryParam.setMaxlng(0);
+                    csMerchantQueryParam.setMinlat(0);
+                    csMerchantQueryParam.setMaxlat(0);
+                }
+                //2.获取位置在正方形内的所有用户
+                page = setPageParam(csMerchantQueryParam, OrderItem.desc("create_time"));
+                iPage = csMerchantMapper.getCsMerchantPageListOrderByNear(page,csMerchantQueryParam);
+
         }
 //        Page page = setPageParam(csMerchantQueryParam, OrderItem.desc("create_time"));
 //        IPage<CsMerchantQueryVo> iPage = csMerchantMapper.getCsMerchantPageList(page, csMerchantQueryParam);
@@ -237,9 +275,46 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
         return csMerchantMapper.updateStatusById(csMerchantQueryParam) > 0;
     }
 
+    // 计算半径
+
+    //地球半径常量，km
+    private static final double EARTH_RADIUS = 6378.137;
+
     private Rectangle getRectangle(double distance, double userLng, double userLat) {
         return spatialContext.getDistCalc()
                 .calcBoxByDistFromPt(spatialContext.makePoint(userLng, userLat),
                         distance * DistanceUtils.KM_TO_DEG, spatialContext, null);
     }
+
+    /**
+     * 根据地球上任意两点的经纬度计算两点间的距离,返回距离单位：km
+     *
+     * @param longitude1 坐标1 经度
+     * @param latitude1  坐标1 纬度
+     * @param longitude2 坐标2 经度
+     * @param latitude2  坐标2 纬度
+     * @return 返回km
+     */
+    public static double getDistance(double longitude1, double latitude1, double longitude2, double latitude2) {
+        double radLat1 = rad(latitude1);
+        double radLat2 = rad(latitude2);
+        double a = radLat1 - radLat2;
+        double b = rad(longitude1) - rad(longitude2);
+        double distance = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
+                Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+        distance = distance * EARTH_RADIUS;
+        distance = Math.round(distance * 10000) / 10000.0;
+        return distance;
+    }
+
+    /**
+     * 角度转弧度
+     *
+     * @param d
+     * @return
+     */
+    private static double rad(double d) {
+        return d * Math.PI / 180.0;
+    }
 }
+

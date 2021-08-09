@@ -51,4 +51,19 @@ public class CsMerchantQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "附近的商店的默认公里数10KM")
     private int distance = 10;
+
+    @ApiModelProperty(value = "城市代码")
+    private String cityCode;
+
+    @ApiModelProperty(value = "附近最小lng")
+    private double minlng;
+
+    @ApiModelProperty(value = "附近最大lng")
+    private double maxlng;
+
+    @ApiModelProperty(value = "附近最小lat")
+    private double minlat;
+
+    @ApiModelProperty(value = "附近最大lat")
+    private double maxlat;
 }

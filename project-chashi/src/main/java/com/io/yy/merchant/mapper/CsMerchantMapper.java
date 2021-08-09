@@ -68,5 +68,20 @@ public interface CsMerchantMapper extends BaseMapper<CsMerchant> {
      */
     IPage<CsMerchantQueryVo> getCsMerchantPageListOrderByPriceDESC(@Param("page") Page page, @Param("param") CsMerchantQueryParam csMerchantQueryParam);
 
+    /**
+     * 获取分页对象
+     *
+     * @param csMerchantQueryParam
+     * @return
+     */
+    IPage<CsMerchantQueryVo> getCsMerchantPageListOrderByNear(@Param("page") Page page, @Param("param") CsMerchantQueryParam csMerchantQueryParam);
+
+    /**
+     * 获取分页对象
+     *
+     * @param csMerchantQueryParam
+     * @return
+     */
+    IPage<CsMerchantQueryVo> getCsMerchantPageListOrderByDefault(@Param("page") Page page, @Param("param") CsMerchantQueryParam csMerchantQueryParam);
 
 }

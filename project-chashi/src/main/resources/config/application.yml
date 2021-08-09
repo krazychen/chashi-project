@@ -348,7 +348,7 @@ spring:
 # swagger配置
 swagger:
   base:
-    package: com.io.cs
+    package: com.io.yy
   contact:
     email: 37485345@qq.com
     name: kris
