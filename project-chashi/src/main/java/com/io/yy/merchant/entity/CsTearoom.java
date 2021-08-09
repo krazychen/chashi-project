@@ -48,7 +48,7 @@ public class CsTearoom extends BaseEntity {
     private String facilitiesName;
 
     @ApiModelProperty(value = "小时金额")
-    private Integer hoursAmount;
+    private Double hoursAmount;
 
     @ApiModelProperty(value = "起订时间")
     private String startTime;

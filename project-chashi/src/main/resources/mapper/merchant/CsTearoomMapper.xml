@@ -12,7 +12,7 @@
         <result column="room_name" property="roomName" javaType="java.lang.String"/>
         <result column="facilities_id" property="facilitiesId" javaType="java.lang.String"/>
         <result column="facilities_name" property="facilitiesName" javaType="java.lang.String"/>
-        <result column="hours_amount" property="hoursAmount" javaType="java.lang.Integer"/>
+        <result column="hours_amount" property="hoursAmount" javaType="java.lang.Double"/>
         <result column="start_time" property="startTime" javaType="java.lang.String"/>
         <result column="recom_num_users" property="recomNumUsers" javaType="java.lang.String"/>
         <result column="room_logo_url" property="roomLogoUrl" javaType="java.lang.String"/>

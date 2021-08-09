@@ -36,7 +36,7 @@ public class CsTearoomQueryVo implements Serializable {
     private String facilitiesName;
 
     @ApiModelProperty(value = "小时金额")
-    private Integer hoursAmount;
+    private Double hoursAmount;
 
     @ApiModelProperty(value = "起订时间，值为1到10,1是1个小时，2个2个小时，以此类推")
     private String startTime;
@@ -65,8 +65,8 @@ public class CsTearoomQueryVo implements Serializable {
     @ApiModelProperty(value = "已购买次数, 为空界面显示0，固定显示")
     private int buyRecord;
 
-    @ApiModelProperty(value = "会员起订金额，若有值显示会员金额，若为0或者空，则界面不显示")
-    private int menberAccount = 5;
+    @ApiModelProperty(value = "会员优惠金额，若有值显示会员金额，若为0或者空，则界面不显示")
+    private Double menberAmount;
 
     @ApiModelProperty(value = "排序")
     private Integer sort;

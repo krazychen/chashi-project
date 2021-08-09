@@ -158,7 +158,7 @@ CREATE TABLE `cs_tearoom` (
   `room_name` varchar(255) NOT NULL COMMENT '茶室名称',
   `facilities_id` varchar(500) DEFAULT NULL COMMENT '设施id（多个，隔开）',
   `facilities_name` varchar(500) DEFAULT NULL COMMENT '设施名（多个，隔开）',
-  `hours_amount` int DEFAULT NULL COMMENT '小时金额',
+  `hours_amount` double DEFAULT NULL COMMENT '小时金额',
   `start_time` varchar(100) DEFAULT NULL COMMENT '起订时间',
   `recom_num_users` varchar(20) DEFAULT NULL COMMENT '建议使用人数',
   `room_logo_url` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '茶室封面url',
