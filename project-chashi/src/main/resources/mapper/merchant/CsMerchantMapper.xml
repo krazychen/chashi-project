@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, merchant_name, merchant_account, merchant_password, order_fee, city, address, longitude, latitude, logo_url_value, logo_url_name, carousel_url_value, carousel_url_name, office_code, contact_phonse, label_id, label_name, facilities_id, facilities_name, services_id, services_name, order_refund_fee, merchant_info, usage_notice, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, merchant_name, merchant_account, merchant_password, order_fee, city, address, longitude, latitude, logo_url_value, logo_url_name, carousel_url_value, carousel_url_name, office_code, contact_phonse, label_id, label_name, facilities_id, facilities_name, services_id, services_name, order_refund_fee, merchant_info, usage_notice, start_time, end_time, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <select id="getCsMerchantById" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
@@ -23,7 +23,7 @@
         select
         <include refid="Base_Column_List"/>
         from cs_merchant
-        where deleted = 0
+        where deleted = 0 and status = 1
         <if test="param.merchantName != null and param.merchantName.trim() != ''">
             and merchant_name like concat('%', #{param.merchantName}, '%')
         </if>

@@ -126,6 +126,8 @@ CREATE TABLE `cs_merchant` (
   `order_refund_fee` int DEFAULT NULL COMMENT '订单退款手续费',
   `merchant_info` varchar(1000) DEFAULT NULL COMMENT '商户简介',
   `usage_notice` varchar(1000) DEFAULT NULL COMMENT '使用须知',
+  `start_time` varchar(10) DEFAULT NULL COMMENT '开始营业时间',
+  `end_time` varchar(10) DEFAULT NULL COMMENT '结束营业时间',
   `status` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
   `deleted` int NOT NULL DEFAULT '0' COMMENT '逻辑删除，0：未删除，1：已删除',
   `version` int NOT NULL DEFAULT '0' COMMENT '版本',
@@ -140,8 +142,8 @@ CREATE TABLE `cs_merchant` (
 
 /*Data for the table `cs_merchant` */
 
-insert  into `cs_merchant`(`id`,`merchant_name`,`merchant_account`,`merchant_password`,`order_fee`,`city`,`address`,`longitude`,`latitude`,`logo_url_value`,`logo_url_name`,`carousel_url_value`,`carousel_url_name`,`office_code`,`contact_phonse`,`label_id`,`label_name`,`facilities_id`,`facilities_name`,`services_id`,`services_name`,`order_refund_fee`,`merchant_info`,`usage_notice`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
-(12633691073123,'商店4','shangdian4','123456',11,'','',NULL,NULL,'http://localhost:1111/config/resource/13eb88903d974c68bd24b4ec3f4d7022202108032320M0FyYWJpYyBMYW5ndWFnZSBDb3Vyc2UgLSBHcmFtbWFyLmpwZw==.jpg','','http://localhost:1111/config/resource/0d21268794ed469ea24ddb1688d55c4f202108032320M2Jpb2xvZ3kuanBn.jpg,http://localhost:1111/config/resource/da729778e32b4325b24233bdaaa24903202108051503R2VvZ3JhcGh5LmpwZw==.jpg','3biology.jpg,Geography.jpg','4a8b8349560b4128a08cbce7b9c42377','123456','12633691073116','','','','','',0,'<p>123</p>','<p>2222</p>',1,0,0,NULL,'2021-08-02 18:13:42',NULL,NULL,'4a8b8349560b4128a08cbce7b9c42377','商店4');
+insert  into `cs_merchant`(`id`,`merchant_name`,`merchant_account`,`merchant_password`,`order_fee`,`city`,`address`,`longitude`,`latitude`,`logo_url_value`,`logo_url_name`,`carousel_url_value`,`carousel_url_name`,`office_code`,`contact_phonse`,`label_id`,`label_name`,`facilities_id`,`facilities_name`,`services_id`,`services_name`,`order_refund_fee`,`merchant_info`,`usage_notice`,`start_time`,`end_time`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
+(12633691073123,'商店4','shangdian4','123456',11,'厦门市','福建省厦门市思明区湖滨北路76号','118.08987','24.477347','http://localhost:1111/config/resource/123e493625e849e088716ae286d37703202108091103a2VjaGVuZzEuanBn.jpg','kecheng1.jpg','http://localhost:1111/config/resource/0d21268794ed469ea24ddb1688d55c4f202108032320M2Jpb2xvZ3kuanBn.jpg,http://localhost:1111/config/resource/da729778e32b4325b24233bdaaa24903202108051503R2VvZ3JhcGh5LmpwZw==.jpg','3biology.jpg,Geography.jpg','4a8b8349560b4128a08cbce7b9c42377','123456','12633691073116','','','','','',0,'<p>123</p>','<p>2222</p>','08:00','23:30',1,0,0,NULL,'2021-08-02 18:13:42',NULL,NULL,'4a8b8349560b4128a08cbce7b9c42377','商店4');
 
 /*Table structure for table `cs_tearoom` */
 
@@ -413,7 +415,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 /*Data for the table `qrtz_scheduler_state` */
 
 insert  into `qrtz_scheduler_state`(`SCHED_NAME`,`INSTANCE_NAME`,`LAST_CHECKIN_TIME`,`CHECKIN_INTERVAL`) values 
-('quartzScheduler','krislaptop1628327888202',1628328071377,5000);
+('quartzScheduler','krislaptop1628478132315',1628478495368,5000);
 
 /*Table structure for table `qrtz_simple_triggers` */
 
@@ -5532,7 +5534,7 @@ insert  into `sys_user`(`is_wx`,`id`,`username`,`nickname`,`password`,`salt`,`em
 ('0',1277903568103362562,'123','123','0bd1923e403d19e35079905fdd9d3f283cdb6fbcfe485421ecdf1abf00b33ff7','4c261d85030d30182352018fbd3b39ce',NULL,NULL,'',1,NULL,NULL,NULL,NULL,NULL,'2',NULL,NULL,'0','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,0,0,'1',NULL,'1',NULL,'10000','whyy'),
 ('0',1287404795155501057,'co-1','co-1','074dc7706a99a02d7c86788518ace50cca49ff63e70c5557a873533effd32060','d4b9f8249c0f041cb5cb368bcfbc1e1c',NULL,NULL,'',1,NULL,NULL,NULL,NULL,NULL,'2',NULL,NULL,'0','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,0,0,'1','2020-07-26 23:11:18','1','2020-07-26 23:11:18','10000','组织管理'),
 ('0',1289243524560097282,'test-123','test-123','8633b9a0c288c59a66a03f64b92e359eb07d77b66eae43a463a049fd8fa36605','87041a29249d1e62ffeec53d119ee336',NULL,NULL,'',1,NULL,NULL,NULL,NULL,NULL,'1',NULL,NULL,'0','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,0,0,'1','2020-08-01 00:56:24','1','2020-08-01 00:56:24','10000','组织管理'),
-('0',1422138530651451393,'shangdian4','shangdian4','3938ad1cd66485c816b95e4335a6eff34fb54b38be07c6db00c3578cdec26b90','be77c22afad171807c58676745c72fc3',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'2',NULL,NULL,'0','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,0,0,'88888888','2021-08-02 18:13:42','88888888','2021-08-02 18:13:42','4a8b8349560b4128a08cbce7b9c42377',NULL);
+('0',1422138530651451393,'shangdian4','shangdian4','0174a0d589302eea4f15f9cf3f58a61fa67a13c47d22377e68144b183828dac5','100b05621f963f3345e2c6ff04d1b9c0',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'2',NULL,NULL,'0','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,0,0,'88888888','2021-08-02 18:13:42','88888888','2021-08-02 18:13:42','4a8b8349560b4128a08cbce7b9c42377',NULL);
 
 /*Table structure for table `sys_user_office` */
 
@@ -10134,15 +10136,15 @@ DROP TABLE IF EXISTS `wx_user`;
 CREATE TABLE `wx_user` (
   `id` bigint NOT NULL COMMENT '主键',
   `nickname` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '昵称',
-  `password` varchar(100) COLLATE utf8mb4_general_ci NOT NULL COMMENT '登录密码',
+  `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '登录密码',
   `salt` varchar(32) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '盐值',
   `email` varchar(300) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '电子邮箱',
   `phone` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '手机号码',
   `gender` int NOT NULL DEFAULT '1' COMMENT '性别，0：女，1：男，默认1',
   `avatar_url` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '头像路径',
   `signtext` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '个性签名',
-  `openid` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信公众号openid',
-  `unionid` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '绑定的微信号unionid',
+  `openid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信公众号openid',
+  `unionid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '绑定的微信号unionid',
   `menber_type` int DEFAULT NULL COMMENT '会员类型',
   `integral` int DEFAULT NULL COMMENT '积分',
   `balance` int DEFAULT NULL COMMENT '余额',
@@ -10161,7 +10163,7 @@ CREATE TABLE `wx_user` (
 
 /*Data for the table `wx_user` */
 
-insert  into `wx_user`(`id`,`nickname`,`password`,`salt`,`email`,`phone`,`gender`,`avatar_url`,`signtext`,`openid`,`unionid`,`menber_type`,`integral`,`balance`,`remarks`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values
+insert  into `wx_user`(`id`,`nickname`,`password`,`salt`,`email`,`phone`,`gender`,`avatar_url`,`signtext`,`openid`,`unionid`,`menber_type`,`integral`,`balance`,`remarks`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
 (1,'testUser','1',NULL,NULL,'13950019129',1,NULL,NULL,NULL,NULL,1,11,11,NULL,1,0,0,'1','2021-08-06 22:47:47',NULL,NULL,NULL,NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

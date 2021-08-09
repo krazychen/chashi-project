@@ -110,6 +110,12 @@ public class CsMerchant extends BaseEntity {
     @ApiModelProperty(value = "使用须知")
     private String usageNotice;
 
+    @ApiModelProperty(value = "开始营业时间")
+    private String startTime;
+
+    @ApiModelProperty(value = "结束营业时间")
+    private String endTime;
+
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
 
