@@ -262,10 +262,16 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
 //        IPage<CsMerchantQueryVo> iPage = csMerchantMapper.getCsMerchantPageList(page, csMerchantQueryParam);
 
         //计算用户和商店的距离
-        iPage.getRecords().stream().forEach(
-                a -> a.setMerchantDistance(
-                        getDistance(Double.valueOf(a.getLongitude()), Double.valueOf(a.getLatitude()),
-                                Double.valueOf(csMerchantQueryParam.getUserLng()), Double.valueOf(csMerchantQueryParam.getUserLat()))));
+        if(StringUtils.isNotEmpty(csMerchantQueryParam.getUserLng())&&StringUtils.isNotEmpty(csMerchantQueryParam.getUserLat())) {
+            iPage.getRecords().stream().forEach(
+                    a -> a.setMerchantDistance(
+                            getDistance(Double.valueOf(a.getLongitude()), Double.valueOf(a.getLatitude()),
+                                    Double.valueOf(csMerchantQueryParam.getUserLng()), Double.valueOf(csMerchantQueryParam.getUserLat()))));
+        }else{
+            iPage.getRecords().stream().forEach(
+                    a -> a.setMerchantDistance(Double.valueOf(0)));
+        }
+
         return new Paging(iPage);
     }
 
