@@ -41,7 +41,7 @@ public class WhyySystemGenerator {
 
         // 组件作者等配置
         codeGenerator
-                .setModuleName("wxops")
+                .setModuleName("merchant")
                 .setAuthor("kris");
 
         // 生成策略
@@ -77,7 +77,7 @@ public class WhyySystemGenerator {
         // 需要生成的表数组
         // xxx,yyy,zzz为需要生成代码的表名称
         String[] tables = {
-                "wx_user"
+                "cs_member_card"
         };
 
         // 循环生成

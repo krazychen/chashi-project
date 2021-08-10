@@ -114,9 +114,9 @@ public class CsAdvertiseController extends BaseController {
                     fileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
-            csAdvertise.setPicUrl(fileUrls);
-            csAdvertise.setPicName(fileNames);
         }
+        csAdvertise.setPicUrl(fileUrls);
+        csAdvertise.setPicName(fileNames);
 
         boolean flag = csAdvertiseService.updateCsAdvertise(csAdvertise);
         return ApiResult.result(flag);

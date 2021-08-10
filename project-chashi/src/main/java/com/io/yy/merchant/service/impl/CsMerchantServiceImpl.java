@@ -260,6 +260,12 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
         }
 //        Page page = setPageParam(csMerchantQueryParam, OrderItem.desc("create_time"));
 //        IPage<CsMerchantQueryVo> iPage = csMerchantMapper.getCsMerchantPageList(page, csMerchantQueryParam);
+
+        //计算用户和商店的距离
+        iPage.getRecords().stream().forEach(
+                a -> a.setMerchantDistance(
+                        getDistance(Double.valueOf(a.getLongitude()), Double.valueOf(a.getLatitude()),
+                                Double.valueOf(csMerchantQueryParam.getUserLng()), Double.valueOf(csMerchantQueryParam.getUserLat()))));
         return new Paging(iPage);
     }
 

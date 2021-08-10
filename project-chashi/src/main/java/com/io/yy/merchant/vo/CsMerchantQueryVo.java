@@ -103,6 +103,9 @@ public class CsMerchantQueryVo implements Serializable {
     @ApiModelProperty(value = "结束营业时间")
     private String endTime;
 
+    @ApiModelProperty(value = "用户和商店的距离")
+    private Double merchantDistance;
+
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
 
