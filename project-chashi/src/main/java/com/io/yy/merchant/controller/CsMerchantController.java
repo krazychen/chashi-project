@@ -211,8 +211,8 @@ public class CsMerchantController extends BaseController {
 
         //logo 新增文件
         MultipartFile[] logoUploadfiles=csMerchant.getLogoUploadFileAdd();
-        String logoFileNames="";
-        String logoFileOriNames="";
+        String logoFileNames=csMerchant.getLogoUrlName();
+        String logoFileOriNames=csMerchant.getLogoUrlValue();
         if(ArrayUtils.isNotEmpty(logoUploadfiles)) {
             for (int i = 0; i < logoUploadfiles.length; i++) {
                 MultipartFile uploadF = logoUploadfiles[i];

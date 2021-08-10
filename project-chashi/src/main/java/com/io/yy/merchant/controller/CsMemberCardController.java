@@ -8,6 +8,7 @@ import com.io.yy.merchant.vo.CsMemberCardQueryVo;
 import com.io.yy.common.api.ApiResult;
 import com.io.yy.common.controller.BaseController;
 import com.io.yy.util.UploadUtil;
+import com.io.yy.util.codec.EncodeUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -74,6 +75,8 @@ public class CsMemberCardController extends BaseController {
 
         csMemberCard.setLogoUrl(fileUrls);
         csMemberCard.setLogoName(fileNames);
+        csMemberCard.setUsageNotice(EncodeUtils.decodeHtml(csMemberCard.getUsageNotice()));
+        csMemberCard.setUseRights(EncodeUtils.decodeHtml(csMemberCard.getUseRights()));
 
         boolean flag = csMemberCardService.saveCsMemberCard(csMemberCard);
         return ApiResult.result(flag);
@@ -99,8 +102,8 @@ public class CsMemberCardController extends BaseController {
 
         //logo 新增文件
         MultipartFile[] uploadfiles=csMemberCard.getUploadFileAdd();
-        String fileNames="";
-        String fileUrls="";
+        String fileNames=csMemberCard.getLogoName();
+        String fileUrls=csMemberCard.getLogoUrl();
         if(ArrayUtils.isNotEmpty(uploadfiles)) {
             for (int i = 0; i < uploadfiles.length; i++) {
                 MultipartFile uploadF = uploadfiles[i];
@@ -116,6 +119,8 @@ public class CsMemberCardController extends BaseController {
         }
         csMemberCard.setLogoUrl(fileUrls);
         csMemberCard.setLogoName(fileNames);
+        csMemberCard.setUsageNotice(EncodeUtils.decodeHtml(csMemberCard.getUsageNotice()));
+        csMemberCard.setUseRights(EncodeUtils.decodeHtml(csMemberCard.getUseRights()));
 
         boolean flag = csMemberCardService.updateCsMemberCard(csMemberCard);
         return ApiResult.result(flag);

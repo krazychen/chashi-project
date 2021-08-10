@@ -39,8 +39,12 @@
     <select id="getCsMerchantPageListOrderByPriceASC" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
         SELECT cm.* FROM cs_merchant cm
         LEFT JOIN cs_tearoom ct ON cm.id=ct.merchant_id
+        where 1=1
         <if test="param.cityCode != null and param.cityCode.trim() != ''">
-        where cm.city_code = #{param.cityCode}
+            and cm.city_code = #{param.cityCode}
+        </if>
+        <if test="param.merchantName != null and param.merchantName.trim() != ''">
+            and cm.merchant_name = #{param.merchantName}
         </if>
         GROUP BY cm.id
         ORDER BY ct.hours_amount ASC
@@ -49,8 +53,12 @@
     <select id="getCsMerchantPageListOrderByPriceDESC" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
         SELECT cm.* FROM cs_merchant cm
         LEFT JOIN cs_tearoom ct ON cm.id=ct.merchant_id
+        where 1 =1
         <if test="param.cityCode != null and param.cityCode.trim() != ''">
-            where cm.city_code = #{param.cityCode}
+            and cm.city_code = #{param.cityCode}
+        </if>
+        <if test="param.merchantName != null and param.merchantName.trim() != ''">
+            and cm.merchant_name = #{param.merchantName}
         </if>
         GROUP BY cm.id
         ORDER BY ct.hours_amount DESC
@@ -59,6 +67,12 @@
     <select id="getCsMerchantPageListOrderByNear" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
         SELECT cm.* FROM cs_merchant cm
         WHERE 1 = 1
+        <if test="param.cityCode != null and param.cityCode.trim() != ''">
+            where cm.city_code = #{param.cityCode}
+        </if>
+        <if test="param.merchantName != null and param.merchantName.trim() != ''">
+            and cm.merchant_name = #{param.merchantName}
+        </if>
         <if test="param.minlng != null and param.minlng != 0">
             and (longitude BETWEEN ${param.minlng} AND ${param.maxlng})
         </if>
@@ -73,6 +87,9 @@
         where 1=1
         <if test="param.cityCode != null and param.cityCode.trim() != ''">
             and cm.city_code = #{param.cityCode}
+        </if>
+        <if test="param.merchantName != null and param.merchantName.trim() != ''">
+            and cm.merchant_name = #{param.merchantName}
         </if>
         <if test="param.minlng != null and param.minlng != 0">
             and (cm.longitude BETWEEN ${param.minlng} AND ${param.maxlng})
