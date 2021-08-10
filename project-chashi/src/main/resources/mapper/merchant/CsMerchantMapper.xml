@@ -44,7 +44,7 @@
             and cm.city_code = #{param.cityCode}
         </if>
         <if test="param.merchantName != null and param.merchantName.trim() != ''">
-            and cm.merchant_name = #{param.merchantName}
+            and cm.merchant_name like concat('%', #{param.merchantName}, '%')
         </if>
         GROUP BY cm.id
         ORDER BY ct.hours_amount ASC
@@ -58,7 +58,7 @@
             and cm.city_code = #{param.cityCode}
         </if>
         <if test="param.merchantName != null and param.merchantName.trim() != ''">
-            and cm.merchant_name = #{param.merchantName}
+            and cm.merchant_name like concat('%', #{param.merchantName}, '%')
         </if>
         GROUP BY cm.id
         ORDER BY ct.hours_amount DESC
@@ -71,7 +71,7 @@
             where cm.city_code = #{param.cityCode}
         </if>
         <if test="param.merchantName != null and param.merchantName.trim() != ''">
-            and cm.merchant_name = #{param.merchantName}
+            and cm.merchant_name like concat('%', #{param.merchantName}, '%')
         </if>
         <if test="param.minlng != null and param.minlng != 0">
             and (longitude BETWEEN ${param.minlng} AND ${param.maxlng})
@@ -89,7 +89,7 @@
             and cm.city_code = #{param.cityCode}
         </if>
         <if test="param.merchantName != null and param.merchantName.trim() != ''">
-            and cm.merchant_name = #{param.merchantName}
+            and cm.merchant_name like concat('%', #{param.merchantName}, '%')
         </if>
         <if test="param.minlng != null and param.minlng != 0">
             and (cm.longitude BETWEEN ${param.minlng} AND ${param.maxlng})
