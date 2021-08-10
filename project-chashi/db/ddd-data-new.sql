@@ -97,6 +97,38 @@ insert  into `cs_label`(`id`,`seq_no`,`title_name`,`image_url`,`sort`,`status`,`
 (12633691073114,NULL,'11',NULL,11,1,0,0,NULL,'2021-07-23 00:13:39',NULL,NULL,NULL,NULL),
 (12633691073116,NULL,'123',NULL,123,1,0,0,NULL,'2021-08-04 16:45:55',NULL,NULL,NULL,NULL);
 
+/*Table structure for table `cs_member_card` */
+
+DROP TABLE IF EXISTS `cs_member_card`;
+
+CREATE TABLE `cs_member_card` (
+  `id` bigint NOT NULL COMMENT '主键',
+  `cardname` varchar(30) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '会员名称',
+  `price` double NOT NULL COMMENT '会员卡价格',
+  `logo_url` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '封面url',
+  `logo_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '封面name',
+  `level` int DEFAULT NULL COMMENT '级别',
+  `discount_off` double NOT NULL DEFAULT '1' COMMENT '会员折扣',
+  `discount_price` double DEFAULT NULL COMMENT '优惠金额',
+  `discount_time` double DEFAULT NULL COMMENT '优惠时长',
+  `valid_period` int DEFAULT NULL COMMENT '有效期',
+  `usage_notice` mediumtext COLLATE utf8mb4_general_ci COMMENT '使用须知',
+  `use_rights` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '用户权益',
+  `remarks` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注信息',
+  `status` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
+  `deleted` int NOT NULL DEFAULT '0' COMMENT '逻辑删除，0：未删除，1：已删除',
+  `version` int NOT NULL DEFAULT '0' COMMENT '版本',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改者',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  `corp_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户代码',
+  `corp_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='会员卡';
+
+/*Data for the table `cs_member_card` */
+
 /*Table structure for table `cs_merchant` */
 
 DROP TABLE IF EXISTS `cs_merchant`;
@@ -159,8 +191,8 @@ CREATE TABLE `cs_tearoom` (
   `facilities_id` varchar(500) DEFAULT NULL COMMENT '设施id（多个，隔开）',
   `facilities_name` varchar(500) DEFAULT NULL COMMENT '设施名（多个，隔开）',
   `hours_amount` double DEFAULT NULL COMMENT '小时金额',
-  `start_time` varchar(100) DEFAULT NULL COMMENT '起订时间',
-  `recom_num_users` varchar(20) DEFAULT NULL COMMENT '建议使用人数',
+  `start_time` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '1' COMMENT '起订时间',
+  `recom_num_users` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '1' COMMENT '建议使用人数',
   `room_logo_url` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '茶室封面url',
   `room_logo_name` varchar(500) DEFAULT NULL COMMENT '茶室封面name',
   `room_banner_url` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '茶室banner url',
@@ -426,7 +458,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 /*Data for the table `qrtz_scheduler_state` */
 
 insert  into `qrtz_scheduler_state`(`SCHED_NAME`,`INSTANCE_NAME`,`LAST_CHECKIN_TIME`,`CHECKIN_INTERVAL`) values 
-('quartzScheduler','krislaptop1628504794680',1628504905721,5000);
+('quartzScheduler','krislaptop1628566997415',1628567436450,5000);
 
 /*Table structure for table `qrtz_simple_triggers` */
 
@@ -1424,7 +1456,13 @@ insert  into `sys_menu`(`menu_code`,`parent_code`,`parent_codes`,`tree_sort`,`tr
 ('64000','60000','00000000,60000',130,'1,100','1',3,'首级节点,茶室管理','茶室信息','2','','','','#409EFF','','cs:tearoom:info',NULL,'0','1','2',0,0,'1','88888888','2021-08-04 23:42:06','88888888','2021-08-04 23:42:06',''),
 ('70000','00000000','00000000',130,'1','2',2,'首级节点','用户管理','1','','','','#409EFF','','wx:user:page',NULL,'1','1','1',0,0,'1','88888888','2021-08-06 22:56:35','88888888','2021-08-06 22:57:30',''),
 ('71000','70000','00000000,70000',100,'1,130','1',3,'首级节点,用户管理','更新用户','2','','','','#409EFF','','wx:user:update',NULL,'0','1','1',0,0,'1','88888888','2021-08-06 22:58:03','88888888','2021-08-06 22:58:54',''),
-('72000','70000','00000000,70000',110,'1,130','1',3,'首级节点,用户管理','用户信息','2','','','','#409EFF','','wx:user:info',NULL,'0','1','1',0,0,'1','88888888','2021-08-06 22:58:40','88888888','2021-08-06 22:58:40','');
+('72000','70000','00000000,70000',110,'1,130','1',3,'首级节点,用户管理','用户信息','2','','','','#409EFF','','wx:user:info',NULL,'0','1','1',0,0,'1','88888888','2021-08-06 22:58:40','88888888','2021-08-06 22:58:40',''),
+('80000','00000000','00000000',150,'1','2',2,'首级节点','营销管理','1','','','','#409EFF','','cs:member:card:page',NULL,'1','1','1',0,0,'1','88888888','2021-08-10 11:45:24','88888888','2021-08-10 11:45:24',''),
+('81000','80000','00000000,80000',100,'1,150','2',3,'首级节点,营销管理','会员卡管理','1','','','','#409EFF','','cs:member:card:page',NULL,'1','1','1',0,0,'1','88888888','2021-08-10 11:45:55','88888888','2021-08-10 11:45:55',''),
+('81100','81000','00000000,80000,81000',100,'1,150,100','1',4,'首级节点,营销管理,会员卡管理','更新会员卡','2','','','','#409EFF','','cs:member:card:update',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 11:46:23','88888888','2021-08-10 11:46:23',''),
+('81200','81000','00000000,80000,81000',110,'1,150,100','1',4,'首级节点,营销管理,会员卡管理','新增会员卡','2','','','','#409EFF','','cs:member:card:add',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 11:46:48','88888888','2021-08-10 11:46:48',''),
+('81300','81000','00000000,80000,81000',120,'1,150,100','1',4,'首级节点,营销管理,会员卡管理','删除会员卡','2','','','','#409EFF','','cs:member:card:delete',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 11:47:13','88888888','2021-08-10 11:47:13',''),
+('81400','81000','00000000,80000,81000',140,'1,150,100','1',4,'首级节点,营销管理,会员卡管理','会员卡信息','2','','','','#409EFF','','cs:member:card:info',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 11:47:45','88888888','2021-08-10 11:47:45','');
 
 /*Table structure for table `sys_msg` */
 
@@ -1791,7 +1829,13 @@ insert  into `sys_role_menu`(`id`,`role_id`,`menu_code`,`deleted`,`version`,`cre
 (1422947532595568646,'1','14005',0,0,'88888888','2021-08-04 23:48:24','88888888','2021-08-04 23:48:24','0','whyy'),
 (1423659985956564994,'1288762228375416834','70000',0,0,'88888888','2021-08-06 22:59:26','88888888','2021-08-06 22:59:26','0','whyy'),
 (1423659985981730818,'1288762228375416834','71000',0,0,'88888888','2021-08-06 22:59:26','88888888','2021-08-06 22:59:26','0','whyy'),
-(1423659985981730819,'1288762228375416834','72000',0,0,'88888888','2021-08-06 22:59:26','88888888','2021-08-06 22:59:26','0','whyy');
+(1423659985981730819,'1288762228375416834','72000',0,0,'88888888','2021-08-06 22:59:26','88888888','2021-08-06 22:59:26','0','whyy'),
+(1424940604573421569,'1288762228375416834','80000',0,0,'88888888','2021-08-10 11:48:09','88888888','2021-08-10 11:48:09','0','whyy'),
+(1424940604594393090,'1288762228375416834','81000',0,0,'88888888','2021-08-10 11:48:09','88888888','2021-08-10 11:48:09','0','whyy'),
+(1424940604594393091,'1288762228375416834','81100',0,0,'88888888','2021-08-10 11:48:09','88888888','2021-08-10 11:48:09','0','whyy'),
+(1424940604602781698,'1288762228375416834','81200',0,0,'88888888','2021-08-10 11:48:09','88888888','2021-08-10 11:48:09','0','whyy'),
+(1424940604602781699,'1288762228375416834','81300',0,0,'88888888','2021-08-10 11:48:09','88888888','2021-08-10 11:48:09','0','whyy'),
+(1424940604602781700,'1288762228375416834','81400',0,0,'88888888','2021-08-10 11:48:09','88888888','2021-08-10 11:48:09','0','whyy');
 
 /*Table structure for table `sys_schedule_job` */
 
@@ -6606,7 +6650,7 @@ CREATE TABLE `wx_user` (
   `signtext` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '个性签名',
   `openid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信公众号openid',
   `unionid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '绑定的微信号unionid',
-  `menber_type` int DEFAULT NULL COMMENT '会员类型',
+  `menber_type` bigint DEFAULT NULL COMMENT '会员类型',
   `integral` int DEFAULT NULL COMMENT '积分',
   `balance` int DEFAULT NULL COMMENT '余额',
   `remarks` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注信息',
