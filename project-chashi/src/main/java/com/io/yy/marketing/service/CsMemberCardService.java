@@ -1,9 +1,9 @@
-package com.io.yy.merchant.service;
+package com.io.yy.marketing.service;
 
-import com.io.yy.merchant.entity.CsMemberCard;
+import com.io.yy.marketing.entity.CsMemberCard;
 import com.io.yy.common.service.BaseService;
-import com.io.yy.merchant.param.CsMemberCardQueryParam;
-import com.io.yy.merchant.vo.CsMemberCardQueryVo;
+import com.io.yy.marketing.param.CsMemberCardQueryParam;
+import com.io.yy.marketing.vo.CsMemberCardQueryVo;
 import com.io.yy.common.vo.Paging;
 
 import java.io.Serializable;

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.io.yy.merchant.mapper.CsMemberCardMapper">
+<mapper namespace="com.io.yy.marketing.mapper.CsMemberCardMapper">
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, cardname, price, logo_url, logo_name, level, discount_off, discount_price, discount_time, valid_period, usage_notice, use_rights, remarks, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
-    <select id="getCsMemberCardById" resultType="com.io.yy.merchant.vo.CsMemberCardQueryVo">
+    <select id="getCsMemberCardById" resultType="com.io.yy.marketing.vo.CsMemberCardQueryVo">
         select
         <include refid="Base_Column_List"/>
         from cs_member_card where id = #{id}
     </select>
 
-    <select id="getCsMemberCardPageList" resultType="com.io.yy.merchant.vo.CsMemberCardQueryVo">
+    <select id="getCsMemberCardPageList" resultType="com.io.yy.marketing.vo.CsMemberCardQueryVo">
         select
         <include refid="Base_Column_List"/>
         from cs_member_card
         where 1=1
         <if test="param.cardname != null and param.cardname.trim() != ''">
-            where cm.cardname = #{param.cardname}
+            where cm.cardname like concat('%', #{param.cardname}, '%')
         </if>
     </select>
 

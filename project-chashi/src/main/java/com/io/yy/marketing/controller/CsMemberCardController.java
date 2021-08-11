@@ -1,10 +1,10 @@
-package com.io.yy.merchant.controller;
+package com.io.yy.marketing.controller;
 
 import com.io.yy.core.properties.WhyySystemProperties;
-import com.io.yy.merchant.entity.CsMemberCard;
-import com.io.yy.merchant.service.CsMemberCardService;
-import com.io.yy.merchant.param.CsMemberCardQueryParam;
-import com.io.yy.merchant.vo.CsMemberCardQueryVo;
+import com.io.yy.marketing.entity.CsMemberCard;
+import com.io.yy.marketing.service.CsMemberCardService;
+import com.io.yy.marketing.param.CsMemberCardQueryParam;
+import com.io.yy.marketing.vo.CsMemberCardQueryVo;
 import com.io.yy.common.api.ApiResult;
 import com.io.yy.common.controller.BaseController;
 import com.io.yy.util.UploadUtil;
@@ -23,7 +23,6 @@ import javax.validation.Valid;
 import java.util.List;
 
 import com.io.yy.common.vo.Paging;
-import com.io.yy.common.param.IdParam;
 import org.springframework.web.multipart.MultipartFile;
 
 /**

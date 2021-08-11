@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.marketing.mapper.CsCouponReleasedMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, coupon_id, wxuser_id, released_time, is_used, used_time, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getCsCouponReleasedById" resultType="com.io.yy.marketing.vo.CsCouponReleasedQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_coupon_released where id = #{id}
+    </select>
+
+    <select id="getCsCouponReleasedPageList" resultType="com.io.yy.marketing.vo.CsCouponReleasedQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_coupon_released
+    </select>
+
+    <update id="updateStatus">
+        update cs_coupon_released set status = #{param.status}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
+</mapper>

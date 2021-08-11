@@ -1,11 +1,11 @@
-package com.io.yy.merchant.mapper;
+package com.io.yy.marketing.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.io.yy.merchant.entity.CsMemberCard;
-import com.io.yy.merchant.param.CsMemberCardQueryParam;
-import com.io.yy.merchant.vo.CsMemberCardQueryVo;
+import com.io.yy.marketing.entity.CsMemberCard;
+import com.io.yy.marketing.param.CsMemberCardQueryParam;
+import com.io.yy.marketing.vo.CsMemberCardQueryVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

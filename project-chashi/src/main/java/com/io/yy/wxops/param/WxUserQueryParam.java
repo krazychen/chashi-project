@@ -30,4 +30,7 @@ public class WxUserQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "手机号码")
     private String phone;
+
+    @ApiModelProperty(value = "昵称或者手机号码")
+    private String nameAphone;
 }

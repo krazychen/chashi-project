@@ -1,47 +1,34 @@
-package com.io.yy.merchant.entity;
+package com.io.yy.marketing.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import java.util.Date;
-
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.io.yy.common.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.springframework.web.multipart.MultipartFile;
+import java.io.Serializable;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * <pre>
- * 会员卡
+ * 会员卡 查询结果对象
  * </pre>
  *
  * @author kris
- * @since 2021-08-09
+ * @date 2021-08-09
  */
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = true)
-@ApiModel(value = "CsMemberCard对象", description = "会员卡")
-public class CsMemberCard extends BaseEntity {
-
+@ApiModel(value = "CsMemberCardQueryVo对象", description = "会员卡查询参数")
+public class CsMemberCardQueryVo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "主键")
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     @ApiModelProperty(value = "会员名称")
     private String cardname;
 
     @ApiModelProperty(value = "会员卡价格")
-    @NotNull(message = "会员卡价格不能为空")
     private Double price;
 
     @ApiModelProperty(value = "封面url")
@@ -100,19 +87,5 @@ public class CsMemberCard extends BaseEntity {
 
     @ApiModelProperty(value = "租户名称")
     private String corpName;
-
-    @ApiModelProperty(value = "上传图片文件对象")
-    @JsonIgnore
-    @TableField(exist = false)
-    private MultipartFile[] uploadFile;
-
-    @ApiModelProperty(value = "更新时上传的新增图片文件对象")
-    @JsonIgnore
-    @TableField(exist = false)
-    private MultipartFile[] uploadFileAdd;
-
-    @ApiModelProperty(value = "更新时上传的删除logo图片文件名称")
-    @TableField(exist = false)
-    private String[] uploadFileDel;
 
 }

@@ -2,6 +2,11 @@ package com.io.yy.wxops.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.io.yy.marketing.entity.CsCouponReleased;
+import com.io.yy.marketing.mapper.CsCouponMapper;
+import com.io.yy.marketing.service.CsCouponReleasedService;
+import com.io.yy.marketing.service.CsCouponService;
+import com.io.yy.marketing.vo.CsCouponQueryVo;
 import com.io.yy.system.vo.SysConfigDataRedisVo;
 import com.io.yy.util.ConfigDataUtil;
 import com.io.yy.util.lang.ObjectUtils;
@@ -29,6 +34,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +53,12 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
 
     @Autowired
     private WxUserMapper wxUserMapper;
+
+    @Autowired
+    private CsCouponReleasedService csCouponReleasedService;
+
+    @Autowired
+    private CsCouponService csCouponService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -89,8 +101,9 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
         return wxUserMapper.updateStatus(wxUserQueryParam) > 0;
     }
 
-    public WxUserQueryVo wxLogin(WxLoginQueryParam wxLoginQueryParam){
+    public WxUserQueryVo wxLogin(WxLoginQueryParam wxLoginQueryParam) throws Exception {
 
+        boolean flag = false;
         WxUserQueryVo wxUserQueryVo = new WxUserQueryVo();
         // 获取微信配置
         List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
@@ -115,8 +128,25 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
             WxUser userExist = wxUserMapper.getWxUserByOpenId(wxUser.getOpenid());
             if(ObjectUtil.isNull(userExist)){
                 wxUser.setDeleted(TrueFlagEnum.NO_FLAG.getCode());
-                super.save(wxUser);
+                flag = super.save(wxUser);
                 wxUserQueryVo = WxUserQueryVo.toVo(wxUser);
+                //如果保存成功，查看是否有新人优惠卷，有的话发放
+                if(flag){
+                    WxUser newUser = wxUserMapper.getWxUserByOpenId(wxUser.getOpenid());
+                    List<CsCouponQueryVo> csCouponQueryVos = csCouponService.getCsCouponOfNewMember();
+                    csCouponQueryVos.stream().forEach(cc -> {
+                        CsCouponReleased csCouponReleased = new CsCouponReleased();
+                        csCouponReleased.setCouponId(cc.getId());
+                        csCouponReleased.setWxuserId(newUser.getId());
+                        csCouponReleased.setIsUsed(0);
+                        csCouponReleased.setReleasedTime(new Date());
+                        try {
+                            csCouponReleasedService.saveCsCouponReleased(csCouponReleased);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
             }else{
                 BeanUtils.copyProperties(wxUser,userExist, ObjectUtils.getNullPropertyNames(wxUser));
                 super.updateById(userExist);

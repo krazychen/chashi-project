@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.marketing.mapper.CsCouponMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, coupon_name, released_method, full_amount, reduction_amount, start_time, end_time, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getCsCouponById" resultType="com.io.yy.marketing.vo.CsCouponQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_coupon where id = #{id}
+    </select>
+
+    <select id="getCsCouponOfNewMember" resultType="com.io.yy.marketing.vo.CsCouponQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_coupon
+        where 1=1
+        AND released_method = 1
+        and status = 1
+        AND CURDATE() <![CDATA[ >= ]]> start_time
+        AND CURDATE() <![CDATA[ <= ]]> end_time
+    </select>
+
+    <select id="getCsCouponPageList" resultType="com.io.yy.marketing.vo.CsCouponQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_coupon
+        where 1 = 1
+        <if test="param.couponName != null and param.couponName.trim() != ''">
+            and coupon_name like concat('%', #{param.couponName}, '%')
+        </if>
+        <if test="param.releasedMethod != null and param.releasedMethod !=0">
+            and released_method = #{param.releasedMethod}
+        </if>
+    </select>
+
+    <update id="updateStatus">
+        update cs_coupon set status = #{param.status}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
+</mapper>

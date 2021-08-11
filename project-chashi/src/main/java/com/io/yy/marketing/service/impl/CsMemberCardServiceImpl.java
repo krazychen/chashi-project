@@ -1,10 +1,10 @@
-package com.io.yy.merchant.service.impl;
+package com.io.yy.marketing.service.impl;
 
-import com.io.yy.merchant.entity.CsMemberCard;
-import com.io.yy.merchant.mapper.CsMemberCardMapper;
-import com.io.yy.merchant.service.CsMemberCardService;
-import com.io.yy.merchant.param.CsMemberCardQueryParam;
-import com.io.yy.merchant.vo.CsMemberCardQueryVo;
+import com.io.yy.marketing.entity.CsMemberCard;
+import com.io.yy.marketing.mapper.CsMemberCardMapper;
+import com.io.yy.marketing.service.CsMemberCardService;
+import com.io.yy.marketing.param.CsMemberCardQueryParam;
+import com.io.yy.marketing.vo.CsMemberCardQueryVo;
 import com.io.yy.common.service.impl.BaseServiceImpl;
 import com.io.yy.common.vo.Paging;
 import lombok.extern.slf4j.Slf4j;

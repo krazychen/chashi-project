@@ -17,11 +17,15 @@
         select
         <include refid="Base_Column_List"/>
         from wx_user
+        where 1=1
         <if test="param.nickname != null and param.nickname.trim() != ''">
             and u.nickname like concat('%', #{param.nickname}, '%')
         </if>
-        <if test="param.phone != null ">
+        <if test="param.phone != null and param.phone.trim() != ''">
             and u.phone like concat('%', #{param.phone}, '%')
+        </if>
+        <if test="param.nameAphone != null and param.nameAphone.trim() != ''">
+            and (nickname like concat('%', #{param.phone}, '%') or phone like concat('%', #{param.phone}, '%'))
         </if>
     </select>
 

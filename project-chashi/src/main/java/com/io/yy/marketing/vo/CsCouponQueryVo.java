@@ -1,4 +1,4 @@
-package com.io.yy.merchant.vo;
+package com.io.yy.marketing.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,56 +10,38 @@ import java.util.Date;
 
 /**
  * <pre>
- * 会员卡 查询结果对象
+ * 优惠卷 查询结果对象
  * </pre>
  *
  * @author kris
- * @date 2021-08-09
+ * @date 2021-08-10
  */
 @Data
 @Accessors(chain = true)
-@ApiModel(value = "CsMemberCardQueryVo对象", description = "会员卡查询参数")
-public class CsMemberCardQueryVo implements Serializable {
+@ApiModel(value = "CsCouponQueryVo对象", description = "优惠卷查询参数")
+public class CsCouponQueryVo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "主键")
     private Long id;
 
-    @ApiModelProperty(value = "会员名称")
-    private String cardname;
+    @ApiModelProperty(value = "优惠卷名称")
+    private String couponName;
 
-    @ApiModelProperty(value = "会员卡价格")
-    private Double price;
+    @ApiModelProperty(value = "获取方式")
+    private Integer releasedMethod;
 
-    @ApiModelProperty(value = "封面url")
-    private String logoUrl;
+    @ApiModelProperty(value = "满")
+    private Double fullAmount;
 
-    @ApiModelProperty(value = "封面name")
-    private String logoName;
+    @ApiModelProperty(value = "减")
+    private Double reductionAmount;
 
-    @ApiModelProperty(value = "级别")
-    private Integer level;
+    @ApiModelProperty(value = "开始时间")
+    private Date startTime;
 
-    @ApiModelProperty(value = "会员折扣")
-    private Double discountOff;
-
-    @ApiModelProperty(value = "优惠金额")
-    private Double discountPrice;
-
-    @ApiModelProperty(value = "优惠时长")
-    private Double discountTime;
-
-    @ApiModelProperty(value = "有效期")
-    private Integer validPeriod;
-
-    @ApiModelProperty(value = "使用须知")
-    private String usageNotice;
-
-    @ApiModelProperty(value = "用户权益")
-    private String useRights;
-
-    @ApiModelProperty(value = "备注信息")
-    private String remarks;
+    @ApiModelProperty(value = "结束时间")
+    private Date endTime;
 
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;

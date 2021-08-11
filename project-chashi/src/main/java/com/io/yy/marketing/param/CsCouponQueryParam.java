@@ -1,4 +1,4 @@
-package com.io.yy.merchant.param;
+package com.io.yy.marketing.param;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,23 +8,29 @@ import lombok.experimental.Accessors;
 
 import com.io.yy.common.param.OrderQueryParam;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * <pre>
- * 会员卡 查询参数对象
+ * 优惠卷 查询参数对象
  * </pre>
  *
  * @author kris
- * @date 2021-08-09
+ * @date 2021-08-10
  */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-@ApiModel(value = "CsMemberCardQueryParam对象", description = "会员卡查询参数")
-public class CsMemberCardQueryParam extends OrderQueryParam {
+@ApiModel(value = "CsCouponQueryParam对象", description = "优惠卷查询参数")
+public class CsCouponQueryParam extends OrderQueryParam {
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "会员名称")
-    private String cardname;
+    @ApiModelProperty(value = "优惠卷名称")
+    private String couponName;
+
+    @ApiModelProperty(value = "获取方式")
+    @NotNull(message = "获取方式不能为空")
+    private Integer releasedMethod;
 
     @ApiModelProperty(value = "主键")
     private Long id;

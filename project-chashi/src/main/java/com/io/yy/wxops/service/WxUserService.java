@@ -88,6 +88,6 @@ public interface WxUserService extends BaseService<WxUser> {
      * @param wxLoginQueryParam
      * @return
      */
-    WxUserQueryVo wxLogin(WxLoginQueryParam wxLoginQueryParam);
+    WxUserQueryVo wxLogin(WxLoginQueryParam wxLoginQueryParam) throws Exception;
 
 }
