@@ -68,7 +68,7 @@
         SELECT cm.* FROM cs_merchant cm
         WHERE 1 = 1
         <if test="param.cityCode != null and param.cityCode.trim() != ''">
-            where cm.city_code = #{param.cityCode}
+            and cm.city_code = #{param.cityCode}
         </if>
         <if test="param.merchantName != null and param.merchantName.trim() != ''">
             and cm.merchant_name like concat('%', #{param.merchantName}, '%')
