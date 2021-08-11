@@ -40,6 +40,69 @@ insert  into `cs_advertise`(`id`,`pic_url`,`pic_name`,`jump_link`,`sort`,`status
 (12633691073114,'http://localhost:1111/config/resource/143509a65eed4b669040efc9b54d507f202108031435M2Jpb2xvZ3kuanBn.jpg','3biology.jpg','111111',1,1,0,0,NULL,'2021-08-03 14:35:19',NULL,NULL,NULL,NULL),
 (12633691073116,'http://localhost:1111/config/resource/fe6cb78fdf394611b1d91e0247a3fd38202108041648M2Jpb2xvZ3kuanBn.jpg','3biology.jpg','222',2,1,0,0,NULL,'2021-08-04 16:48:53',NULL,NULL,NULL,NULL);
 
+/*Table structure for table `cs_coupon` */
+
+DROP TABLE IF EXISTS `cs_coupon`;
+
+CREATE TABLE `cs_coupon` (
+  `id` bigint NOT NULL COMMENT '主键',
+  `coupon_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '优惠卷名称',
+  `released_method` int NOT NULL COMMENT '获取方式',
+  `full_amount` double DEFAULT NULL COMMENT '满',
+  `reduction_amount` double DEFAULT NULL COMMENT '减',
+  `start_time` timestamp NULL DEFAULT NULL COMMENT '开始时间',
+  `end_time` timestamp NULL DEFAULT NULL COMMENT '结束时间',
+  `status` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
+  `deleted` int NOT NULL DEFAULT '0' COMMENT '逻辑删除，0：未删除，1：已删除',
+  `version` int NOT NULL DEFAULT '0' COMMENT '版本',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改者',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  `corp_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户代码',
+  `corp_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='优惠卷';
+
+/*Data for the table `cs_coupon` */
+
+insert  into `cs_coupon`(`id`,`coupon_name`,`released_method`,`full_amount`,`reduction_amount`,`start_time`,`end_time`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
+(1425045502497456129,'新人礼包',1,10,3,NULL,NULL,1,0,0,NULL,'2021-08-10 18:44:58',NULL,NULL,NULL,NULL),
+(1425391350364286977,'分享礼包',2,100,5,'2021-08-09 00:00:00','2021-08-25 00:00:00',1,0,0,NULL,'2021-08-11 17:39:15',NULL,NULL,NULL,NULL),
+(1425391451417653249,'分享优惠卷',2,200,10,'2021-07-31 00:00:00','2021-08-08 00:00:00',1,0,0,NULL,'2021-08-11 17:39:39',NULL,NULL,NULL,NULL),
+(1425396623359442946,'领卷中心1',3,50,5,'2021-07-31 00:00:00','2021-08-30 00:00:00',1,0,0,NULL,'2021-08-11 18:00:12',NULL,NULL,NULL,NULL);
+
+/*Table structure for table `cs_coupon_released` */
+
+DROP TABLE IF EXISTS `cs_coupon_released`;
+
+CREATE TABLE `cs_coupon_released` (
+  `id` bigint NOT NULL COMMENT '主键',
+  `coupon_id` bigint DEFAULT NULL COMMENT '优惠卷id',
+  `wxuser_id` bigint NOT NULL COMMENT '用户ID',
+  `released_time` timestamp NULL DEFAULT NULL COMMENT '领取时间',
+  `is_used` int DEFAULT NULL COMMENT '是否被使用0未被使用，1已使用',
+  `used_time` timestamp NULL DEFAULT NULL COMMENT '使用时间',
+  `status` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
+  `deleted` int NOT NULL DEFAULT '0' COMMENT '逻辑删除，0：未删除，1：已删除',
+  `version` int NOT NULL DEFAULT '0' COMMENT '版本',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改者',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  `corp_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户代码',
+  `corp_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='优惠卷发放/领取记录';
+
+/*Data for the table `cs_coupon_released` */
+
+insert  into `cs_coupon_released`(`id`,`coupon_id`,`wxuser_id`,`released_time`,`is_used`,`used_time`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
+(1425372743597076481,1425045502497456129,1,'2021-08-11 16:25:19',0,NULL,1,0,0,NULL,'2021-08-11 16:25:18',NULL,NULL,NULL,NULL),
+(1425374440541171713,1425045502497456129,1,'2021-08-11 16:32:03',0,NULL,1,0,0,NULL,'2021-08-11 16:32:03',NULL,NULL,NULL,NULL),
+(1425374440868327425,1425045502497456129,1,'2021-08-11 16:32:04',0,NULL,1,0,0,NULL,'2021-08-11 16:32:03',NULL,NULL,NULL,NULL),
+(1425374441094819842,1425045502497456129,1,'2021-08-11 16:32:04',0,NULL,1,0,0,NULL,'2021-08-11 16:32:03',NULL,NULL,NULL,NULL);
+
 /*Table structure for table `cs_facilities` */
 
 DROP TABLE IF EXISTS `cs_facilities`;
@@ -128,6 +191,9 @@ CREATE TABLE `cs_member_card` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='会员卡';
 
 /*Data for the table `cs_member_card` */
+
+insert  into `cs_member_card`(`id`,`cardname`,`price`,`logo_url`,`logo_name`,`level`,`discount_off`,`discount_price`,`discount_time`,`valid_period`,`usage_notice`,`use_rights`,`remarks`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
+(1424977440712749058,'普通会员卡',98,'http://localhost:1111/config/resource/f170d77aff07406386f239779876f091202108101424M1N1YmplY3QgbWF0dGVyIGFwcGxpZWQgbWF0aGVtYXRpY3MuanBn.jpg','3Subject matter applied mathematics.jpg',1,9,100,5,2,'<p>22222333432</p>','<p>反反复复发333</p>',NULL,1,0,0,NULL,'2021-08-10 14:14:31',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `cs_merchant` */
 
@@ -458,7 +524,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 /*Data for the table `qrtz_scheduler_state` */
 
 insert  into `qrtz_scheduler_state`(`SCHED_NAME`,`INSTANCE_NAME`,`LAST_CHECKIN_TIME`,`CHECKIN_INTERVAL`) values 
-('quartzScheduler','krislaptop1628566997415',1628567436450,5000);
+('quartzScheduler','krislaptop1628675968590',1628676114311,5000);
 
 /*Table structure for table `qrtz_simple_triggers` */
 
@@ -1462,7 +1528,13 @@ insert  into `sys_menu`(`menu_code`,`parent_code`,`parent_codes`,`tree_sort`,`tr
 ('81100','81000','00000000,80000,81000',100,'1,150,100','1',4,'首级节点,营销管理,会员卡管理','更新会员卡','2','','','','#409EFF','','cs:member:card:update',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 11:46:23','88888888','2021-08-10 11:46:23',''),
 ('81200','81000','00000000,80000,81000',110,'1,150,100','1',4,'首级节点,营销管理,会员卡管理','新增会员卡','2','','','','#409EFF','','cs:member:card:add',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 11:46:48','88888888','2021-08-10 11:46:48',''),
 ('81300','81000','00000000,80000,81000',120,'1,150,100','1',4,'首级节点,营销管理,会员卡管理','删除会员卡','2','','','','#409EFF','','cs:member:card:delete',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 11:47:13','88888888','2021-08-10 11:47:13',''),
-('81400','81000','00000000,80000,81000',140,'1,150,100','1',4,'首级节点,营销管理,会员卡管理','会员卡信息','2','','','','#409EFF','','cs:member:card:info',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 11:47:45','88888888','2021-08-10 11:47:45','');
+('81400','81000','00000000,80000,81000',140,'1,150,100','1',4,'首级节点,营销管理,会员卡管理','会员卡信息','2','','','','#409EFF','','cs:member:card:info',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 11:47:45','88888888','2021-08-10 11:47:45',''),
+('82000','80000','00000000,80000',110,'1,150','2',3,'首级节点,营销管理','优惠卷管理','1','','','','#409EFF','','cs:coupon:page',NULL,'1','1','1',0,0,'1','88888888','2021-08-10 18:24:20','88888888','2021-08-10 18:24:20',''),
+('82100','82000','00000000,80000,82000',100,'1,150,110','1',4,'首级节点,营销管理,优惠卷管理','优惠卷更新','2','','','','#409EFF','','cs:coupon:update',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 18:24:45','88888888','2021-08-10 18:24:45',''),
+('82200','82000','00000000,80000,82000',110,'1,150,110','1',4,'首级节点,营销管理,优惠卷管理','优惠卷新增','2','','','','#409EFF','','cs:coupon:add',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 18:25:09','88888888','2021-08-10 18:25:09',''),
+('82300','82000','00000000,80000,82000',130,'1,150,110','1',4,'首级节点,营销管理,优惠卷管理','优惠卷信息','2','','','','#409EFF','','cs:coupon:info',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 18:25:33','88888888','2021-08-10 18:25:33',''),
+('82400','82000','00000000,80000,82000',140,'1,150,110','1',4,'首级节点,营销管理,优惠卷管理','优惠卷删除','2','','','','#409EFF','','cs:coupon:delete',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 18:25:57','88888888','2021-08-10 18:25:57',''),
+('82500','82000','00000000,80000,82000',150,'1,150,110','1',4,'首级节点,营销管理,优惠卷管理','发放优惠卷','2','','','','#409EFF','','cs:coupon:released:add',NULL,'0','1','1',0,0,'1','88888888','2021-08-11 16:06:53','88888888','2021-08-11 16:06:53','');
 
 /*Table structure for table `sys_msg` */
 
@@ -1835,7 +1907,13 @@ insert  into `sys_role_menu`(`id`,`role_id`,`menu_code`,`deleted`,`version`,`cre
 (1424940604594393091,'1288762228375416834','81100',0,0,'88888888','2021-08-10 11:48:09','88888888','2021-08-10 11:48:09','0','whyy'),
 (1424940604602781698,'1288762228375416834','81200',0,0,'88888888','2021-08-10 11:48:09','88888888','2021-08-10 11:48:09','0','whyy'),
 (1424940604602781699,'1288762228375416834','81300',0,0,'88888888','2021-08-10 11:48:09','88888888','2021-08-10 11:48:09','0','whyy'),
-(1424940604602781700,'1288762228375416834','81400',0,0,'88888888','2021-08-10 11:48:09','88888888','2021-08-10 11:48:09','0','whyy');
+(1424940604602781700,'1288762228375416834','81400',0,0,'88888888','2021-08-10 11:48:09','88888888','2021-08-10 11:48:09','0','whyy'),
+(1425040826695745538,'1288762228375416834','82000',0,0,'88888888','2021-08-10 18:26:24','88888888','2021-08-10 18:26:24','0','whyy'),
+(1425040826712522754,'1288762228375416834','82100',0,0,'88888888','2021-08-10 18:26:24','88888888','2021-08-10 18:26:24','0','whyy'),
+(1425040826720911361,'1288762228375416834','82200',0,0,'88888888','2021-08-10 18:26:24','88888888','2021-08-10 18:26:24','0','whyy'),
+(1425040826720911362,'1288762228375416834','82300',0,0,'88888888','2021-08-10 18:26:24','88888888','2021-08-10 18:26:24','0','whyy'),
+(1425040826720911363,'1288762228375416834','82400',0,0,'88888888','2021-08-10 18:26:24','88888888','2021-08-10 18:26:24','0','whyy'),
+(1425368158589452289,'1288762228375416834','82500',0,0,'88888888','2021-08-11 16:07:06','88888888','2021-08-11 16:07:06','0','whyy');
 
 /*Table structure for table `sys_schedule_job` */
 
