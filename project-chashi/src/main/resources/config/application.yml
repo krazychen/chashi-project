@@ -205,7 +205,9 @@ whyy-system:
       /wxUser/wxLogin=anon
       /csAdvertise/getBannerListForWx=anon
       /csMerchant/getPageListForWx=anon
+      /csMerchant/infoForWx=anon
       /csTearoom/getRoomListForWx/**=anon
+      /csTearoom/infoForWx/**=anon
       /sysArea/getReleaseCityWx=anon
     # 权限配置
     permission:

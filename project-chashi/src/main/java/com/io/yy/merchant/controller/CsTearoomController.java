@@ -284,5 +284,15 @@ public class CsTearoomController extends BaseController {
         Paging<CsTearoomQueryVo> paging = csTearoomService.getCsTearoomPageListOrderBySort(csTearoomQueryParam);
         return ApiResult.ok(paging);
     }
+
+    /**
+     * 获取wx茶室管理
+     */
+    @GetMapping("/infoForWx/{id}")
+    @ApiOperation(value = "获取wx CsTearoom对象详情", notes = "查看wx茶室管理", response = CsTearoomQueryVo.class)
+    public ApiResult<CsTearoomQueryVo> getCsTearoomForWx(@PathVariable("id") Long id) throws Exception {
+        CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(id);
+        return ApiResult.ok(csTearoomQueryVo);
+    }
 }
 

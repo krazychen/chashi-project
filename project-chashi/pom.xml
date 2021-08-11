@@ -62,6 +62,22 @@
         </dependency>
         <!--附近的商家正方形计算库 -->
 
+        <!--最新稳定微信开发包-->
+        <!-- https://mvnrepository.com/artifact/org.weixin4j/weixin4j -->
+        <dependency>
+            <groupId>org.weixin4j</groupId>
+            <artifactId>weixin4j</artifactId>
+            <version>0.1.6</version>
+            <!--排除旧的-->
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--最新稳定微信开发包-->
+
     </dependencies>
 
     <build>

@@ -273,5 +273,15 @@ public class CsMerchantController extends BaseController {
         Paging<CsMerchantQueryVo> paging = csMerchantService.getCsMerchantPageListForWx(csMerchantQueryParam);
         return ApiResult.ok(paging);
     }
+
+    /**
+     * 获取wx商家管理
+     */
+    @GetMapping("/infoForWx/{id}")
+    @ApiOperation(value = "获取wx CsMerchant对象详情", notes = "查看wx商家管理", response = CsMerchantQueryVo.class)
+    public ApiResult<CsMerchantQueryVo> getCsMerchantForWx(@PathVariable("id") Long id) throws Exception {
+        CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(id);
+        return ApiResult.ok(csMerchantQueryVo);
+    }
 }
 
