@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <pre>
@@ -133,4 +134,5 @@ public class CsMerchantQueryVo implements Serializable {
     @ApiModelProperty(value = "租户名称")
     private String corpName;
 
+    private List<CsTearoomQueryVo> tearoomList;
 }

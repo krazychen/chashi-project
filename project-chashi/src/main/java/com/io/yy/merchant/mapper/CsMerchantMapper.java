@@ -84,4 +84,12 @@ public interface CsMerchantMapper extends BaseMapper<CsMerchant> {
      */
     IPage<CsMerchantQueryVo> getCsMerchantPageListOrderByDefault(@Param("page") Page page, @Param("param") CsMerchantQueryParam csMerchantQueryParam);
 
+    /**
+     * wx获取商店详情
+     *
+     * @param id
+     * @return
+     */
+    CsMerchantQueryVo getCsMerchantByIdForWx(Serializable id);
+
 }

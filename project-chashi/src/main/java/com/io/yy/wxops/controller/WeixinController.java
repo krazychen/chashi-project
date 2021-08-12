@@ -207,4 +207,5 @@ public class WeixinController extends WeixinSupport {
         out.flush();
         out.close();
     }
+
 }

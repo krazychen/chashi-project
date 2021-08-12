@@ -128,4 +128,13 @@ public interface CsMerchantService extends BaseService<CsMerchant> {
      * @throws Exception
      */
     public Boolean updateStatusById(CsMerchantQueryParam csMerchantQueryParam);
+
+    /**
+     * wx根据ID获取查询对象
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    CsMerchantQueryVo getCsMerchantByIdForWx(Long id) throws Exception;
 }

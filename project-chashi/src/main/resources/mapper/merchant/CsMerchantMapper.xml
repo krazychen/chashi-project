@@ -4,8 +4,58 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, merchant_name, merchant_account, merchant_password, order_fee, city_code, city, address, longitude, latitude, logo_url_value, logo_url_name, carousel_url_value, carousel_url_name, office_code, contact_phonse, label_id, label_name, facilities_id, facilities_name, services_id, services_name, order_refund_fee, merchant_info, usage_notice, start_time, end_time, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, merchant_name, merchant_account, merchant_password, order_fee, city_code, city, address, longitude, latitude, logo_url_value,
+        logo_url_name, carousel_url_value, carousel_url_name, office_code, contact_phonse, label_id, label_name, facilities_id,
+        facilities_name, services_id, services_name, order_refund_fee, merchant_info, usage_notice, start_time, end_time,
+        status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
+
+    <resultMap id="csTearoomObj" type="com.io.yy.merchant.vo.CsMerchantQueryVo">
+        <result column="id" property="id" javaType="java.lang.Long"/>
+        <result column="merchant_name" property="merchantName" javaType="java.lang.String"/>
+        <result column="order_fee" property="orderFee" javaType="java.lang.Integer"/>
+        <result column="city_code" property="cityCode" javaType="java.lang.String"/>
+        <result column="city" property="city" javaType="java.lang.String"/>
+        <result column="address" property="address" javaType="java.lang.String"/>
+        <result column="longitude" property="longitude" javaType="java.lang.String"/>
+        <result column="latitude" property="latitude" javaType="java.lang.String"/>
+        <result column="logo_url_value" property="logoUrlValue" javaType="java.lang.String"/>
+        <result column="logo_url_name" property="logoUrlName" javaType="java.lang.String"/>
+        <result column="carousel_url_value" property="carouselUrlValue" javaType="java.lang.String"/>
+        <result column="carousel_url_name" property="carouselUrlName" javaType="java.lang.String"/>
+        <result column="office_code" property="officeCode" javaType="java.lang.String"/>
+        <result column="contact_phonse" property="contactPhonse" javaType="java.lang.String"/>
+        <result column="label_id" property="labelId" javaType="java.lang.String"/>
+        <result column="label_name" property="labelName" javaType="java.lang.String"/>
+        <result column="facilities_id" property="facilitiesId" javaType="java.lang.String"/>
+        <result column="facilities_name" property="facilitiesName" javaType="java.lang.String"/>
+        <result column="services_id" property="servicesId" javaType="java.lang.String"/>
+        <result column="services_name" property="servicesName" javaType="java.lang.String"/>
+        <result column="order_refund_fee" property="orderRefundFee" javaType="java.lang.Integer"/>
+        <result column="merchant_info" property="merchantInfo" javaType="java.lang.String"/>
+        <result column="usage_notice" property="usageNotice" javaType="java.lang.String"/>
+        <result column="start_time" property="startTime" javaType="java.lang.String"/>
+        <result column="end_time" property="endTime" javaType="java.lang.String"/>
+        <result column="status" property="status" javaType="java.lang.String"/>
+        <collection property="tearoomList" ofType="com.io.yy.merchant.vo.CsTearoomQueryVo">
+            <result column="t_id" property="id" javaType="java.lang.Long"/>
+            <result column="room_name" property="roomName" javaType="java.lang.String"/>
+            <result column="facilities_id" property="facilitiesId" javaType="java.lang.String"/>
+            <result column="facilities_name" property="facilitiesName" javaType="java.lang.String"/>
+            <result column="hours_amount" property="hoursAmount" javaType="java.lang.Double"/>
+            <result column="start_time" property="startTime" javaType="java.lang.String"/>
+            <result column="recom_num_users" property="recomNumUsers" javaType="java.lang.String"/>
+            <result column="room_logo_url" property="roomLogoUrl" javaType="java.lang.String"/>
+            <result column="room_logo_name" property="roomLogoName" javaType="java.lang.String"/>
+            <result column="room_banner_url" property="roomBannerUrl" javaType="java.lang.String"/>
+            <result column="room_banner_name" property="roomBannerName" javaType="java.lang.String"/>
+            <result column="door_open_method" property="doorOpenMethod" javaType="java.lang.Integer"/>
+            <result column="t_sort" property="sort" javaType="java.lang.Integer"/>
+            <result column="merchant_id" property="merchantId" javaType="java.lang.Long"/>
+            <result column="t_status" property="status" javaType="java.lang.String"/>
+            <result column="t_create_time" property="createTime" javaType="java.util.Date"/>
+        </collection>
+    </resultMap>
 
     <select id="getCsMerchantById" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
         select
@@ -98,6 +148,16 @@
             and (cm.latitude BETWEEN ${param.minlat} AND ${param.maxlat})
         </if>
         GROUP BY cm.id
-        ORDER BY ct.hours_amount ASC
+        ORDER BY ct.sort ASC, ct.hours_amount ASC
+    </select>
+
+    <select id="getCsMerchantByIdForWx" resultMap="csTearoomObj">
+        SELECT cm.*, ct.id AS t_id,ct.room_name,ct.facilities_id,ct.facilities_name,ct.hours_amount,ct.start_time,ct.recom_num_users,
+        ct.room_logo_url,ct.room_logo_name,ct.room_banner_url,ct.room_banner_name,ct.door_open_method,ct.sort AS t_sort,ct.merchant_id,
+        ct.status AS t_status,ct.create_time AS t_create_time
+        FROM cs_merchant cm
+        LEFT JOIN cs_tearoom ct ON cm.id=ct.merchant_id
+        where 1=1 and cm.id =  #{param.id}
+        ORDER BY ct.sort ASC, ct.hours_amount ASC
     </select>
 </mapper>

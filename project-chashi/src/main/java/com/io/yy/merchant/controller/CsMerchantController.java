@@ -280,7 +280,7 @@ public class CsMerchantController extends BaseController {
     @GetMapping("/infoForWx/{id}")
     @ApiOperation(value = "获取wx CsMerchant对象详情", notes = "查看wx商家管理", response = CsMerchantQueryVo.class)
     public ApiResult<CsMerchantQueryVo> getCsMerchantForWx(@PathVariable("id") Long id) throws Exception {
-        CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(id);
+        CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantByIdForWx(id);
         return ApiResult.ok(csMerchantQueryVo);
     }
 }

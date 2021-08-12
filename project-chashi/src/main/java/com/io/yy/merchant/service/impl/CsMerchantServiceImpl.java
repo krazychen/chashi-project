@@ -287,6 +287,18 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
         return csMerchantMapper.updateStatusById(csMerchantQueryParam) > 0;
     }
 
+    /**
+     * wx根据ID获取查询对象
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public CsMerchantQueryVo getCsMerchantByIdForWx(Long id) throws Exception {
+        return csMerchantMapper.getCsMerchantByIdForWx(id);
+    }
+
     // 计算半径
 
     //地球半径常量，km

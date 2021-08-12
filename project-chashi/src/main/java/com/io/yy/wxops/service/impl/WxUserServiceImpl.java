@@ -10,6 +10,7 @@ import com.io.yy.marketing.vo.CsCouponQueryVo;
 import com.io.yy.system.vo.SysConfigDataRedisVo;
 import com.io.yy.util.ConfigDataUtil;
 import com.io.yy.util.lang.ObjectUtils;
+import com.io.yy.util.reflect.ReflectUtils;
 import com.io.yy.wxops.entity.WxUser;
 import com.io.yy.wxops.mapper.WxUserMapper;
 import com.io.yy.wxops.param.WxLoginQueryParam;
@@ -23,6 +24,8 @@ import com.io.yy.wxops.vo.WxUserQueryVo;
 import com.io.yy.common.service.impl.BaseServiceImpl;
 import com.io.yy.common.vo.Paging;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +38,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
