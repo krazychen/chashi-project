@@ -205,7 +205,7 @@ whyy-system:
       /wxUser/wxLogin=anon
       /csAdvertise/getBannerListForWx=anon
       /csMerchant/getPageListForWx=anon
-      /csMerchant/infoForWx=anon
+      /csMerchant/infoForWx/**=anon
       /csTearoom/getRoomListForWx/**=anon
       /csTearoom/infoForWx/**=anon
       /sysArea/getReleaseCityWx=anon
