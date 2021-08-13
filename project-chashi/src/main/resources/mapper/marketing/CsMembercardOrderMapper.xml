@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.marketing.mapper.CsMembercardOrderMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, membercard_id, wxuser_id, wxuser_phone, openid, order_name, order_date, start_time, end_time, order_price, out_trade_no, payment_status, payment_type, source_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getCsMembercardOrderById" resultType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_membercard_order where id = #{id}
+    </select>
+
+    <select id="getCsMembercardOrderPageList" resultType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_membercard_order
+    </select>
+
+    <update id="updateStatus">
+        update cs_membercard_order set status = #{param.status}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
+</mapper>

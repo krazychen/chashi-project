@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.merchant.mapper.CsMerchantOrderMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, merchant_id, tearoom_id, wxuser_id, wxuser_phone, openid, order_name, order_date, order_timerage, order_origin_timenum, order_timenum, order_unit_originPrice, order_unit_price, order_originPrice, order_cp_amount, order_mb_amount, order_price, out_trade_no, payment_status, payment_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getCsMerchantOrderById" resultType="com.io.yy.merchant.vo.CsMerchantOrderQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_merchant_order where id = #{id}
+    </select>
+
+    <select id="getCsMerchantOrderPageList" resultType="com.io.yy.merchant.vo.CsMerchantOrderQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_merchant_order
+    </select>
+
+    <update id="updateStatus">
+        update cs_merchant_order set status = #{param.status}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
+</mapper>
