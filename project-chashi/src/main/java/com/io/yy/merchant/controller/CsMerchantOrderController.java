@@ -113,6 +113,13 @@ public class CsMerchantOrderController extends BaseController {
         return ApiResult.ok(csMerchantOrderService.updateStatus(csMerchantOrderQueryParam));
     }
 
-
+    /**
+     * 根据tearoomid和预订日期获取当前茶室已经被预定的时间段，返回是时间段的一个包含","的字符串
+     */
+    @PostMapping("/getTimeRangeForWx")
+    @ApiOperation(value = "获取当前茶室已经被预定的时间段，返回是时间段的一个包含\",\"的字符串", notes = "获取当前茶室已经被预定的时间段", response = ApiResult.class)
+    public ApiResult<String> getTimeRangeForWx(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        return ApiResult.ok(csMerchantOrderService.getTimeRangeForWx(csMerchantOrderQueryParam));
+    }
 }
 

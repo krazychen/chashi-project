@@ -5,6 +5,7 @@ import com.io.yy.common.service.BaseService;
 import com.io.yy.merchant.param.CsMerchantOrderQueryParam;
 import com.io.yy.merchant.vo.CsMerchantOrderQueryVo;
 import com.io.yy.common.vo.Paging;
+import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
 import java.util.List;
@@ -82,5 +83,11 @@ public interface CsMerchantOrderService extends BaseService<CsMerchantOrder> {
      */
      boolean updateStatus(CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 
-
+    /**
+     * 根据tearoomid和预订日期获取当前茶室已经被预定的时间段，返回是时间段的一个包含","的字符串
+     *
+     * @param csMerchantOrderQueryParam
+     * @return
+     */
+    String getTimeRangeForWx(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 }

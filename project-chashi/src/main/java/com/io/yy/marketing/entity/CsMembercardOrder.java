@@ -37,23 +37,26 @@ public class CsMembercardOrder extends BaseEntity {
     @NotNull(message = "会员卡id不能为空")
     private Long membercardId;
 
+    @ApiModelProperty(value = "会员卡名称")
+    private String membercardName;
+
     @ApiModelProperty(value = "微信用户ID")
-    @NotNull(message = "微信用户ID不能为空")
     private Long wxuserId;
 
     @ApiModelProperty(value = "微信用户手机")
-    @NotBlank(message = "微信用户手机不能为空")
     private String wxuserPhone;
 
     @ApiModelProperty(value = "微信用户openID")
-    @NotNull(message = "微信用户openID不能为空")
-    private Long openid;
+    private String openid;
 
     @ApiModelProperty(value = "商品名称，会员卡名称+预订手机+预订日期+uuid")
     private String orderName;
 
     @ApiModelProperty(value = "购买日期")
     private Date orderDate;
+
+    @ApiModelProperty(value = "有效期")
+    private Integer validPeriod;
 
     @ApiModelProperty(value = "会员卡开始时间")
     private Date startTime;
@@ -102,5 +105,4 @@ public class CsMembercardOrder extends BaseEntity {
 
     @ApiModelProperty(value = "租户名称")
     private String corpName;
-
 }

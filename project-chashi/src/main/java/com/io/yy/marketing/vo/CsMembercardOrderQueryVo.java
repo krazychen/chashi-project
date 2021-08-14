@@ -1,5 +1,6 @@
 package com.io.yy.marketing.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -28,6 +29,9 @@ public class CsMembercardOrderQueryVo implements Serializable {
     @ApiModelProperty(value = "会员卡id")
     private Long membercardId;
 
+    @ApiModelProperty(value = "会员卡名称")
+    private String membercardName;
+
     @ApiModelProperty(value = "微信用户ID")
     private Long wxuserId;
 
@@ -35,13 +39,16 @@ public class CsMembercardOrderQueryVo implements Serializable {
     private String wxuserPhone;
 
     @ApiModelProperty(value = "微信用户openID")
-    private Long openid;
+    private String openid;
 
     @ApiModelProperty(value = "商品名称，会员卡名称+预订手机+预订日期+uuid")
     private String orderName;
 
     @ApiModelProperty(value = "购买日期")
     private Date orderDate;
+
+    @ApiModelProperty(value = "有效期")
+    private Integer validPeriod;
 
     @ApiModelProperty(value = "会员卡开始时间")
     private Date startTime;
@@ -90,5 +97,14 @@ public class CsMembercardOrderQueryVo implements Serializable {
 
     @ApiModelProperty(value = "租户名称")
     private String corpName;
+
+    @ApiModelProperty(value = "微信用户昵称")
+    private String wxuserName;
+
+    @ApiModelProperty(value = "会员卡级别")
+    private String level;
+
+    @ApiModelProperty(value = "折扣")
+    private String discountOff;
 
 }

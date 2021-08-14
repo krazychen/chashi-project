@@ -47,5 +47,11 @@ public interface CsMembercardOrderMapper extends BaseMapper<CsMembercardOrder> {
      */
     Integer updateStatus(@Param("param") CsMembercardOrderQueryParam csMembercardOrderQueryParam);
 
-
+    /**
+     * 检查是否购买过会员卡，购买过则不能再购买;
+     *
+     * @param csMembercardOrderQueryParam
+     * @return
+     */
+    CsMembercardOrderQueryVo isExistCsMembercardOrderByUserId(@Param("param") CsMembercardOrderQueryParam csMembercardOrderQueryParam);
 }

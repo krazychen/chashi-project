@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, membercard_id, wxuser_id, wxuser_phone, openid, order_name, order_date, start_time, end_time, order_price, out_trade_no, payment_status, payment_type, source_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, membercard_id, membercard_name, wxuser_id, wxuser_phone, openid, order_name, order_date, valid_period, start_time, end_time, order_price, out_trade_no, payment_status, payment_type, source_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <select id="getCsMembercardOrderById" resultType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
@@ -13,10 +13,23 @@
         from cs_membercard_order where id = #{id}
     </select>
 
-    <select id="getCsMembercardOrderPageList" resultType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
+    <select id="isExistCsMembercardOrderByUserId" resultType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
         select
         <include refid="Base_Column_List"/>
         from cs_membercard_order
+        where 1=1
+        and wxuser_id = #{param.wxuserId}
+        and membercard_id = #{param.membercardId}
+        AND CURTIME() <![CDATA[ >= ]]> start_time
+        AND CURTIME() <![CDATA[ <= ]]> end_time
+        ANd payment_status = 2
+    </select>
+
+    <select id="getCsMembercardOrderPageList" resultType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
+        SELECT cmo.*, wu.nickname AS wxuserName, cmc.level,cmc.discount_off
+        FROM cs_membercard_order cmo
+        LEFT JOIN wx_user  wu  ON cmo.`wxuser_id`=wu.id
+        LEFT JOIN cs_member_card cmc ON cmo.`membercard_id`=cmc.`id`
     </select>
 
     <update id="updateStatus">
@@ -26,4 +39,5 @@
             and id = #{param.id}
         </if>
     </update>
+
 </mapper>

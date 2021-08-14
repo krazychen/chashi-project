@@ -346,4 +346,24 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils{
         }
         return new Date[]{beginDate, endDate};
     }
+
+    /****
+     * 传入具体日期和要增加的月份 ，返回增加对应月份的具体日期。
+     * @param date 日期(2017-04-13)
+     * @param amount 1
+     * @return 2017-05-13
+     * @throws ParseException
+     */
+    public static Date plusMonth(Date date, int amount) throws ParseException {
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);//设置起时间
+//        cal.add(Calendar.YEAR, 1);//增加一年
+        //cal.add(Calendar.DATE, n);//增加一天
+        //cal.add(Calendar.DATE, -10);//减10天
+        cal.add(Calendar.MONTH, amount);//增加一个月
+//        System.out.println("输出::"+cal.getTime());
+
+        return cal.getTime();
+    }
 }

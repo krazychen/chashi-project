@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <pre>
@@ -47,5 +48,11 @@ public interface CsMerchantOrderMapper extends BaseMapper<CsMerchantOrder> {
      */
     Integer updateStatus(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 
-
+    /**
+     * 根据tearoomid和预订日期获取当前茶室已经被预定的时间段，返回是时间段list 的一个包含","的字符串
+     *
+     * @param csMerchantOrderQueryParam
+     * @return
+     */
+    List<CsMerchantOrderQueryVo> getTimeRangeForWx(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 }

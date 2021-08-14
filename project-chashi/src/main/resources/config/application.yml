@@ -209,7 +209,8 @@ whyy-system:
       /csTearoom/getRoomListForWx/**=anon
       /csTearoom/infoForWx/**=anon
       /sysArea/getReleaseCityWx=anon
-      /weixin/wxPay=anon
+      /weixin/*=anon
+      /csMerchantOrder/getTimeRangeForWx=anon
     # 权限配置
     permission:
       # 排除登陆登出相关

@@ -38,6 +38,15 @@ public class CsMembercardOrderServiceImpl extends BaseServiceImpl<CsMembercardOr
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean saveCsMembercardOrder(CsMembercardOrder csMembercardOrder) throws Exception {
+        //  检查是否购买过会员卡，购买过则不能再购买;
+        CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
+        csMembercardOrderQueryParam.setMembercardId(csMembercardOrder.getMembercardId());
+        csMembercardOrderQueryParam.setWxuserId(csMembercardOrder.getWxuserId());
+        CsMembercardOrderQueryVo csMembercardOrderQueryVo = csMembercardOrderMapper.isExistCsMembercardOrderByUserId(csMembercardOrderQueryParam);
+        if(csMembercardOrderQueryVo != null){
+            return false;
+        }
+
         return super.save(csMembercardOrder);
     }
 

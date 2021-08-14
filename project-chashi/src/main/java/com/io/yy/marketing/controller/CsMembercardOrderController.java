@@ -6,15 +6,19 @@ import com.io.yy.marketing.param.CsMembercardOrderQueryParam;
 import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
 import com.io.yy.common.api.ApiResult;
 import com.io.yy.common.controller.BaseController;
+import com.io.yy.util.UUIDUtil;
+import com.io.yy.util.lang.DateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 import com.io.yy.common.vo.Paging;
@@ -44,7 +48,17 @@ public class CsMembercardOrderController extends BaseController {
     @RequiresPermissions("cs:membercard:order:add")
     @ApiOperation(value = "添加CsMembercardOrder对象", notes = "添加会员卡购买记录", response = ApiResult.class)
     public ApiResult<Boolean> addCsMembercardOrder(@Valid @RequestBody CsMembercardOrder csMembercardOrder) throws Exception {
+        csMembercardOrder.setSourceType(0);
+        csMembercardOrder.setPaymentStatus(2);
+        csMembercardOrder.setOrderDate(new Date());
+        csMembercardOrder.setStartTime(csMembercardOrder.getOrderDate());
+        csMembercardOrder.setEndTime(DateUtils.plusMonth(csMembercardOrder.getStartTime(),csMembercardOrder.getValidPeriod()));
+        csMembercardOrder.setOrderName(csMembercardOrder.getMembercardName()+'-'+
+                DateUtils.getYYYYMMDDHHMMSS(csMembercardOrder.getOrderDate())+'-'+ UUIDUtil.getUUID());
         boolean flag = csMembercardOrderService.saveCsMembercardOrder(csMembercardOrder);
+        if(!flag){
+            return ApiResult.fail("用户已购买会员卡<"+csMembercardOrder.getMembercardId()+">");
+        }
         return ApiResult.result(flag);
     }
 

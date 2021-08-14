@@ -76,4 +76,24 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         return csMerchantOrderMapper.updateStatus(csMerchantOrderQueryParam) > 0;
     }
 
+    /**
+     * 根据tearoomid和预订日期获取当前茶室已经被预定的时间段，返回是时间段的一个包含","的字符串
+     *
+     * @param csMerchantOrderQueryParam
+     * @return
+     */
+    @Override
+    public String getTimeRangeForWx(CsMerchantOrderQueryParam csMerchantOrderQueryParam) {
+        List<CsMerchantOrderQueryVo> list = csMerchantOrderMapper.getTimeRangeForWx(csMerchantOrderQueryParam);
+        String timeRanges = "";
+        for(int i=0 ; i<list.size();i++){
+            if(i != list.size()-1){
+                timeRanges += list.get(i)+",";
+            }else{
+                timeRanges += list.get(i);
+            }
+        }
+        return timeRanges;
+    }
+
 }
