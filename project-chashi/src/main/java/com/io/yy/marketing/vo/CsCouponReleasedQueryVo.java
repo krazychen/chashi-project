@@ -1,5 +1,6 @@
 package com.io.yy.marketing.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -67,4 +68,9 @@ public class CsCouponReleasedQueryVo implements Serializable {
     @ApiModelProperty(value = "租户名称")
     private String corpName;
 
+    @ApiModelProperty(value = "优惠卷开始时间")
+    private Date startTime;
+
+    @ApiModelProperty(value = "优惠卷结束时间")
+    private Date endTime;
 }

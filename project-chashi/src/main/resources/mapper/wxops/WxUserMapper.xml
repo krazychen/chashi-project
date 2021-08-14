@@ -43,4 +43,48 @@
         from wx_user where deleted = 0
         and openid = #{openId}
     </select>
+
+    <resultMap id="wxUserObj" type="com.io.yy.wxops.vo.WxUserQueryVo">
+        <result column="id" property="id" javaType="java.lang.Long"/>
+        <result column="nickname" property="nickname" javaType="java.lang.String"/>
+        <result column="phone" property="phone" javaType="java.lang.String"/>
+        <result column="gender" property="gender" javaType="java.lang.Integer"/>
+        <result column="avatar_url" property="avatarUrl" javaType="java.lang.String"/>
+        <result column="signtext" property="signtext" javaType="java.lang.String"/>
+        <result column="openid" property="openid" javaType="java.lang.String"/>
+        <result column="unionid" property="unionid" javaType="java.lang.String"/>
+        <result column="integral" property="integral" javaType="java.lang.String"/>
+        <result column="balance" property="balance" javaType="java.lang.Double"/>
+        <association property="csMembercardOrderQueryVo" javaType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
+            <result column="m_id" property="id" javaType="java.lang.Long"/>
+            <result column="membercard_id" property="membercardId" javaType="java.lang.String"/>
+            <result column="membercard_name" property="membercardName" javaType="java.lang.String"/>
+            <result column="valid_period" property="validPeriod" javaType="java.lang.Integer"/>
+            <result column="order_date" property="orderDate" javaType="java.util.Date"/>
+            <result column="m_start_time" property="startTime" javaType="java.util.Date"/>
+            <result column="m_end_time" property="endTime" javaType="java.util.Date"/>
+            <result column="order_price" property="orderPrice" javaType="java.lang.Double"/>
+        </association>
+        <collection property="csCouponReleasedList" ofType="com.io.yy.marketing.vo.CsCouponReleasedQueryVo">
+            <id column="c_id" property="id" javaType="java.lang.Long" />
+            <result column="coupon_id" property="couponId" javaType="java.lang.Long"/>
+            <result column="wxuser_id" property="wxuserId" javaType="java.lang.Long"/>
+            <result column="released_time" property="releasedTime" javaType="java.util.Date"/>
+            <result column="is_used" property="isUsed" javaType="java.lang.Integer"/>
+            <result column="used_time" property="usedTime" javaType="java.util.Date"/>
+            <result column="c_start_time" property="startTime" javaType="java.util.Date"/>
+            <result column="c_end_time" property="endTime" javaType="java.util.Date"/>
+        </collection>
+    </resultMap>
+
+    <select id="getWxUserById" resultMap="wxUserObj">
+        select wu.*,cmo.id as m_id,cmo.membercard_id,cmo.membercard_name,cmo.valid_period,cmo.order_date,cmo.start_time as m_start_time,
+        cmo.end_time as m_end_time,cmo.order_price,ccr.id as c_id,ccr.coupon_id,ccr.wxuser_id,ccr.released_time,ccr.is_used,
+        ccr.used_time,cc.start_time as c_start_time, cc.end_time as c_end_time
+        from wx_user wu
+        left join cs_coupon_released ccr on ccr.wxuser_id = wu.id and is_used = 0
+        left join cs_coupon cc on ccr.coupon_id = cc.id and CURDATE() <![CDATA[ >= ]]> Date(cc.start_time) and CURDATE() <![CDATA[ <= ]]> cc.end_time
+        left join cs_membercard_order cmo on cmo.wxuser_id = wu.id and CURTIME() <![CDATA[ >= ]]> cmo.start_time and CURTIME() <![CDATA[ <= ]]> cmo.end_time
+        where wu.id=  #{openId}
+    </select>
 </mapper>

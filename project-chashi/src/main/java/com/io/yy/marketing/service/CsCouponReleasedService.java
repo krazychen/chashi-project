@@ -5,6 +5,7 @@ import com.io.yy.common.service.BaseService;
 import com.io.yy.marketing.param.CsCouponReleasedQueryParam;
 import com.io.yy.marketing.vo.CsCouponReleasedQueryVo;
 import com.io.yy.common.vo.Paging;
+import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
 import java.util.List;
@@ -89,4 +90,12 @@ public interface CsCouponReleasedService extends BaseService<CsCouponReleased> {
      * @return
      */
      boolean releaseForNewMember(CsCouponReleased csCouponReleased) throws Exception;
+
+    /**
+     * 获取生效的优惠卷for wx根据wxuserId
+     *
+     * @param wxuserId
+     * @return
+     */
+    List<CsCouponReleasedQueryVo> getCsCouponReleasedByUserId(@Param("wxuserId") Long wxuserId);
 }

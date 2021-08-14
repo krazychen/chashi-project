@@ -161,4 +161,16 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
 
         return wxUserQueryVo;
     }
+
+    /**
+     * 根据openid获取查询对象
+     *
+     * @param openid
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public WxUserQueryVo getWxUserByOpenid(Serializable openid) throws Exception {
+        return wxUserMapper.getWxUserByOpenid(openid);
+    }
 }

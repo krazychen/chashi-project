@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <pre>
@@ -47,5 +48,12 @@ public interface CsCouponReleasedMapper extends BaseMapper<CsCouponReleased> {
      */
     Integer updateStatus(@Param("param") CsCouponReleasedQueryParam csCouponReleasedQueryParam);
 
+    /**
+     * 获取生效的优惠卷for wx根据wxuserId
+     *
+     * @param wxuserId
+     * @return
+     */
+    List<CsCouponReleasedQueryVo> getCsCouponReleasedByUserId(@Param("wxuserId") Long wxuserId);
 
 }

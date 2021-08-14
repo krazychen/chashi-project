@@ -4,6 +4,7 @@ import com.io.yy.marketing.entity.CsMembercardOrder;
 import com.io.yy.marketing.mapper.CsMembercardOrderMapper;
 import com.io.yy.marketing.service.CsMembercardOrderService;
 import com.io.yy.marketing.param.CsMembercardOrderQueryParam;
+import com.io.yy.marketing.vo.CsMemberCardQueryVo;
 import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
 import com.io.yy.common.service.impl.BaseServiceImpl;
 import com.io.yy.common.vo.Paging;
@@ -83,6 +84,20 @@ public class CsMembercardOrderServiceImpl extends BaseServiceImpl<CsMembercardOr
     @Override
     public boolean updateStatus(CsMembercardOrderQueryParam csMembercardOrderQueryParam) {
         return csMembercardOrderMapper.updateStatus(csMembercardOrderQueryParam) > 0;
+    }
+
+    /**
+     * 根据ID获取查询对象
+     *
+     * @param wxuserId
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public CsMembercardOrderQueryVo getMemberCardForWx(Serializable wxuserId) throws Exception {
+        CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
+        csMembercardOrderQueryParam.setWxuserId(Long.valueOf(wxuserId.toString()));
+        return csMembercardOrderMapper.isExistCsMembercardOrderByUserId(csMembercardOrderQueryParam);
     }
 
 }

@@ -90,4 +90,12 @@ public interface WxUserService extends BaseService<WxUser> {
      */
     WxUserQueryVo wxLogin(WxLoginQueryParam wxLoginQueryParam) throws Exception;
 
+    /**
+     * 根据openid获取查询对象
+     *
+     * @param openid
+     * @return
+     * @throws Exception
+     */
+    WxUserQueryVo getWxUserByOpenid(Serializable openid) throws Exception;
 }

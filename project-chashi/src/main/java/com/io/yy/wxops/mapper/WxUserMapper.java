@@ -54,4 +54,12 @@ public interface WxUserMapper extends BaseMapper<WxUser> {
      * @return
      */
     WxUser getWxUserByOpenId(String openId);
+
+    /**
+     * 根据 Id获取查询对象
+     *
+     * @param openId
+     * @return
+     */
+    WxUserQueryVo getWxUserByOpenid(Serializable openId);
 }

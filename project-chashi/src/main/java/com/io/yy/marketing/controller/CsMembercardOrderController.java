@@ -127,6 +127,14 @@ public class CsMembercardOrderController extends BaseController {
         return ApiResult.ok(csMembercardOrderService.updateStatus(csMembercardOrderQueryParam));
     }
 
-
+    /**
+     * 根据获取当下购买的有效会员卡记录
+     */
+    @GetMapping("/getMemberCardForWx/{id}")
+    @ApiOperation(value = "获取CsMembercardOrder对象详情", notes = "查看会员卡购买记录", response = CsMembercardOrderQueryVo.class)
+    public ApiResult<CsMembercardOrderQueryVo> getMemberCardForWx(@PathVariable("wxuserId") Long wxuserId) throws Exception {
+        CsMembercardOrderQueryVo csMembercardOrderQueryVo = csMembercardOrderService.getMemberCardForWx(wxuserId);
+        return ApiResult.ok(csMembercardOrderQueryVo);
+    }
 }
 

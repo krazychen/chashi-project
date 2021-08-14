@@ -122,5 +122,15 @@ public class WxUserController extends BaseController {
         WxUserQueryVo wsUserQueryVo = wxUserService.wxLogin(wxLoginQueryParam);
         return ApiResult.ok(wsUserQueryVo);
     }
+
+    /**
+     * 获取微信用户for wx
+     */
+    @GetMapping("/infoForWx/{id}")
+    @ApiOperation(value = "获取WxUser对象详情", notes = "查看微信用户", response = WxUserQueryVo.class)
+    public ApiResult<WxUserQueryVo> getWxUserForWx(@PathVariable("openid") Long openid) throws Exception {
+        WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(openid);
+        return ApiResult.ok(wxUserQueryVo);
+    }
 }
 

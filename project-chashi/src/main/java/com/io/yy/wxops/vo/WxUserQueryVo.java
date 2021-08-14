@@ -1,5 +1,13 @@
 package com.io.yy.wxops.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.io.yy.marketing.entity.CsCouponReleased;
+import com.io.yy.marketing.entity.CsMemberCard;
+import com.io.yy.marketing.entity.CsMembercardOrder;
+import com.io.yy.marketing.vo.CsCouponReleasedQueryVo;
+import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
+import com.io.yy.merchant.entity.CsMerchantOrder;
+import com.io.yy.merchant.vo.CsMerchantOrderQueryVo;
 import com.io.yy.wxops.entity.WxUser;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <pre>
@@ -65,7 +74,7 @@ public class WxUserQueryVo implements Serializable {
     private Integer integral;
 
     @ApiModelProperty(value = "余额")
-    private Integer balance;
+    private Double balance;
 
     @ApiModelProperty(value = "备注信息")
     private String remarks;
@@ -96,6 +105,18 @@ public class WxUserQueryVo implements Serializable {
 
     @ApiModelProperty(value = "租户名称")
     private String corpName;
+
+    @ApiModelProperty(value = "会员卡，同一时间只会存在一张会员卡")
+    @TableField(exist = false)
+    private CsMembercardOrderQueryVo csMembercardOrderQueryVo;
+
+    @ApiModelProperty(value = "优惠卷")
+    @TableField(exist = false)
+    private List<CsCouponReleasedQueryVo> csCouponReleasedQueryVoList;
+
+    @ApiModelProperty(value = "订单列表")
+    @TableField(exist = false)
+    private List<CsMerchantOrderQueryVo> csMerchantOrderQueryVoList;
 
     public static WxUserQueryVo toVo(WxUser wxUser){
         WxUserQueryVo vo = new WxUserQueryVo();

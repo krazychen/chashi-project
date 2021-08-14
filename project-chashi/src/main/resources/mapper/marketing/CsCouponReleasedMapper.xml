@@ -26,4 +26,11 @@
             and id = #{param.id}
         </if>
     </update>
+
+    <select id="getCsCouponReleasedByUserId" resultType="com.io.yy.marketing.vo.CsCouponReleasedQueryVo">
+        SELECT ccr.*,cc.start_time ,cc.end_time
+        FROM cs_coupon_released ccr
+        LEFT JOIN cs_coupon cc ON ccr.coupon_id = cc.id AND is_used=0 AND CURDATE() <![CDATA[ >= ]]> DATE(cc.start_time) AND CURDATE() <![CDATA[ <= ]]> end_time
+        WHERE ccr.wxuser_id=#{wxuserId}
+    </select>
 </mapper>

@@ -90,4 +90,15 @@ public class CsCouponReleasedServiceImpl extends BaseServiceImpl<CsCouponRelease
         return false;
     }
 
+    /**
+     * 获取生效的优惠卷for wx根据wxuserId
+     *
+     * @param wxuserId
+     * @return
+     */
+    @Override
+    public List<CsCouponReleasedQueryVo> getCsCouponReleasedByUserId(Long wxuserId) {
+        return csCouponReleasedMapper.getCsCouponReleasedByUserId(wxuserId);
+    }
+
 }

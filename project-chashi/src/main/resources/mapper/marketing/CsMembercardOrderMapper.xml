@@ -19,7 +19,9 @@
         from cs_membercard_order
         where 1=1
         and wxuser_id = #{param.wxuserId}
+        <if test="param.membercardId != null and param.membercardId !=0">
         and membercard_id = #{param.membercardId}
+        </if>
         AND CURTIME() <![CDATA[ >= ]]> start_time
         AND CURTIME() <![CDATA[ <= ]]> end_time
         ANd payment_status = 2

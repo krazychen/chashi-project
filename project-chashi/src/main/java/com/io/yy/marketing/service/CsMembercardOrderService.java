@@ -3,6 +3,7 @@ package com.io.yy.marketing.service;
 import com.io.yy.marketing.entity.CsMembercardOrder;
 import com.io.yy.common.service.BaseService;
 import com.io.yy.marketing.param.CsMembercardOrderQueryParam;
+import com.io.yy.marketing.vo.CsMemberCardQueryVo;
 import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
 import com.io.yy.common.vo.Paging;
 
@@ -83,4 +84,12 @@ public interface CsMembercardOrderService extends BaseService<CsMembercardOrder>
      boolean updateStatus(CsMembercardOrderQueryParam csMembercardOrderQueryParam);
 
 
+    /**
+     * 根据ID获取查询对象
+     *
+     * @param wxuserId
+     * @return
+     * @throws Exception
+     */
+    CsMembercardOrderQueryVo getMemberCardForWx(Serializable wxuserId) throws Exception;
 }
