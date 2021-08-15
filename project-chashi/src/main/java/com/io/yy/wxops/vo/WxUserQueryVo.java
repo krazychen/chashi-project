@@ -52,6 +52,9 @@ public class WxUserQueryVo implements Serializable {
     @ApiModelProperty(value = "手机号码")
     private String phone;
 
+    @ApiModelProperty(value = "手机号码(微信返回)")
+    private String phoneNumber;
+
     @ApiModelProperty(value = "性别，0：女，1：男，默认1")
     private Integer gender;
 
