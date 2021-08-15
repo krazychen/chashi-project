@@ -45,9 +45,6 @@ public class WxUser extends BaseEntity {
     @ApiModelProperty(value = "电子邮箱")
     private String email;
 
-    @ApiModelProperty(value = "手机号码")
-    private String phone;
-
     @ApiModelProperty(value = "手机号码(微信返回)")
     private String phoneNumber;
 
