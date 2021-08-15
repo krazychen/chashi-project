@@ -6812,6 +6812,7 @@ CREATE TABLE `wx_user` (
   `salt` varchar(32) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '盐值',
   `email` varchar(300) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '电子邮箱',
   `phone` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '手机号码',
+  `phone_number` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '手机号码(微信获取)',
   `gender` int NOT NULL DEFAULT '1' COMMENT '性别，0：女，1：男，默认1',
   `avatar_url` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '头像路径',
   `signtext` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '个性签名',

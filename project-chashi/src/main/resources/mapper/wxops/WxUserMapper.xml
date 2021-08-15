@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, nickname, password, salt, email, phone, gender, avatar_url, signtext, openid, unionid, menber_type, integral, balance, remarks, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, nickname, password, salt, email, phone, phone_number,gender, avatar_url, signtext, openid, unionid, menber_type, integral, balance, remarks, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <select id="getWxUserById" resultType="com.io.yy.wxops.vo.WxUserQueryVo">
@@ -48,6 +48,7 @@
         <result column="id" property="id" javaType="java.lang.Long"/>
         <result column="nickname" property="nickname" javaType="java.lang.String"/>
         <result column="phone" property="phone" javaType="java.lang.String"/>
+        <result column="phone_number" property="phoneNumber" javaType="java.lang.String"/>
         <result column="gender" property="gender" javaType="java.lang.Integer"/>
         <result column="avatar_url" property="avatarUrl" javaType="java.lang.String"/>
         <result column="signtext" property="signtext" javaType="java.lang.String"/>

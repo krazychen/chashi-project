@@ -209,6 +209,7 @@ whyy-system:
       /csTearoom/getRoomListForWx/**=anon
       /csTearoom/infoForWx/**=anon
       /sysArea/getReleaseCityWx=anon
+      /sysConfig/getAllConfigDataCache=anon
       /weixin/*=anon
       /csMerchantOrder/getTimeRangeForWx=anon
       /wxUser/infoForWx=anon
