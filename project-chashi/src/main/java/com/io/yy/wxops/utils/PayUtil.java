@@ -36,9 +36,9 @@ public class PayUtil {
      * @return 签名结果
      */
     public static boolean verify(String text, String sign, String key, String input_charset) {
-        text = text + key;
+        text = text + "&key="+ key;
         String mysign = DigestUtils.md5Hex(getContentBytes(text, input_charset));
-        if (mysign.equals(sign)) {
+        if (mysign.equalsIgnoreCase(sign)) {
             return true;
         } else {
             return false;
@@ -115,6 +115,8 @@ public class PayUtil {
     public static String createLinkString(Map<String, String> params) {
         List<String> keys = new ArrayList<String>(params.keySet());
         Collections.sort(keys);
+        //collection 需要去掉sign
+        keys.remove("sign");
         String prestr = "";
         for (int i = 0; i < keys.size(); i++) {
             String key = keys.get(i);

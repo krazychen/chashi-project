@@ -2,6 +2,7 @@ package com.io.yy.wxops.controller;
 
 import com.io.yy.common.api.ApiResult;
 import com.io.yy.marketing.entity.CsMembercardOrder;
+import com.io.yy.marketing.param.CsMembercardOrderQueryParam;
 import com.io.yy.marketing.service.CsMembercardOrderService;
 import com.io.yy.system.vo.SysConfigDataRedisVo;
 import com.io.yy.util.ConfigDataUtil;
@@ -57,7 +58,7 @@ public class WeixinController extends WeixinSupport {
      * @param request
      * @return
      */
-    @PostMapping("cardWxPay")
+    @RequestMapping("cardWxPay")
     @ApiOperation(value = "发起会员卡微信支付", notes = "发起会员卡微信支付", response = ApiResult.class)
     public ApiResult<Boolean> cardWxPay(@ModelAttribute CsMembercardOrder csMembercardOrder, HttpServletRequest request) throws Exception{
         // 获取微信配置
@@ -78,9 +79,10 @@ public class WeixinController extends WeixinSupport {
         csMembercardOrder.setOrderDate(new Date());
         csMembercardOrder.setStartTime(csMembercardOrder.getOrderDate());
         csMembercardOrder.setEndTime(DateUtils.plusMonth(csMembercardOrder.getStartTime(),csMembercardOrder.getValidPeriod()));
+        String outTradeNo = "card_"+UUIDUtil.getUUIDBits(24);
         csMembercardOrder.setOrderName(csMembercardOrder.getMembercardName()+'-'+
-                DateUtils.getYYYYMMDDHHMMSS(csMembercardOrder.getOrderDate())+'-'+ UUIDUtil.getUUID());
-        csMembercardOrder.setOutTradeNo(UUIDUtil.getUUID());
+                DateUtils.getYYYYMMDDHHMMSS(csMembercardOrder.getOrderDate())+'-'+ outTradeNo);
+        csMembercardOrder.setOutTradeNo(outTradeNo);
 
         try {
             //生成的随机字符串
@@ -90,13 +92,17 @@ public class WeixinController extends WeixinSupport {
             //获取本机的ip地址
             String spbill_create_ip = IpUtil.getRequestIp(request);
 
+            Double moneyFen = csMembercardOrder.getOrderPrice()*100;
+
+            String money = String.valueOf(moneyFen.intValue());
+
             Map<String, String> packageParams = new HashMap<String, String>();
             packageParams.put("appid",appid);
             packageParams.put("mch_id", mch_id);
             packageParams.put("nonce_str", nonce_str);
             packageParams.put("body", body);
             packageParams.put("out_trade_no", csMembercardOrder.getOutTradeNo());//商户订单号
-            packageParams.put("total_fee", String.valueOf(csMembercardOrder.getOrderPrice()*100));//支付金额，这边需要转成字符串类型，否则后面的签名会失败
+            packageParams.put("total_fee", money);//支付金额，这边需要转成字符串类型，否则后面的签名会失败
             packageParams.put("spbill_create_ip", spbill_create_ip);
             packageParams.put("notify_url",notify_url);
             packageParams.put("trade_type", trade_type);
@@ -119,17 +125,17 @@ public class WeixinController extends WeixinSupport {
                     + "<openid>" + openid + "</openid>"
                     + "<out_trade_no>" + csMembercardOrder.getOutTradeNo() + "</out_trade_no>"
                     + "<spbill_create_ip>" + spbill_create_ip + "</spbill_create_ip>"
-                    + "<total_fee>" + String.valueOf(csMembercardOrder.getOrderPrice()*100) + "</total_fee>"
+                    + "<total_fee>" + money + "</total_fee>"
                     + "<trade_type>" + trade_type + "</trade_type>"
                     + "<sign>" + mysign + "</sign>"
                     + "</xml>";
 
-            System.out.println("调试模式_统一下单接口 请求XML数据：" + xml);
+            logger.info("调试模式_统一下单接口 请求XML数据：" + xml);
 
             //调用统一下单接口，并接受返回的结果
             String result = PayUtil.httpRequest(pay_url, "POST", xml);
 
-            System.out.println("调试模式_统一下单接口 返回XML数据：" + result);
+            logger.info("调试模式_统一下单接口 返回XML数据：" + result);
 
             // 将解析结果存储在HashMap中
             Map map = PayUtil.doXMLParse(result);
@@ -138,7 +144,10 @@ public class WeixinController extends WeixinSupport {
 
             //返回给移动端需要的参数
             Map<String, Object> response = new HashMap<String, Object>();
-            if (return_code == "SUCCESS" || return_code.equals(return_code)) {
+            if (!StringUtils.equals(return_code, "SUCCESS")){
+                return ApiResult.fail((String) map.get("return_msg"));
+            }else{
+//            if (return_code == "SUCCESS" || return_code.equals(return_code)) {
                 // 业务结果
                 String prepay_id = (String) map.get("prepay_id");//返回的预付单信息
                 response.put("nonceStr", nonce_str);
@@ -305,11 +314,19 @@ public class WeixinController extends WeixinSupport {
         Map map = PayUtil.doXMLParse(notityXml);
 
         String returnCode = (String) map.get("return_code");
+        String outTradeNo = (String)map.get("out_trade_no");
         if ("SUCCESS".equals(returnCode)) {
             //验证签名是否正确
             if (PayUtil.verify(PayUtil.createLinkString(map), (String) map.get("sign"), key, "utf-8")) {
                 /**此处添加自己的业务逻辑代码start**/
 
+                // 如果是会员卡订单,更新订单的付款状态
+                if(StringUtils.isNotEmpty(outTradeNo)&&outTradeNo.indexOf("card_")!=-1){
+                    CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
+                    csMembercardOrderQueryParam.setOutTradeNo(outTradeNo);
+                    csMembercardOrderQueryParam.setPaymentStatus(2);
+                    csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
+                }
 
                 /**此处添加自己的业务逻辑代码end**/
 
@@ -318,11 +335,19 @@ public class WeixinController extends WeixinSupport {
                         + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
             }
         } else {
+            /**此处添加自己的业务逻辑代码start**/
+            // 如果是会员卡订单,更新订单的付款状态
+            if(StringUtils.isNotEmpty(outTradeNo)&&outTradeNo.indexOf("card_")!=-1){
+                CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
+                csMembercardOrderQueryParam.setOutTradeNo(outTradeNo);
+                csMembercardOrderQueryParam.setPaymentStatus(2);
+            }
+            /**此处添加自己的业务逻辑代码end**/
             resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
                     + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
         }
-        System.out.println(resXml);
-        System.out.println("微信支付回调数据结束");
+        logger.info(resXml);
+        logger.info("微信支付回调数据结束");
 
         //商户处理后同步返回给微信信息，参考：https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_7&index=8
         BufferedOutputStream out = new BufferedOutputStream(

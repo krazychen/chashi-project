@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.io.yy.marketing.entity.CsMembercardOrder;
 import com.io.yy.marketing.param.CsMembercardOrderQueryParam;
 import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
+import com.io.yy.merchant.param.CsMerchantOrderQueryParam;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -54,4 +55,12 @@ public interface CsMembercardOrderMapper extends BaseMapper<CsMembercardOrder> {
      * @return
      */
     CsMembercardOrderQueryVo isExistCsMembercardOrderByUserId(@Param("param") CsMembercardOrderQueryParam csMembercardOrderQueryParam);
+
+    /**
+     * 更新支付状态
+     *
+     * @param csMembercardOrderQueryParam
+     * @return
+     */
+    Integer updatePaymentStatus(@Param("param") CsMembercardOrderQueryParam csMembercardOrderQueryParam);
 }

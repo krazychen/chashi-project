@@ -92,4 +92,12 @@ public interface CsMembercardOrderService extends BaseService<CsMembercardOrder>
      * @throws Exception
      */
     CsMembercardOrderQueryVo getMemberCardForWx(Serializable wxuserId) throws Exception;
+
+    /**
+     * 更新支付状态
+     *
+     * @param csMembercardOrderQueryParam
+     * @return
+     */
+    boolean updatePaymentStatus(CsMembercardOrderQueryParam csMembercardOrderQueryParam);
 }

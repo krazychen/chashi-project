@@ -28,4 +28,10 @@ public class CsMembercardOrderQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "微信用户ID")
     private Long wxuserId;
+
+    @ApiModelProperty(value = "支付状态：支付中、支付失败、支付成功")
+    private Integer paymentStatus;
+
+    @ApiModelProperty(value = "32位的UUID")
+    private String outTradeNo;
 }

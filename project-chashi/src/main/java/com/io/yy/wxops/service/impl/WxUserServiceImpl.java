@@ -171,6 +171,6 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
      */
     @Override
     public WxUserQueryVo getWxUserByOpenid(Serializable openid) throws Exception {
-        return wxUserMapper.getWxUserByOpenid(openid);
+        return wxUserMapper.getWxUserObjByOpenid(openid);
     }
 }

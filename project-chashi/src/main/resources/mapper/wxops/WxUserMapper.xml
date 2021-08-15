@@ -77,7 +77,7 @@
         </collection>
     </resultMap>
 
-    <select id="getWxUserById" resultMap="wxUserObj">
+    <select id="getWxUserObjByOpenid" resultMap="wxUserObj">
         select wu.*,cmo.id as m_id,cmo.membercard_id,cmo.membercard_name,cmo.valid_period,cmo.order_date,cmo.start_time as m_start_time,
         cmo.end_time as m_end_time,cmo.order_price,ccr.id as c_id,ccr.coupon_id,ccr.wxuser_id,ccr.released_time,ccr.is_used,
         ccr.used_time,cc.start_time as c_start_time, cc.end_time as c_end_time

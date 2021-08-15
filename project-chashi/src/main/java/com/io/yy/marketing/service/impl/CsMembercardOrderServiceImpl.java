@@ -100,4 +100,15 @@ public class CsMembercardOrderServiceImpl extends BaseServiceImpl<CsMembercardOr
         return csMembercardOrderMapper.isExistCsMembercardOrderByUserId(csMembercardOrderQueryParam);
     }
 
+    /**
+     * 更新支付状态
+     *
+     * @param csMembercardOrderQueryParam
+     * @return
+     */
+    @Override
+    public boolean updatePaymentStatus(CsMembercardOrderQueryParam csMembercardOrderQueryParam) {
+        return csMembercardOrderMapper.updatePaymentStatus(csMembercardOrderQueryParam) > 0;
+    }
+
 }
