@@ -65,7 +65,7 @@
             <result column="m_end_time" property="endTime" javaType="java.util.Date"/>
             <result column="order_price" property="orderPrice" javaType="java.lang.Double"/>
         </association>
-        <collection property="csCouponReleasedList" ofType="com.io.yy.marketing.vo.CsCouponReleasedQueryVo">
+        <collection property="csCouponReleasedList" javaType="com.io.yy.marketing.vo.CsCouponReleasedQueryVo">
             <id column="c_id" property="id" javaType="java.lang.Long" />
             <result column="coupon_id" property="couponId" javaType="java.lang.Long"/>
             <result column="wxuser_id" property="wxuserId" javaType="java.lang.Long"/>
