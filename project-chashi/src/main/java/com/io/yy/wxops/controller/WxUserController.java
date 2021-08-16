@@ -144,9 +144,9 @@ public class WxUserController extends BaseController {
     /**
      * 获取微信用户for wx
      */
-    @GetMapping("/infoForWx/{id}")
+    @GetMapping("/infoForWx/{openid}")
     @ApiOperation(value = "获取WxUser对象详情", notes = "查看微信用户", response = WxUserQueryVo.class)
-    public ApiResult<WxUserQueryVo> getWxUserForWx(@PathVariable("openid") Long openid) throws Exception {
+    public ApiResult<WxUserQueryVo> getWxUserForWx(@PathVariable("openid") String openid) throws Exception {
         WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(openid);
         return ApiResult.ok(wxUserQueryVo);
     }

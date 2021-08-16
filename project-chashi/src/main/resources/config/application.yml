@@ -214,7 +214,7 @@ whyy-system:
       /sysConfig/getAllConfigDataCache=anon
       /weixin/*=anon
       /csMerchantOrder/getTimeRangeForWx=anon
-      /wxUser/infoForWx=anon
+      /wxUser/infoForWx/**=anon
       /csMembercardOrder/getMemberCardForWx=anon
       /csCouponReleased/getCouponForWx=anon
     # 权限配置
