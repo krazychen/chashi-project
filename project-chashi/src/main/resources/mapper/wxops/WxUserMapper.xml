@@ -56,7 +56,7 @@
         <result column="integral" property="integral" javaType="java.lang.String"/>
         <result column="balance" property="balance" javaType="java.lang.Double"/>
         <association property="csMembercardOrderQueryVo" javaType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
-            <result column="m_id" property="id" javaType="java.lang.Long"/>
+            <id column="m_id" property="id" javaType="java.lang.Long"/>
             <result column="membercard_id" property="membercardId" javaType="java.lang.String"/>
             <result column="membercard_name" property="membercardName" javaType="java.lang.String"/>
             <result column="valid_period" property="validPeriod" javaType="java.lang.Integer"/>
@@ -65,7 +65,7 @@
             <result column="m_end_time" property="endTime" javaType="java.util.Date"/>
             <result column="order_price" property="orderPrice" javaType="java.lang.Double"/>
         </association>
-        <collection property="csCouponReleasedQueryVoList" javaType="com.io.yy.marketing.vo.CsCouponReleasedQueryVo">
+        <collection property="csCouponReleasedQueryVoList" ofType="com.io.yy.marketing.vo.CsCouponReleasedQueryVo">
             <id column="c_id" property="id" javaType="java.lang.Long" />
             <result column="coupon_id" property="couponId" javaType="java.lang.Long"/>
             <result column="wxuser_id" property="wxuserId" javaType="java.lang.Long"/>
