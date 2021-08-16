@@ -19,7 +19,10 @@
         from cs_member_card
         where 1=1
         <if test="param.cardname != null and param.cardname.trim() != ''">
-            where cm.cardname like concat('%', #{param.cardname}, '%')
+            and cardname like concat('%', #{param.cardname}, '%')
+        </if>
+        <if test="param.status != null and param.status.trim() != ''">
+            and status = #{param.status}
         </if>
     </select>
 

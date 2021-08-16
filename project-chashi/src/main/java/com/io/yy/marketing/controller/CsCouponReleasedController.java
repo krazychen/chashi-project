@@ -133,7 +133,7 @@ public class CsCouponReleasedController extends BaseController {
     /**
      * 获取生效的优惠卷for wx根据wxuserId
      */
-    @GetMapping("/getCouponForWx/{id}")
+    @GetMapping("/getCouponForWx/{wxuserId}")
     @ApiOperation(value = "获取生效的优惠卷for wx根据wxuserId", notes = "获取生效的优惠卷for wx根据wxuserId", response = List.class)
     public ApiResult<List<CsCouponReleasedQueryVo>> getCouponForWx(@PathVariable("wxuserId") Long wxuserId) throws Exception {
         List<CsCouponReleasedQueryVo> list = csCouponReleasedService.getCsCouponReleasedByUserId(wxuserId);

@@ -73,4 +73,16 @@ public class CsCouponReleasedQueryVo implements Serializable {
 
     @ApiModelProperty(value = "优惠卷结束时间")
     private Date endTime;
+
+    @ApiModelProperty(value = "获取方式, 1为新人优惠卷，2为分享优惠卷，3为领卷中心领取的优惠卷")
+    private Integer releasedMethod;
+
+    @ApiModelProperty(value = "满")
+    private Double fullAmount;
+
+    @ApiModelProperty(value = "减")
+    private Double reductionAmount;
+
+    @ApiModelProperty(value = "优惠卷名称")
+    private String couponName;
 }

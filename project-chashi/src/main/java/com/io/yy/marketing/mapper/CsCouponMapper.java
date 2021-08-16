@@ -54,4 +54,11 @@ public interface CsCouponMapper extends BaseMapper<CsCoupon> {
      * @return
      */
     List<CsCouponQueryVo> getCsCouponOfNewMember();
+
+    /**
+     * 获取领卷中心优惠卷
+     *
+     * @return
+     */
+    List<CsCouponQueryVo> getCsCouponListOfCouponCenter();
 }

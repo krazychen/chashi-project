@@ -44,4 +44,14 @@
             and id = #{param.id}
         </if>
     </update>
+
+    <select id="getCsCouponListOfCouponCenter" resultType="com.io.yy.marketing.vo.CsCouponQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_coupon
+        where 1 = 1
+        AND CURDATE() <![CDATA[ >= ]]> DATE(start_time)
+        AND CURDATE() <![CDATA[ <= ]]> DATE(end_time)
+        AND released_method =3
+    </select>
 </mapper>

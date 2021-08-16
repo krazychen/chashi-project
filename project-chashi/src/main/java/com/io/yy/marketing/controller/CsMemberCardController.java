@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -101,8 +102,8 @@ public class CsMemberCardController extends BaseController {
 
         //logo 新增文件
         MultipartFile[] uploadfiles=csMemberCard.getUploadFileAdd();
-        String fileNames=csMemberCard.getLogoName();
-        String fileUrls=csMemberCard.getLogoUrl();
+        String fileNames=StringUtils.isNotEmpty(csMemberCard.getLogoName())?csMemberCard.getLogoName():"";
+        String fileUrls= StringUtils.isNotEmpty(csMemberCard.getLogoUrl())?csMemberCard.getLogoUrl():"";
         if(ArrayUtils.isNotEmpty(uploadfiles)) {
             for (int i = 0; i < uploadfiles.length; i++) {
                 MultipartFile uploadF = uploadfiles[i];
@@ -179,6 +180,16 @@ public class CsMemberCardController extends BaseController {
         return ApiResult.ok(csMemberCardService.updateStatus(csMemberCardQueryParam));
     }
 
-
+    /**
+     * wx获取启用的会员卡列表
+     */
+    @PostMapping("/getCsMemberCardListForWx")
+    @ApiOperation(value = "获取wx获取启用的会员卡列表", notes = "启用会员卡列表", response = CsMemberCardQueryVo.class)
+    public ApiResult<Paging<CsMemberCardQueryVo>> getCsMemberCardListForWx() throws Exception {
+        CsMemberCardQueryParam csMemberCardQueryParam = new CsMemberCardQueryParam();
+        csMemberCardQueryParam.setStatus("1");
+        Paging<CsMemberCardQueryVo> paging = csMemberCardService.getCsMemberCardPageList(csMemberCardQueryParam);
+        return ApiResult.ok(paging.getRecords());
+    }
 }
 

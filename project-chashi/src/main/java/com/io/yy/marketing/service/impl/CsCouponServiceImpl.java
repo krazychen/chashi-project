@@ -86,4 +86,14 @@ public class CsCouponServiceImpl extends BaseServiceImpl<CsCouponMapper, CsCoupo
         return csCouponMapper.getCsCouponOfNewMember();
     }
 
+    /**
+     * 获取领卷中心优惠卷
+     *
+     * @return
+     */
+    @Override
+    public List<CsCouponQueryVo> getCsCouponListOfCouponCenter() {
+        return csCouponMapper.getCsCouponListOfCouponCenter();
+    }
+
 }

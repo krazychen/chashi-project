@@ -89,4 +89,11 @@ public interface CsCouponService extends BaseService<CsCoupon> {
      * @return
      */
     List<CsCouponQueryVo> getCsCouponOfNewMember();
+
+    /**
+     * 获取领卷中心优惠卷
+     *
+     * @return
+     */
+    List<CsCouponQueryVo> getCsCouponListOfCouponCenter();
 }

@@ -113,6 +113,13 @@ public class CsCouponController extends BaseController {
         return ApiResult.ok(csCouponService.updateStatus(csCouponQueryParam));
     }
 
-
+    /**
+     * 获取领卷中心优惠卷
+     */
+    @PostMapping("/getCsCouponListOfCouponCenter")
+    @ApiOperation(value = "获取CsCoupon领卷中心优惠卷列表", notes = "领卷中心优惠卷列表", response = List.class)
+    public ApiResult<List<CsCouponQueryVo>> getCsCouponListOfCouponCenter() throws Exception {
+        return ApiResult.ok(csCouponService.getCsCouponListOfCouponCenter());
+    }
 }
 

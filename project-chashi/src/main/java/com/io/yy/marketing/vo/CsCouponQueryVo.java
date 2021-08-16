@@ -28,7 +28,7 @@ public class CsCouponQueryVo implements Serializable {
     @ApiModelProperty(value = "优惠卷名称")
     private String couponName;
 
-    @ApiModelProperty(value = "获取方式")
+    @ApiModelProperty(value = "获取方式, 1为新人优惠卷，2为分享优惠卷，3为领卷中心领取的优惠卷")
     private Integer releasedMethod;
 
     @ApiModelProperty(value = "满")

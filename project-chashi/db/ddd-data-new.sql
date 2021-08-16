@@ -70,7 +70,9 @@ insert  into `cs_coupon`(`id`,`coupon_name`,`released_method`,`full_amount`,`red
 (1425045502497456129,'新人礼包',1,10,3,'2021-07-31 00:00:00','2021-08-30 00:00:00',1,0,0,NULL,'2021-08-10 18:44:58',NULL,NULL,NULL,NULL),
 (1425391350364286977,'分享礼包',2,100,5,'2021-08-09 00:00:00','2021-08-25 00:00:00',1,0,0,NULL,'2021-08-11 17:39:15',NULL,NULL,NULL,NULL),
 (1425391451417653249,'分享优惠卷',2,200,10,'2021-07-31 00:00:00','2021-08-08 00:00:00',1,0,0,NULL,'2021-08-11 17:39:39',NULL,NULL,NULL,NULL),
-(1425396623359442946,'领卷中心1',3,50,5,'2021-07-31 00:00:00','2021-08-30 00:00:00',1,0,0,NULL,'2021-08-11 18:00:12',NULL,NULL,NULL,NULL);
+(1425396623359442946,'领卷中心1',3,50,5,'2021-07-31 00:00:00','2021-08-30 00:00:00',1,0,0,NULL,'2021-08-11 18:00:12',NULL,NULL,NULL,NULL),
+(1427266075331956738,'领卷1',3,50,5,'2021-07-31 00:00:00','2021-09-29 00:00:00',1,0,0,NULL,'2021-08-16 21:48:44',NULL,NULL,NULL,NULL),
+(1427266169305337858,'领卷中心2',3,100,9,'2021-07-31 00:00:00','2021-10-30 00:00:00',1,0,0,NULL,'2021-08-16 21:49:06',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `cs_coupon_released` */
 
@@ -98,9 +100,9 @@ CREATE TABLE `cs_coupon_released` (
 /*Data for the table `cs_coupon_released` */
 
 insert  into `cs_coupon_released`(`id`,`coupon_id`,`wxuser_id`,`released_time`,`is_used`,`used_time`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
-(1425372743597076481,1425045502497456129,1,'2021-08-11 16:25:19',0,NULL,1,0,0,NULL,'2021-08-11 16:25:18',NULL,NULL,NULL,NULL),
-(1425374440541171713,1425045502497456129,1,'2021-08-11 16:32:03',0,NULL,1,0,0,NULL,'2021-08-11 16:32:03',NULL,NULL,NULL,NULL),
-(1425374440868327425,1425045502497456129,1,'2021-08-11 16:32:04',0,NULL,1,0,0,NULL,'2021-08-11 16:32:03',NULL,NULL,NULL,NULL),
+(1425372743597076481,1425045502497456129,1425650854943322113,'2021-08-11 16:25:19',0,NULL,1,0,0,NULL,'2021-08-11 16:25:18',NULL,NULL,NULL,NULL),
+(1425374440541171713,1425045502497456129,1425650854943322113,'2021-08-11 16:32:03',0,NULL,1,0,0,NULL,'2021-08-11 16:32:03',NULL,NULL,NULL,NULL),
+(1425374440868327425,1425045502497456129,1425650854943322113,'2021-08-11 16:32:04',0,NULL,1,0,0,NULL,'2021-08-11 16:32:03',NULL,NULL,NULL,NULL),
 (1425374441094819842,1425045502497456129,1,'2021-08-11 16:32:04',0,NULL,1,0,0,NULL,'2021-08-11 16:32:03',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `cs_facilities` */
@@ -193,7 +195,9 @@ CREATE TABLE `cs_member_card` (
 /*Data for the table `cs_member_card` */
 
 insert  into `cs_member_card`(`id`,`cardname`,`price`,`logo_url`,`logo_name`,`level`,`discount_off`,`discount_price`,`discount_time`,`valid_period`,`usage_notice`,`use_rights`,`remarks`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
-(1424977440712749058,'普通会员卡',98,'http://localhost:1111/config/resource/f170d77aff07406386f239779876f091202108101424M1N1YmplY3QgbWF0dGVyIGFwcGxpZWQgbWF0aGVtYXRpY3MuanBn.jpg','3Subject matter applied mathematics.jpg',1,9,100,5,2,'<p>22222333432</p>','<p>反反复复发333</p>',NULL,1,0,0,NULL,'2021-08-10 14:14:31',NULL,NULL,NULL,NULL);
+(1424977440712749058,'普通会员卡',98,'http://localhost:1111/config/resource/e9a8edf1e3ee43e6ae616243544a42ff202108162200aGlzdG9yeS5qcGc=.jpg','history.jpg',1,9,5,5,2,'<p>22222333432</p>','<p>反反复复发333</p>',NULL,1,0,0,NULL,'2021-08-10 14:14:31',NULL,NULL,NULL,NULL),
+(1427268788274913281,'中级会员卡',198,'http://localhost:1111/config/resource/f37f7fb0743c4f18ab1349a83ea09fd9202108162159YmlvbG9neS1iZy5qcGc=.jpg','biology-bg.jpg',2,8,10,10,2,'<p>23232323</p>','<p>44444</p>',NULL,1,0,0,NULL,'2021-08-16 21:59:31',NULL,NULL,NULL,NULL),
+(1427268877261266946,'高级会员卡',298,'http://localhost:1111/config/resource/85cbf33bd63e4f8abcd78bd3e42f1643202108162159aGlzdG9yeS5qcGc=.jpg','history.jpg',3,7,20,20,2,'<p>5555555555555555555</p>','<p>55</p>',NULL,1,0,0,NULL,'2021-08-16 21:59:52',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `cs_membercard_order` */
 
@@ -611,7 +615,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 /*Data for the table `qrtz_scheduler_state` */
 
 insert  into `qrtz_scheduler_state`(`SCHED_NAME`,`INSTANCE_NAME`,`LAST_CHECKIN_TIME`,`CHECKIN_INTERVAL`) values 
-('quartzScheduler','krislaptop1629044361450',1629044422314,5000);
+('quartzScheduler','krislaptop1629122873012',1629122964296,5000);
 
 /*Table structure for table `qrtz_simple_triggers` */
 
