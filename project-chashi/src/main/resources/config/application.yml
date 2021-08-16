@@ -216,8 +216,8 @@ whyy-system:
       /csMerchantOrder/getTimeRangeForWx=anon
       /wxUser/infoForWx/**=anon
       /csMembercardOrder/getMemberCardForWx=anon
+      /csCouponReleased/getCouponForWx/**=anon
       /csMemberCard/getCsMemberCardListForWx=anon
-      /csCouponReleased/getCouponForWx=anon
       /csCoupon/getCsCouponListOfCouponCenter=anon
     # 权限配置
     permission:
