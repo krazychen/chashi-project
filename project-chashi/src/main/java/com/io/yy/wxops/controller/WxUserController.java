@@ -4,6 +4,7 @@ import com.io.yy.wxops.entity.WxUser;
 import com.io.yy.wxops.param.WxLoginQueryParam;
 import com.io.yy.wxops.service.WxUserService;
 import com.io.yy.wxops.param.WxUserQueryParam;
+import com.io.yy.wxops.vo.WxLoginQueryVo;
 import com.io.yy.wxops.vo.WxUserQueryVo;
 import com.io.yy.common.api.ApiResult;
 import com.io.yy.common.controller.BaseController;
@@ -122,6 +123,23 @@ public class WxUserController extends BaseController {
         WxUserQueryVo wsUserQueryVo = wxUserService.wxLogin(wxLoginQueryParam);
         return ApiResult.ok(wsUserQueryVo);
     }
+
+    /**
+     * 微信登录获取sessionkey，防止手机号码解密失败
+     */
+    @PostMapping("/wxLoginForSK")
+    public ApiResult<WxLoginQueryVo> wxLoginForSessionKey(@RequestBody WxLoginQueryParam wxLoginQueryParam) throws Exception {
+        return ApiResult.ok(wxUserService.wxLoginForSessionKey(wxLoginQueryParam));
+    }
+
+    /**
+     * 更新用户头像跟昵称
+     */
+    @PostMapping("/wxUserUpdateNickName")
+    public ApiResult<WxLoginQueryVo> wxUserUpdateNickName(@RequestBody WxLoginQueryParam wxLoginQueryParam) throws Exception {
+        return ApiResult.ok(wxUserService.wxUserUpdateNickName(wxLoginQueryParam));
+    }
+
 
     /**
      * 获取微信用户for wx

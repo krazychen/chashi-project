@@ -4,6 +4,7 @@ import com.io.yy.wxops.entity.WxUser;
 import com.io.yy.common.service.BaseService;
 import com.io.yy.wxops.param.WxLoginQueryParam;
 import com.io.yy.wxops.param.WxUserQueryParam;
+import com.io.yy.wxops.vo.WxLoginQueryVo;
 import com.io.yy.wxops.vo.WxUserQueryVo;
 import com.io.yy.common.vo.Paging;
 
@@ -98,4 +99,20 @@ public interface WxUserService extends BaseService<WxUser> {
      * @throws Exception
      */
     WxUserQueryVo getWxUserByOpenid(Serializable openid) throws Exception;
+
+    /**
+     * 微信登录，获取sessinonKey
+     * @param wxLoginQueryParam
+     * @return
+     * @throws Exception
+     */
+    WxLoginQueryVo wxLoginForSessionKey(WxLoginQueryParam wxLoginQueryParam) throws Exception;
+
+    /**
+     * 更新用户头像跟昵称
+     * @param wxLoginQueryParam
+     * @return
+     * @throws Exception
+     */
+    WxUserQueryVo wxUserUpdateNickName(WxLoginQueryParam wxLoginQueryParam) throws Exception;
 }

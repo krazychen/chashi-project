@@ -10,6 +10,7 @@ import com.io.yy.marketing.vo.CsCouponQueryVo;
 import com.io.yy.system.vo.SysConfigDataRedisVo;
 import com.io.yy.util.ConfigDataUtil;
 import com.io.yy.util.lang.ObjectUtils;
+import com.io.yy.util.lang.StringUtils;
 import com.io.yy.util.reflect.ReflectUtils;
 import com.io.yy.wxops.entity.WxUser;
 import com.io.yy.wxops.mapper.WxUserMapper;
@@ -27,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,9 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
 
     @Autowired
     private CsCouponService csCouponService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -107,7 +112,6 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
     }
 
     public WxUserQueryVo wxLogin(WxLoginQueryParam wxLoginQueryParam) throws Exception {
-
         boolean flag = false;
         WxUserQueryVo wxUserQueryVo = new WxUserQueryVo();
         // 获取微信配置
@@ -117,19 +121,27 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
         List<SysConfigDataRedisVo> appSecrets = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("appSecret")).collect(Collectors.toList());
         List<SysConfigDataRedisVo> loginUrlappids = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("loginUrl")).collect(Collectors.toList());
 
-        String appid = appids.get(0).getConfigValue();
-        String appSecret =appSecrets.get(0).getConfigValue();
-        String loginUrl = loginUrlappids.get(0).getConfigValue();
-        loginUrl = loginUrl+"?"+"appid="+appid+"&secret="+appSecret+"&js_code="+wxLoginQueryParam.getJsCode()+"&grant_type=authorization_code";
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new WxMappingJackson2HttpMessageConverter());
-        WxLoginQueryVo wxLoginQueryVo = restTemplate.getForObject(loginUrl, WxLoginQueryVo.class);
-        JSONObject userInfo = EncryptedUtil.getUserInfo(wxLoginQueryParam.getEncryptedData(),wxLoginQueryVo.getSession_key(),wxLoginQueryParam.getIv());
+        String sessionKey = wxLoginQueryParam.getSession_key();
+        String openid = wxLoginQueryParam.getOpenid();
+        String unionid = wxLoginQueryParam.getUnionid();
+        if(StringUtils.isEmpty(sessionKey)){
+            String appid = appids.get(0).getConfigValue();
+            String appSecret =appSecrets.get(0).getConfigValue();
+            String loginUrl = loginUrlappids.get(0).getConfigValue();
+            loginUrl = loginUrl+"?"+"appid="+appid+"&secret="+appSecret+"&js_code="+wxLoginQueryParam.getJsCode()+"&grant_type=authorization_code";
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new WxMappingJackson2HttpMessageConverter());
+            WxLoginQueryVo wxLoginQueryVo = restTemplate.getForObject(loginUrl, WxLoginQueryVo.class);
+            sessionKey = wxLoginQueryVo.getSession_key();
+            openid = wxLoginQueryVo.getOpenid();
+            unionid = wxLoginQueryVo.getUnionid();
+        }
+        JSONObject userInfo = EncryptedUtil.getUserInfo(wxLoginQueryParam.getEncryptedData(),sessionKey,wxLoginQueryParam.getIv());
         System.out.println(userInfo);
         if(userInfo!=null){
             WxUser wxUser =  JSONObject.toJavaObject(userInfo, WxUser.class);
-            wxUser.setOpenid(wxLoginQueryVo.getOpenid());
-            wxUser.setUnionid(wxLoginQueryVo.getUnionid());
+            wxUser.setOpenid(openid);
+            wxUser.setUnionid(unionid);
             WxUser userExist = wxUserMapper.getWxUserByOpenId(wxUser.getOpenid());
             if(ObjectUtil.isNull(userExist)){
                 wxUser.setDeleted(TrueFlagEnum.NO_FLAG.getCode());
@@ -158,7 +170,6 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
                 wxUserQueryVo = WxUserQueryVo.toVo(userExist);
             }
         }
-
         return wxUserQueryVo;
     }
 
@@ -173,4 +184,61 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
     public WxUserQueryVo getWxUserByOpenid(Serializable openid) throws Exception {
         return wxUserMapper.getWxUserObjByOpenid(openid);
     }
+
+
+    /**
+     * 微信登录，获取sessinonKey
+     * @param wxLoginQueryParam
+     * @return
+     * @throws Exception
+     */
+    public WxLoginQueryVo wxLoginForSessionKey(WxLoginQueryParam wxLoginQueryParam) throws Exception {
+        // 获取微信配置
+        List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
+        List<SysConfigDataRedisVo> appids = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("appid")).collect(Collectors.toList());
+        List<SysConfigDataRedisVo> appSecrets = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("appSecret")).collect(Collectors.toList());
+        List<SysConfigDataRedisVo> loginUrlappids = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("loginUrl")).collect(Collectors.toList());
+
+        String appid = appids.get(0).getConfigValue();
+        String appSecret =appSecrets.get(0).getConfigValue();
+        String loginUrl = loginUrlappids.get(0).getConfigValue();
+        loginUrl = loginUrl+"?"+"appid="+appid+"&secret="+appSecret+"&js_code="+wxLoginQueryParam.getJsCode()+"&grant_type=authorization_code";
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new WxMappingJackson2HttpMessageConverter());
+        WxLoginQueryVo wxLoginQueryVo = restTemplate.getForObject(loginUrl, WxLoginQueryVo.class);
+        if(wxLoginQueryVo!=null){
+            // 小程序 wx.checksession通过，currentSessionObj为空时。重新从服务端缓存中获取标识。1 为重新获取
+            if(StringUtils.isNotEmpty(wxLoginQueryParam.getReGetFlag()) && wxLoginQueryParam.getReGetFlag().equals("1")){
+                WxLoginQueryVo wxLoginQueryVoTemp = (WxLoginQueryVo) redisTemplate.opsForValue().get(wxLoginQueryVo.getOpenid());
+                if(wxLoginQueryVoTemp!=null){
+                    wxLoginQueryVo = wxLoginQueryVoTemp;
+                }else{
+                    redisTemplate.opsForValue().set(wxLoginQueryVo.getOpenid(), wxLoginQueryVo);
+                }
+            }else{
+                redisTemplate.opsForValue().set(wxLoginQueryVo.getOpenid(), wxLoginQueryVo);
+            }
+            return wxLoginQueryVo;
+        }
+        return null;
+    }
+
+    /**
+     * 更新用户头像跟昵称
+     * @param wxLoginQueryParam
+     * @return
+     * @throws Exception
+     */
+    public WxUserQueryVo wxUserUpdateNickName(WxLoginQueryParam wxLoginQueryParam) throws Exception {
+        WxUserQueryVo wxUserQueryVo = new WxUserQueryVo();
+        WxUser userExist = wxUserMapper.getWxUserByOpenId(wxLoginQueryParam.getOpenid());
+        if(userExist!=null){
+            userExist.setAvatarUrl(wxLoginQueryParam.getAvatarUrl());
+            userExist.setNickname(wxLoginQueryParam.getNickName());
+            super.updateById(userExist);
+            wxUserQueryVo = WxUserQueryVo.toVo(userExist);
+        }
+        return wxUserQueryVo;
+    }
+
 }

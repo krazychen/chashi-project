@@ -203,6 +203,8 @@ whyy-system:
       /wx/getQRCode/**=anon
       /wx/checkLoginQr/**=anon
       /wxUser/wxLogin=anon
+      /wxUser/wxLoginForSK=anon
+      /wxUser/wxUserUpdateNickName=anon
       /csAdvertise/getBannerListForWx=anon
       /csMerchant/getPageListForWx=anon
       /csMerchant/infoForWx/**=anon
