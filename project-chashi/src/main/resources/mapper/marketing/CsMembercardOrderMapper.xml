@@ -14,17 +14,17 @@
     </select>
 
     <select id="isExistCsMembercardOrderByUserId" resultType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
-        select
-        <include refid="Base_Column_List"/>
-        from cs_membercard_order
+        SELECT cmo.*,cm.*
+        FROM cs_membercard_order cmo
+        LEFT JOIN cs_member_card cm ON cmo.`membercard_id`=cm.id
         where 1=1
-        and wxuser_id = #{param.wxuserId}
+        and cmo.wxuser_id = #{param.wxuserId}
         <if test="param.membercardId != null and param.membercardId !=0">
-        and membercard_id = #{param.membercardId}
+        and cmo.membercard_id = #{param.membercardId}
         </if>
-        AND CURTIME() <![CDATA[ >= ]]> start_time
-        AND CURTIME() <![CDATA[ <= ]]> end_time
-        ANd payment_status = 2
+        AND CURTIME() <![CDATA[ >= ]]> cmo.start_time
+        AND CURTIME() <![CDATA[ <= ]]> cmo.end_time
+        ANd cmo.payment_status = 2
     </select>
 
     <select id="getCsMembercardOrderPageList" resultType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">

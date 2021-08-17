@@ -104,7 +104,25 @@ public class CsMembercardOrderQueryVo implements Serializable {
     @ApiModelProperty(value = "会员卡级别")
     private String level;
 
-    @ApiModelProperty(value = "折扣")
-    private String discountOff;
+    @ApiModelProperty(value = "会员折扣")
+    private Double discountOff;
+
+    @ApiModelProperty(value = "优惠金额")
+    private Double discountPrice;
+
+    @ApiModelProperty(value = "优惠时长")
+    private Double discountTime;
+
+    @ApiModelProperty(value = "封面url")
+    private String logoUrl;
+
+    @ApiModelProperty(value = "封面name")
+    private String logoName;
+
+    @ApiModelProperty(value = "使用须知")
+    private String usageNotice;
+
+    @ApiModelProperty(value = "用户权益")
+    private String useRights;
 
 }
