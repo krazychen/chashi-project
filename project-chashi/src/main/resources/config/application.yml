@@ -218,6 +218,7 @@ whyy-system:
       /csMembercardOrder/getMemberCardForWx=anon
       /csMemberCard/getCsMemberCardListForWx=anon
       /csCouponReleased/getCouponForWx=anon
+      /csCouponReleased/saveCouponForCouponCenter=anon
       /csCoupon/getCsCouponListOfCouponCenter=anon
     # 权限配置
     permission:

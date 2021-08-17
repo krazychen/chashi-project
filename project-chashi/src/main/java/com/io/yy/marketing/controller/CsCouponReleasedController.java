@@ -139,5 +139,14 @@ public class CsCouponReleasedController extends BaseController {
         List<CsCouponReleasedQueryVo> list = csCouponReleasedService.getCsCouponReleasedByUserId(wxuserId);
         return ApiResult.ok(list);
     }
+
+    /**
+     * 领取领卷中心的优惠卷,只需要CouponId和WxuserId，每张优惠卷调用一次
+     */
+    @PostMapping("/saveCouponForCouponCenter")
+    @ApiOperation(value = "领取领卷中心的优惠卷", notes = "领取领卷中心的优惠卷", response = Boolean.class)
+    public ApiResult<Boolean> saveCouponForCouponCenter(@Valid @RequestBody CsCouponReleased csCouponReleased) throws Exception {
+        return ApiResult.ok(csCouponReleasedService.saveCsCouponReleased(csCouponReleased));
+    }
 }
 
