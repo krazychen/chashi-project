@@ -215,9 +215,9 @@ whyy-system:
       /weixin/*=anon
       /csMerchantOrder/getTimeRangeForWx=anon
       /wxUser/infoForWx/**=anon
-      /csMembercardOrder/getMemberCardForWx=anon
+      /csMembercardOrder/getMemberCardForWx/**=anon
+      /csCouponReleased/getCouponForWx/**=anon
       /csMemberCard/getCsMemberCardListForWx=anon
-      /csCouponReleased/getCouponForWx=anon
       /csCouponReleased/saveCouponForCouponCenter=anon
       /csCoupon/getCsCouponListOfCouponCenter=anon
     # 权限配置
