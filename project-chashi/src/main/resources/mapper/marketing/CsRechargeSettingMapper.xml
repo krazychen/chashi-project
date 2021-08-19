@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.marketing.mapper.CsRechargeSettingMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, recharge_amount, recharge_gived, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getCsRechargeSettingById" resultType="com.io.yy.marketing.vo.CsRechargeSettingQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_recharge_setting where id = #{id}
+    </select>
+
+    <select id="getCsRechargeSettingPageList" resultType="com.io.yy.marketing.vo.CsRechargeSettingQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_recharge_setting
+        <if test="param.status != null and param.status.trim() != ''">
+            and status = #{param.status}
+        </if>
+    </select>
+
+    <update id="updateStatus">
+        update cs_recharge_setting set status = #{param.status}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
+</mapper>

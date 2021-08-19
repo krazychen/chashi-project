@@ -241,4 +241,15 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
         return wxUserQueryVo;
     }
 
+    /**
+     * 更新余额和积分
+     *
+     * @param wxUserQueryParam
+     * @return
+     */
+    @Override
+    public Integer updateBalanceAIntegral(WxUserQueryParam wxUserQueryParam) {
+        return wxUserMapper.updateBalanceAIntegral(wxUserQueryParam);
+    }
+
 }

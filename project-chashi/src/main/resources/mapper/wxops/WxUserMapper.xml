@@ -87,4 +87,12 @@
         left join cs_membercard_order cmo on cmo.wxuser_id = wu.id and CURTIME() <![CDATA[ >= ]]> cmo.start_time and CURTIME() <![CDATA[ <= ]]> cmo.end_time and cmo.payment_status = 2
         where wu.openid =  #{openId}
     </select>
+
+    <update id="updateBalanceAIntegral">
+        update wx_user set balance = balance + #{param.balance}, integral = integral + #{param.integral}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
 </mapper>

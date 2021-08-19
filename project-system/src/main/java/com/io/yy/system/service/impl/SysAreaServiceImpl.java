@@ -137,10 +137,10 @@ public class SysAreaServiceImpl extends BaseServiceImpl<SysAreaMapper, SysArea> 
     @Override
     public Boolean addAreaToRedis() {
         try {
-            List<SysMenuTreeQueryVo> list = (List<SysMenuTreeQueryVo>)redisTemplate.opsForValue().get("reidsSysArea");
+            List<SysMenuTreeQueryVo> list = (List<SysMenuTreeQueryVo>)redisTemplate.opsForValue().get("city:area:redisSysArea");
             if(CollUtil.isEmpty(list)){
                 list = sysAreaMapper.getSysAreaSimplifyPageList(new SysAreaQueryParam());
-                redisTemplate.opsForValue().set("reidsSysArea", list);
+                redisTemplate.opsForValue().set("city:area:redisSysArea", list);
             }
             return true;
         } catch (Exception e) {
@@ -155,10 +155,10 @@ public class SysAreaServiceImpl extends BaseServiceImpl<SysAreaMapper, SysArea> 
 
     @Override
     public List<SysMenuTreeQueryVo> getSysAreaRidesSimplifyPageList() {
-        List<SysMenuTreeQueryVo> list = (List<SysMenuTreeQueryVo>)redisTemplate.opsForValue().get("reidsSysArea");
+        List<SysMenuTreeQueryVo> list = (List<SysMenuTreeQueryVo>)redisTemplate.opsForValue().get("city:area:redisSysArea");
         if(CollUtil.isEmpty(list)){
             list = sysAreaMapper.getSysAreaSimplifyPageList(new SysAreaQueryParam());
-            redisTemplate.opsForValue().set("reidsSysArea", list);
+            redisTemplate.opsForValue().set("city:area:redisSysArea", list);
         }
         return list;
     }

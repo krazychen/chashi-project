@@ -62,4 +62,12 @@ public interface WxUserMapper extends BaseMapper<WxUser> {
      * @return
      */
     WxUserQueryVo getWxUserObjByOpenid(Serializable openId);
+
+    /**
+     * 更新余额和积分
+     *
+     * @param wxUserQueryParam
+     * @return
+     */
+    Integer updateBalanceAIntegral(@Param("param") WxUserQueryParam wxUserQueryParam);
 }

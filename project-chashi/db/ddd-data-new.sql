@@ -235,17 +235,17 @@ CREATE TABLE `cs_membercard_order` (
 /*Data for the table `cs_membercard_order` */
 
 insert  into `cs_membercard_order`(`id`,`membercard_id`,`membercard_name`,`wxuser_id`,`wxuser_phone`,`openid`,`order_name`,`order_date`,`valid_period`,`start_time`,`end_time`,`order_price`,`out_trade_no`,`payment_status`,`payment_type`,`source_type`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
-(1426854395682848769,1424977440712749000,'普通会员卡',1425650854943322000,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 18:32:51-dfb93856ea5444d58053ef03766060ee','2021-08-15 18:32:52',2,'2021-08-15 18:32:52','2021-10-15 18:32:52',0.01,'9a77459080b34e9a8a56308b89d9497d',1,NULL,1,1,0,0,NULL,'2021-08-15 18:32:52',NULL,NULL,NULL,NULL),
-(1426917325140992001,1424977440712749000,'普通会员卡',1425650854943322000,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 22:42:54-71df58d6c1cd4f9ebc1a293287a58d1b','2021-08-15 22:42:55',2,'2021-08-15 22:42:55','2021-10-15 22:42:55',0.01,'8f277e20067547dcb4e00da75aab62fe',1,NULL,1,1,0,0,NULL,'2021-08-15 22:42:55',NULL,NULL,NULL,NULL),
-(1426918465278648321,1424977440712749000,'普通会员卡',1425650854943322000,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 22:47:27-41d37bc974fb4cc98c7c8510f73bfa5a','2021-08-15 22:47:27',2,'2021-08-15 22:47:27','2021-10-15 22:47:27',0.01,'f1b9bbb4a06041e2ba5a5798e07546a1',1,NULL,1,1,0,0,NULL,'2021-08-15 22:47:27',NULL,NULL,NULL,NULL),
-(1426933271389884418,1424977440712749000,'普通会员卡',1425650854943322000,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 23:46:17-card_zMZXpM42TdS4EgUSQM98oA**','2021-08-15 23:46:17',2,'2021-08-15 23:46:17','2021-10-15 23:46:17',0.01,'card_zMZXpM42TdS4EgUSQM98oA**',1,NULL,1,1,0,0,NULL,'2021-08-15 23:46:17',NULL,NULL,NULL,NULL),
-(1426934159986741250,1424977440712749000,'普通会员卡',1425650854943322000,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 23:49:49-card_vPvyHHssSOy-JTBr3Gp-Zw**','2021-08-15 23:49:49',2,'2021-08-15 23:49:49','2021-10-15 23:49:49',0.01,'card_vPvyHHssSOy-JTBr3Gp-Zw**',1,NULL,1,1,0,0,NULL,'2021-08-15 23:49:49',NULL,NULL,NULL,NULL),
-(1426934199887155202,1424977440712749000,'普通会员卡',1425650854943322000,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 23:49:58-card_nVaiV76OSO6iBM7uMPYiUA**','2021-08-15 23:49:59',2,'2021-08-15 23:49:59','2021-10-15 23:49:59',0.01,'card_nVaiV76OSO6iBM7uMPYiUA**',1,NULL,1,1,0,0,NULL,'2021-08-15 23:49:59',NULL,NULL,NULL,NULL),
-(1426934263644770305,1424977440712749000,'普通会员卡',1425650854943322000,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 23:50:13-card_pfF_7UhbRQ-KuAOVEjxFLA**','2021-08-15 23:50:14',2,'2021-08-15 23:50:14','2021-10-15 23:50:14',0.01,'card_pfF_7UhbRQ-KuAOVEjxFLA**',1,NULL,1,1,0,0,NULL,'2021-08-15 23:50:14',NULL,NULL,NULL,NULL),
-(1426936811445374978,1424977440712749000,'普通会员卡',1425650854943322000,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-16 00:00:21-card__JhgEmtgSs61-FbflZsj5g**','2021-08-16 00:00:21',2,'2021-08-16 00:00:21','2021-10-16 00:00:21',0.01,'card__JhgEmtgSs61-FbflZsj5g**',1,NULL,1,1,0,0,NULL,'2021-08-16 00:00:21',NULL,NULL,NULL,NULL),
-(1426939558307639298,1424977440712749000,'普通会员卡',1425650854943322000,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-16 00:11:08-card_g0XOl_qlSI6GJX60qDxVlg**','2021-08-16 00:11:08',2,'2021-08-16 00:11:08','2021-10-16 00:11:08',0.01,'card_g0XOl_qlSI6GJX60qDxVlg**',1,NULL,1,1,0,0,NULL,'2021-08-16 00:11:16',NULL,NULL,NULL,NULL),
-(1426940941006090242,1424977440712749000,'普通会员卡',1425650854943322000,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-16 00:16:41-card_N19_mdwqSsmhAKwNqajkBw**','2021-08-16 00:16:42',2,'2021-08-16 00:16:42','2021-10-16 00:16:42',0.01,'card_N19_mdwqSsmhAKwNqajkBw**',1,NULL,1,1,0,0,NULL,'2021-08-16 00:16:46',NULL,NULL,NULL,NULL),
-(1426941683775381506,1424977440712749000,'普通会员卡',1425650854943322000,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-16 00:19:42-card_8m765BSgTX6-7v2Rum_aVA**','2021-08-16 00:19:43',2,'2021-08-16 00:19:43','2021-10-16 00:19:43',0.01,'card_8m765BSgTX6-7v2Rum_aVA**',2,NULL,1,1,0,0,NULL,'2021-08-16 00:19:43',NULL,NULL,NULL,NULL);
+(1426854395682848769,1424977440712749058,'普通会员卡',1425650854943322113,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 18:32:51-dfb93856ea5444d58053ef03766060ee','2021-08-15 18:32:52',2,'2021-08-15 18:32:52','2021-10-15 18:32:52',0.01,'9a77459080b34e9a8a56308b89d9497d',1,NULL,1,1,0,0,NULL,'2021-08-15 18:32:52',NULL,NULL,NULL,NULL),
+(1426917325140992001,1424977440712749058,'普通会员卡',1425650854943322113,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 22:42:54-71df58d6c1cd4f9ebc1a293287a58d1b','2021-08-15 22:42:55',2,'2021-08-15 22:42:55','2021-10-15 22:42:55',0.01,'8f277e20067547dcb4e00da75aab62fe',1,NULL,1,1,0,0,NULL,'2021-08-15 22:42:55',NULL,NULL,NULL,NULL),
+(1426918465278648321,1424977440712749058,'普通会员卡',1425650854943322113,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 22:47:27-41d37bc974fb4cc98c7c8510f73bfa5a','2021-08-15 22:47:27',2,'2021-08-15 22:47:27','2021-10-15 22:47:27',0.01,'f1b9bbb4a06041e2ba5a5798e07546a1',1,NULL,1,1,0,0,NULL,'2021-08-15 22:47:27',NULL,NULL,NULL,NULL),
+(1426933271389884418,1424977440712749058,'普通会员卡',1425650854943322113,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 23:46:17-card_zMZXpM42TdS4EgUSQM98oA**','2021-08-15 23:46:17',2,'2021-08-15 23:46:17','2021-10-15 23:46:17',0.01,'card_zMZXpM42TdS4EgUSQM98oA**',1,NULL,1,1,0,0,NULL,'2021-08-15 23:46:17',NULL,NULL,NULL,NULL),
+(1426934159986741250,1424977440712749058,'普通会员卡',1425650854943322113,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 23:49:49-card_vPvyHHssSOy-JTBr3Gp-Zw**','2021-08-15 23:49:49',2,'2021-08-15 23:49:49','2021-10-15 23:49:49',0.01,'card_vPvyHHssSOy-JTBr3Gp-Zw**',1,NULL,1,1,0,0,NULL,'2021-08-15 23:49:49',NULL,NULL,NULL,NULL),
+(1426934199887155202,1424977440712749058,'普通会员卡',1425650854943322113,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 23:49:58-card_nVaiV76OSO6iBM7uMPYiUA**','2021-08-15 23:49:59',2,'2021-08-15 23:49:59','2021-10-15 23:49:59',0.01,'card_nVaiV76OSO6iBM7uMPYiUA**',1,NULL,1,1,0,0,NULL,'2021-08-15 23:49:59',NULL,NULL,NULL,NULL),
+(1426934263644770305,1424977440712749058,'普通会员卡',1425650854943322113,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-15 23:50:13-card_pfF_7UhbRQ-KuAOVEjxFLA**','2021-08-15 23:50:14',2,'2021-08-15 23:50:14','2021-10-15 23:50:14',0.01,'card_pfF_7UhbRQ-KuAOVEjxFLA**',1,NULL,1,1,0,0,NULL,'2021-08-15 23:50:14',NULL,NULL,NULL,NULL),
+(1426936811445374978,1424977440712749058,'普通会员卡',1425650854943322113,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-16 00:00:21-card__JhgEmtgSs61-FbflZsj5g**','2021-08-16 00:00:21',2,'2021-08-16 00:00:21','2021-10-16 00:00:21',0.01,'card__JhgEmtgSs61-FbflZsj5g**',1,NULL,1,1,0,0,NULL,'2021-08-16 00:00:21',NULL,NULL,NULL,NULL),
+(1426939558307639298,1424977440712749058,'普通会员卡',1425650854943322113,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-16 00:11:08-card_g0XOl_qlSI6GJX60qDxVlg**','2021-08-16 00:11:08',2,'2021-08-16 00:11:08','2021-10-16 00:11:08',0.01,'card_g0XOl_qlSI6GJX60qDxVlg**',1,NULL,1,1,0,0,NULL,'2021-08-16 00:11:16',NULL,NULL,NULL,NULL),
+(1426940941006090242,1424977440712749058,'普通会员卡',1425650854943322113,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-16 00:16:41-card_N19_mdwqSsmhAKwNqajkBw**','2021-08-16 00:16:42',2,'2021-08-16 00:16:42','2021-10-16 00:16:42',0.01,'card_N19_mdwqSsmhAKwNqajkBw**',1,NULL,1,1,0,0,NULL,'2021-08-16 00:16:46',NULL,NULL,NULL,NULL),
+(1426941683775381506,1424977440712749058,'普通会员卡',1425650854943322113,'','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','普通会员卡-2021-08-16 00:19:42-card_8m765BSgTX6-7v2Rum_aVA**','2021-08-16 00:19:43',2,'2021-08-16 00:19:43','2021-10-16 00:19:43',0.01,'card_8m765BSgTX6-7v2Rum_aVA**',2,NULL,1,1,0,0,NULL,'2021-08-16 00:19:43',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `cs_merchant` */
 
@@ -289,7 +289,7 @@ CREATE TABLE `cs_merchant` (
   `corp_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '租户代码',
   `corp_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '租户名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12633691073127 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商家管理';
+) ENGINE=InnoDB AUTO_INCREMENT=12633691073128 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商家管理';
 
 /*Data for the table `cs_merchant` */
 
@@ -297,7 +297,8 @@ insert  into `cs_merchant`(`id`,`merchant_name`,`merchant_account`,`merchant_pas
 (12633691073123,'商店4','shangdian4','123456',11,'350200','厦门市','福建省厦门市思明区湖滨北路76号','118.08987','24.477347','http://localhost:1111/config/resource/9486a0ef3ccb4c26861641269327dd40202108091523a2VjaGVuZzIuanBn.jpg','kecheng2.jpg','http://localhost:1111/config/resource/0d21268794ed469ea24ddb1688d55c4f202108032320M2Jpb2xvZ3kuanBn.jpg,http://localhost:1111/config/resource/da729778e32b4325b24233bdaaa24903202108051503R2VvZ3JhcGh5LmpwZw==.jpg','3biology.jpg,Geography.jpg','4a8b8349560b4128a08cbce7b9c42377','123456','12633691073116,12633691073114','123,11','12633691073116,12633691073115,12633691073114','热水,wifi,空调','12633691073116,12633691073115','热水,wifi',0,'<p>123</p>','<p>2222</p>','08:00','23:30',1,0,0,NULL,'2021-08-02 18:13:42',NULL,NULL,'4a8b8349560b4128a08cbce7b9c42377','商店4'),
 (12633691073124,'商店5','shangdian5','123456',1,'350200','厦门市','福建省厦门市思明区民族路33号','118.08243','24.44579','http://localhost:1111/config/resource/9486a0ef3ccb4c26861641269327dd40202108091523a2VjaGVuZzIuanBn.jpg','kecheng2.jpg','http://localhost:1111/config/resource/0b7dfe518a284cfc94f8aa8b971f3614202108091523M0FyYWJpYyBMYW5ndWFnZSBTdWJqZWN0IC0gVGV4dHMuanBn.jpg','3Arabic Language Subject - Texts.jpg','ab144b04b56b47a4a520f43b54193a2b',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'','','00:30','22:00',1,0,0,NULL,'2021-08-09 15:23:42',NULL,NULL,'ab144b04b56b47a4a520f43b54193a2b','商店5'),
 (12633691073125,'商店6','shangdian6','123456',5,'350200','厦门市','福建省厦门市思明区寿山路4号','118.083215','24.447083','http://localhost:1111/config/resource/9486a0ef3ccb4c26861641269327dd40202108091523a2VjaGVuZzIuanBn.jpg','kecheng2.jpg','','','7df965bc0c2043899dfaa9c687e23877',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'','','00:30','23:30',1,0,0,NULL,'2021-08-09 15:24:35',NULL,NULL,'7df965bc0c2043899dfaa9c687e23877','商店6'),
-(12633691073126,'商店7','shangdian7','123456',1,'350200','厦门市','厦门市','118.08243','24.44579','http://localhost:1111/config/resource/9486a0ef3ccb4c26861641269327dd40202108091523a2VjaGVuZzIuanBn.jpg','kecheng2.jpg','','','4eafb79da7164bc18b5b5392b2ddc6b6',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'','','00:00','18:00',1,0,0,NULL,'2021-08-09 17:01:03',NULL,NULL,'4eafb79da7164bc18b5b5392b2ddc6b6','商店7');
+(12633691073126,'商店7','shangdian7','123456',1,'350200','厦门市','厦门市','118.08243','24.44579','http://localhost:1111/config/resource/9486a0ef3ccb4c26861641269327dd40202108091523a2VjaGVuZzIuanBn.jpg','kecheng2.jpg','','','4eafb79da7164bc18b5b5392b2ddc6b6',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'','','00:00','18:00',1,0,0,NULL,'2021-08-09 17:01:03',NULL,NULL,'4eafb79da7164bc18b5b5392b2ddc6b6','商店7'),
+(12633691073127,'fuzhou1','fuzhou1','123456',5,'350100','福州市','福建省福州市鼓楼区津泰路98号','119.30405','26.08198','http://localhost:1111/config/resource/fa9c8fe2b39745beb5355d5514d2db43202108172044YmlvbG9neS1iZy5qcGc=.jpg','biology-bg.jpg','http://localhost:1111/config/resource/facfc5be7ab54746b9f699ea5e13ec9c202108172044a2VjaGVuZzEuanBn.jpg,http://localhost:1111/config/resource/f0d71371bed34035957fa0d791a3852f202108172044M1N1YmplY3QgbWF0dGVyIGFwcGxpZWQgbWF0aGVtYXRpY3MuanBn.jpg','kecheng1.jpg,3Subject matter applied mathematics.jpg','39e1802d7d24464eb5719651fb9e24a9',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'','','00:00','23:59',1,0,0,NULL,'2021-08-17 20:44:18',NULL,NULL,'39e1802d7d24464eb5719651fb9e24a9','fuzhou1');
 
 /*Table structure for table `cs_merchant_order` */
 
@@ -337,6 +338,93 @@ CREATE TABLE `cs_merchant_order` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='商店茶室订单记录';
 
 /*Data for the table `cs_merchant_order` */
+
+/*Table structure for table `cs_recharge_consum` */
+
+DROP TABLE IF EXISTS `cs_recharge_consum`;
+
+CREATE TABLE `cs_recharge_consum` (
+  `id` bigint NOT NULL COMMENT '主键',
+  `wxuser_id` bigint NOT NULL COMMENT '微信用户ID',
+  `cousum_amount` double NOT NULL COMMENT '消费金额',
+  `room_order_id` bigint NOT NULL COMMENT '茶室订单id',
+  `card_order_id` bigint NOT NULL COMMENT '会员卡订单id',
+  `consum_type` int NOT NULL COMMENT '消费类型，0是茶室订单，1是会员订单',
+  `status` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
+  `deleted` int NOT NULL DEFAULT '0' COMMENT '逻辑删除，0：未删除，1：已删除',
+  `version` int NOT NULL DEFAULT '0' COMMENT '版本',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改者',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  `corp_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户代码',
+  `corp_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='充值消费';
+
+/*Data for the table `cs_recharge_consum` */
+
+/*Table structure for table `cs_recharge_record` */
+
+DROP TABLE IF EXISTS `cs_recharge_record`;
+
+CREATE TABLE `cs_recharge_record` (
+  `id` bigint NOT NULL COMMENT '主键',
+  `recharge_amount` double NOT NULL COMMENT '充值金额',
+  `recharge_gived` double NOT NULL COMMENT '赠送金额',
+  `recharge_final` double NOT NULL COMMENT '最终金额',
+  `integral` int DEFAULT NULL COMMENT '积分',
+  `wxuser_id` bigint DEFAULT NULL COMMENT '微信用户ID',
+  `wxuser_phone` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信用户手机',
+  `openid` varchar(64) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信用户openID',
+  `order_name` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '商品名称，充值+金额+预订日期+uuid',
+  `order_date` timestamp NULL DEFAULT NULL COMMENT '购买日期',
+  `out_trade_no` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '32位的UUID',
+  `payment_status` int DEFAULT NULL COMMENT '支付状态：支付中0、支付失败1、支付成功2，支付关闭3，充值失败后就将交易关闭，每次都是最新的',
+  `source_type` int DEFAULT NULL COMMENT '充值来源：系统发放0、用户购买1',
+  `status` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
+  `deleted` int NOT NULL DEFAULT '0' COMMENT '逻辑删除，0：未删除，1：已删除',
+  `version` int NOT NULL DEFAULT '0' COMMENT '版本',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改者',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  `corp_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户代码',
+  `corp_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='充值记录';
+
+/*Data for the table `cs_recharge_record` */
+
+insert  into `cs_recharge_record`(`id`,`recharge_amount`,`recharge_gived`,`recharge_final`,`integral`,`wxuser_id`,`wxuser_phone`,`openid`,`order_name`,`order_date`,`out_trade_no`,`payment_status`,`source_type`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
+(1428283108853055489,20,5,25,20,1,'13950019129',NULL,'Recharge-20.02021-08-19 17:10:04-3ef641924442486c98eaea7a26278064','2021-08-19 17:10:04',NULL,2,0,1,0,0,NULL,'2021-08-19 17:10:04',NULL,NULL,NULL,NULL),
+(1428283203921149953,100,10,110,100,1,'13950019129',NULL,'Recharge-100.02021-08-19 17:10:26-9791ad022c39437f87f31431ea1d3a01','2021-08-19 17:10:27',NULL,2,0,1,0,0,NULL,'2021-08-19 17:10:26',NULL,NULL,NULL,NULL);
+
+/*Table structure for table `cs_recharge_setting` */
+
+DROP TABLE IF EXISTS `cs_recharge_setting`;
+
+CREATE TABLE `cs_recharge_setting` (
+  `id` bigint NOT NULL COMMENT '主键',
+  `recharge_amount` double NOT NULL COMMENT '充值金额',
+  `recharge_gived` double NOT NULL COMMENT '赠送金额',
+  `status` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
+  `deleted` int NOT NULL DEFAULT '0' COMMENT '逻辑删除，0：未删除，1：已删除',
+  `version` int NOT NULL DEFAULT '0' COMMENT '版本',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改者',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  `corp_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户代码',
+  `corp_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='充值设置';
+
+/*Data for the table `cs_recharge_setting` */
+
+insert  into `cs_recharge_setting`(`id`,`recharge_amount`,`recharge_gived`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
+(1428243412303253506,100,10,1,0,0,NULL,'2021-08-19 14:32:19',NULL,NULL,NULL,NULL),
+(1428257494083330049,20,5,1,0,0,NULL,'2021-08-19 15:28:17',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `cs_tearoom` */
 
@@ -615,7 +703,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 /*Data for the table `qrtz_scheduler_state` */
 
 insert  into `qrtz_scheduler_state`(`SCHED_NAME`,`INSTANCE_NAME`,`LAST_CHECKIN_TIME`,`CHECKIN_INTERVAL`) values 
-('quartzScheduler','krislaptop1629122873012',1629122964296,5000);
+('quartzScheduler','krislaptop1629358384795',1629365179068,5000);
 
 /*Table structure for table `qrtz_simple_triggers` */
 
@@ -1634,7 +1722,14 @@ insert  into `sys_menu`(`menu_code`,`parent_code`,`parent_codes`,`tree_sort`,`tr
 ('82200','82000','00000000,80000,82000',110,'1,150,110','1',4,'首级节点,营销管理,优惠卷管理','优惠卷新增','2','','','','#409EFF','','cs:coupon:add',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 18:25:09','88888888','2021-08-10 18:25:09',''),
 ('82300','82000','00000000,80000,82000',130,'1,150,110','1',4,'首级节点,营销管理,优惠卷管理','优惠卷信息','2','','','','#409EFF','','cs:coupon:info',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 18:25:33','88888888','2021-08-10 18:25:33',''),
 ('82400','82000','00000000,80000,82000',140,'1,150,110','1',4,'首级节点,营销管理,优惠卷管理','优惠卷删除','2','','','','#409EFF','','cs:coupon:delete',NULL,'0','1','1',0,0,'1','88888888','2021-08-10 18:25:57','88888888','2021-08-10 18:25:57',''),
-('82500','82000','00000000,80000,82000',150,'1,150,110','1',4,'首级节点,营销管理,优惠卷管理','发放优惠卷','2','','','','#409EFF','','cs:coupon:released:add',NULL,'0','1','1',0,0,'1','88888888','2021-08-11 16:06:53','88888888','2021-08-11 16:06:53','');
+('82500','82000','00000000,80000,82000',150,'1,150,110','1',4,'首级节点,营销管理,优惠卷管理','发放优惠卷','2','','','','#409EFF','','cs:coupon:released:add',NULL,'0','1','1',0,0,'1','88888888','2021-08-11 16:06:53','88888888','2021-08-11 16:06:53',''),
+('83000','80000','00000000',120,'1','2',2,'首级节点','充值管理','1','','','','#409EFF','','cs:recharge:setting:page',NULL,'1','1','1',0,0,'1','88888888','2021-08-19 12:03:27','88888888','2021-08-19 12:03:48',''),
+('83100','83000','00000000,83000',100,'1,120','1',3,'首级节点,充值管理','充值更新','2','','','','#409EFF','','cs:recharge:setting:update',NULL,'0','1','1',0,0,'1','88888888','2021-08-19 12:04:29','88888888','2021-08-19 12:04:29',''),
+('83200','83000','00000000,83000',110,'1,120','1',3,'首级节点,充值管理','充值删除','2','','','','#409EFF','','cs:recharge:setting:delete',NULL,'0','1','1',0,0,'1','88888888','2021-08-19 12:04:53','88888888','2021-08-19 12:04:53',''),
+('83300','83000','00000000,83000',120,'1,120','1',3,'首级节点,充值管理','充值新增','2','','','','#409EFF','','cs:recharge:setting:add',NULL,'0','1','1',0,0,'1','88888888','2021-08-19 12:05:16','88888888','2021-08-19 12:05:16',''),
+('83400','83000','00000000,83000',130,'1,120','1',3,'首级节点,充值管理','充值信息','2','','','','#409EFF','','cs:recharge:setting:info',NULL,'0','1','1',0,0,'1','88888888','2021-08-19 12:05:46','88888888','2021-08-19 12:05:46',''),
+('83500','83000','00000000,83000',140,'1,120','1',3,'首级节点,充值管理','充值历史查询','2','','','','#409EFF','','cs:recharge:record:page',NULL,'0','1','1',0,0,'1','88888888','2021-08-19 12:06:23','88888888','2021-08-19 12:06:23',''),
+('83600','83000','00000000,83000',150,'1,120','1',3,'首级节点,充值管理','充值历史新增','2','','','','#409EFF','','cs:recharge:record:add',NULL,'0','1','1',0,0,'1','88888888','2021-08-19 12:07:00','88888888','2021-08-19 12:07:00','');
 
 /*Table structure for table `sys_msg` */
 
@@ -1752,6 +1847,7 @@ CREATE TABLE `sys_office` (
 insert  into `sys_office`(`office_code`,`parent_code`,`parent_codes`,`tree_sort`,`tree_sorts`,`tree_leaf`,`tree_level`,`tree_names`,`view_code`,`office_name`,`full_name`,`office_type`,`leader`,`phone`,`address`,`zip_code`,`email`,`deleted`,`version`,`status`,`create_by`,`create_time`,`update_by`,`update_time`,`remarks`,`corp_code`,`corp_name`,`default_account_rules`) values 
 ('00000000','88888888','88888888',100,'1','1',1,'顶级节点','00000000','管理组织','管理组织','1',NULL,NULL,NULL,NULL,NULL,0,0,'1','88888888','2020-08-01 00:11:26','88888888','2020-08-01 00:11:26',NULL,'','',''),
 ('10000','00000000','00000000',100,'1','2',2,'首级节点','10000','测试商户','测试商户','1','','','','','',0,0,'1','1','2019-11-29 11:58:35','1','2019-12-17 23:44:20','','10000','','01'),
+('39e1802d7d24464eb5719651fb9e24a9','00000000','00000000',1,'1','1',2,'首级节点','39e1802d7d24464eb5719651fb9e24a9','fuzhou1','fuzhou1','1',NULL,NULL,NULL,NULL,NULL,0,0,'1','88888888','2021-08-17 20:44:19','88888888','2021-08-17 20:44:19',NULL,'39e1802d7d24464eb5719651fb9e24a9','fuzhou1',NULL),
 ('4a8b8349560b4128a08cbce7b9c42377','00000000','00000000',1,'1','1',2,'首级节点','4a8b8349560b4128a08cbce7b9c42377','商店4','商店4','1',NULL,NULL,NULL,NULL,NULL,0,0,'1','88888888','2021-08-02 18:13:42','88888888','2021-08-02 18:13:42',NULL,'4a8b8349560b4128a08cbce7b9c42377','商店4',NULL),
 ('4eafb79da7164bc18b5b5392b2ddc6b6','00000000','00000000',1,'1','1',2,'首级节点','4eafb79da7164bc18b5b5392b2ddc6b6','商店7','商店7','1',NULL,NULL,NULL,NULL,NULL,0,0,'1','88888888','2021-08-09 17:01:04','88888888','2021-08-09 17:01:04',NULL,'4eafb79da7164bc18b5b5392b2ddc6b6','商店7',NULL),
 ('7df965bc0c2043899dfaa9c687e23877','00000000','00000000',1,'1','1',2,'首级节点','7df965bc0c2043899dfaa9c687e23877','商店6','商店6','1',NULL,NULL,NULL,NULL,NULL,0,0,'1','88888888','2021-08-09 15:24:36','88888888','2021-08-09 15:24:36',NULL,'7df965bc0c2043899dfaa9c687e23877','商店6',NULL),
@@ -2016,7 +2112,14 @@ insert  into `sys_role_menu`(`id`,`role_id`,`menu_code`,`deleted`,`version`,`cre
 (1425368158589452289,'1288762228375416834','82500',0,0,'88888888','2021-08-11 16:07:06','88888888','2021-08-11 16:07:06','0','whyy'),
 (1426026406153895937,'1288762228375416834','81500',0,0,'88888888','2021-08-13 11:42:44','88888888','2021-08-13 11:42:44','0','whyy'),
 (1426026406183256066,'1288762228375416834','81600',0,0,'88888888','2021-08-13 11:42:44','88888888','2021-08-13 11:42:44','0','whyy'),
-(1426026406183256067,'1288762228375416834','81700',0,0,'88888888','2021-08-13 11:42:44','88888888','2021-08-13 11:42:44','0','whyy');
+(1426026406183256067,'1288762228375416834','81700',0,0,'88888888','2021-08-13 11:42:44','88888888','2021-08-13 11:42:44','0','whyy'),
+(1428206910886240258,'1288762228375416834','83000',0,0,'88888888','2021-08-19 12:07:17','88888888','2021-08-19 12:07:17','0','whyy'),
+(1428206910911406082,'1288762228375416834','83100',0,0,'88888888','2021-08-19 12:07:17','88888888','2021-08-19 12:07:17','0','whyy'),
+(1428206910911406083,'1288762228375416834','83200',0,0,'88888888','2021-08-19 12:07:17','88888888','2021-08-19 12:07:17','0','whyy'),
+(1428206910911406084,'1288762228375416834','83300',0,0,'88888888','2021-08-19 12:07:17','88888888','2021-08-19 12:07:17','0','whyy'),
+(1428206910911406085,'1288762228375416834','83400',0,0,'88888888','2021-08-19 12:07:17','88888888','2021-08-19 12:07:17','0','whyy'),
+(1428206910919794690,'1288762228375416834','83500',0,0,'88888888','2021-08-19 12:07:17','88888888','2021-08-19 12:07:17','0','whyy'),
+(1428206910919794691,'1288762228375416834','83600',0,0,'88888888','2021-08-19 12:07:17','88888888','2021-08-19 12:07:17','0','whyy');
 
 /*Table structure for table `sys_schedule_job` */
 
@@ -2214,7 +2317,8 @@ insert  into `sys_user`(`is_wx`,`id`,`username`,`nickname`,`password`,`salt`,`em
 ('0',1422138530651451393,'shangdian4','shangdian4','46f92365436a857d7face8fc51b68bd45583a8c60e62c9a6c1b624446bfbcbe7','11d95b69d5c87f10baa46d8e6155cc3d',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'2',NULL,NULL,'0','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,0,0,'88888888','2021-08-02 18:13:42','88888888','2021-08-02 18:13:42','4a8b8349560b4128a08cbce7b9c42377',NULL),
 ('0',1424632462979391489,'shangdian5','shangdian5','d95420740f36f25f6131824d93e810fc239665dcbec652d7650d002d45fb45a5','3dbca5eb6cb81448e541b3c497be9d36',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'2',NULL,NULL,'0','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,0,0,'88888888','2021-08-09 15:23:42','88888888','2021-08-09 15:23:42','ab144b04b56b47a4a520f43b54193a2b',NULL),
 ('0',1424632686623875074,'shangdian6','shangdian6','3649e75e23714e5c82c272ef7e9542b5704a192d5ac54ecf44bf608d61922cd3','1946d106fa18b5dd33c768102ffbc710',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'2',NULL,NULL,'0','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,0,0,'88888888','2021-08-09 15:24:36','88888888','2021-08-09 15:24:36','7df965bc0c2043899dfaa9c687e23877',NULL),
-('0',1424656964719288321,'shangdian7','shangdian7','e6cab40f49cd15638b9374e33add58f965418315d646921f1026066122244159','2f72bbdf7dda698301a4deb5efa312b9',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'2',NULL,NULL,'0','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,0,0,'88888888','2021-08-09 17:01:04','88888888','2021-08-09 17:01:04','4eafb79da7164bc18b5b5392b2ddc6b6',NULL);
+('0',1424656964719288321,'shangdian7','shangdian7','e6cab40f49cd15638b9374e33add58f965418315d646921f1026066122244159','2f72bbdf7dda698301a4deb5efa312b9',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'2',NULL,NULL,'0','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,0,0,'88888888','2021-08-09 17:01:04','88888888','2021-08-09 17:01:04','4eafb79da7164bc18b5b5392b2ddc6b6',NULL),
+('0',1427612250518130689,'fuzhou1','fuzhou1','926c201cd842f03d0d2cb1e321e0bd01bcabd31f2b7879302d6b2e6bdc835ffe','43357a1260eb3ffdb682517c824826b2',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'2',NULL,NULL,'0','1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,1,0,0,'88888888','2021-08-17 20:44:19','88888888','2021-08-17 20:44:19','39e1802d7d24464eb5719651fb9e24a9',NULL);
 
 /*Table structure for table `sys_user_office` */
 
@@ -4512,7 +4616,8 @@ insert  into `sys_user_office`(`id`,`user_id`,`office_code`,`deleted`,`version`,
 (1422138530680811521,1422138530651451393,'4a8b8349560b4128a08cbce7b9c42377',0,0,'88888888','2021-08-02 18:13:42','88888888','2021-08-02 18:13:42','4a8b8349560b4128a08cbce7b9c42377',NULL),
 (1424632463033917442,1424632462979391489,'ab144b04b56b47a4a520f43b54193a2b',0,0,'88888888','2021-08-09 15:23:42','88888888','2021-08-09 15:23:42','ab144b04b56b47a4a520f43b54193a2b',NULL),
 (1424632686674206721,1424632686623875074,'7df965bc0c2043899dfaa9c687e23877',0,0,'88888888','2021-08-09 15:24:36','88888888','2021-08-09 15:24:36','7df965bc0c2043899dfaa9c687e23877',NULL),
-(1424656964773814274,1424656964719288321,'4eafb79da7164bc18b5b5392b2ddc6b6',0,0,'88888888','2021-08-09 17:01:04','88888888','2021-08-09 17:01:04','4eafb79da7164bc18b5b5392b2ddc6b6',NULL);
+(1424656964773814274,1424656964719288321,'4eafb79da7164bc18b5b5392b2ddc6b6',0,0,'88888888','2021-08-09 17:01:04','88888888','2021-08-09 17:01:04','4eafb79da7164bc18b5b5392b2ddc6b6',NULL),
+(1427612250576850945,1427612250518130689,'39e1802d7d24464eb5719651fb9e24a9',0,0,'88888888','2021-08-17 20:44:19','88888888','2021-08-17 20:44:19','39e1802d7d24464eb5719651fb9e24a9',NULL);
 
 /*Table structure for table `sys_user_role` */
 
@@ -6813,7 +6918,8 @@ insert  into `sys_user_role`(`id`,`user_id`,`role_id`,`deleted`,`version`,`creat
 (1422138530739531777,1422138530651451393,1,0,0,'88888888','2021-08-02 18:13:42','88888888','2021-08-02 18:13:42',NULL,NULL),
 (1424632463239438338,1424632462979391489,1,0,0,'88888888','2021-08-09 15:23:42','88888888','2021-08-09 15:23:42',NULL,NULL),
 (1424632686753898497,1424632686623875074,1,0,0,'88888888','2021-08-09 15:24:36','88888888','2021-08-09 15:24:36',NULL,NULL),
-(1424656964899643394,1424656964719288321,1,0,0,'88888888','2021-08-09 17:01:04','88888888','2021-08-09 17:01:04',NULL,NULL);
+(1424656964899643394,1424656964719288321,1,0,0,'88888888','2021-08-09 17:01:04','88888888','2021-08-09 17:01:04',NULL,NULL),
+(1427612250694291458,1427612250518130689,1,0,0,'88888888','2021-08-17 20:44:19','88888888','2021-08-17 20:44:19',NULL,NULL);
 
 /*Table structure for table `wx_user` */
 
@@ -6833,7 +6939,7 @@ CREATE TABLE `wx_user` (
   `unionid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '绑定的微信号unionid',
   `menber_type` bigint DEFAULT NULL COMMENT '会员类型',
   `integral` int DEFAULT NULL COMMENT '积分',
-  `balance` int DEFAULT NULL COMMENT '余额',
+  `balance` double DEFAULT NULL COMMENT '余额',
   `remarks` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注信息',
   `status` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
   `deleted` int NOT NULL DEFAULT '0' COMMENT '逻辑删除，0：未删除，1：已删除',
@@ -6850,7 +6956,7 @@ CREATE TABLE `wx_user` (
 /*Data for the table `wx_user` */
 
 insert  into `wx_user`(`id`,`nickname`,`password`,`salt`,`email`,`phone_number`,`gender`,`avatar_url`,`signtext`,`openid`,`unionid`,`menber_type`,`integral`,`balance`,`remarks`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
-(1,'testUser','1',NULL,NULL,'13950019129',1,NULL,NULL,NULL,NULL,1,11,11,NULL,1,0,0,'1','2021-08-06 22:47:47',NULL,NULL,NULL,NULL),
+(1,'testUser','1',NULL,NULL,'13950019129',1,NULL,NULL,NULL,NULL,1,120,135,NULL,1,0,0,'1','2021-08-06 22:47:47',NULL,NULL,NULL,NULL),
 (1425650854943322113,'陈艺超',NULL,NULL,NULL,NULL,1,'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqso2yHdJuwe2b0CQZt8icCLallfEtkm6Mkxb8rgRGvAWAeEmO4q6WMJIsK7ibib0YNajnegqXTGWaQw/132',NULL,'oS2ws5OZJFdBNtuhdqM9v4OJjkOY',NULL,NULL,NULL,NULL,NULL,1,0,0,NULL,'2021-08-12 10:50:25',NULL,NULL,NULL,NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

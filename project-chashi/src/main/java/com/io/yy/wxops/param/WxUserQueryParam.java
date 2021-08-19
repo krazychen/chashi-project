@@ -1,5 +1,7 @@
 package com.io.yy.wxops.param;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -25,6 +27,9 @@ import javax.validation.constraints.NotBlank;
 public class WxUserQueryParam extends OrderQueryParam {
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty(value = "主键")
+    private Long id;
+
     @ApiModelProperty(value = "昵称")
     private String nickname;
 
@@ -33,4 +38,10 @@ public class WxUserQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "昵称或者手机号码")
     private String nameAphone;
+
+    @ApiModelProperty(value = "积分")
+    private Integer integral;
+
+    @ApiModelProperty(value = "余额")
+    private Double balance;
 }

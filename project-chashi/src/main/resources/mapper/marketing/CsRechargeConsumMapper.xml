@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.marketing.mapper.CsRechargeConsumMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, wxuser_id, cousum_amount, room_order_id, card_order_id, consum_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getCsRechargeConsumById" resultType="com.io.yy.marketing.vo.CsRechargeConsumQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_recharge_consum where id = #{id}
+    </select>
+
+    <select id="getCsRechargeConsumPageList" resultType="com.io.yy.marketing.vo.CsRechargeConsumQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_recharge_consum
+    </select>
+
+    <update id="updateStatus">
+        update cs_recharge_consum set status = #{param.status}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
+</mapper>

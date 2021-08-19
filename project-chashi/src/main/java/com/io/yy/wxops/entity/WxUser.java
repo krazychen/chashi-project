@@ -70,7 +70,7 @@ public class WxUser extends BaseEntity {
     private Integer integral;
 
     @ApiModelProperty(value = "余额")
-    private Integer balance;
+    private Double balance;
 
     @ApiModelProperty(value = "备注信息")
     private String remarks;

@@ -178,7 +178,7 @@ public class SysSchoolServiceImpl extends BaseServiceImpl<SysSchoolMapper, SysSc
         //最后批量保存学校数据
         //批量保存专业数据
         //批量保存学科数据
-        List<SysMenuTreeQueryVo> lists1 = (List<SysMenuTreeQueryVo>) redisTemplate.opsForValue().get("reidsSysArea");
+        List<SysMenuTreeQueryVo> lists1 = (List<SysMenuTreeQueryVo>) redisTemplate.opsForValue().get("city:area:redisSysArea");
         Boolean judge = true;
         try {
             ExcelImport excelImport = new ExcelImport(file, 2, 0);

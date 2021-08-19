@@ -7,6 +7,7 @@ import com.io.yy.wxops.param.WxUserQueryParam;
 import com.io.yy.wxops.vo.WxLoginQueryVo;
 import com.io.yy.wxops.vo.WxUserQueryVo;
 import com.io.yy.common.vo.Paging;
+import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
 import java.util.List;
@@ -115,4 +116,12 @@ public interface WxUserService extends BaseService<WxUser> {
      * @throws Exception
      */
     WxUserQueryVo wxUserUpdateNickName(WxLoginQueryParam wxLoginQueryParam) throws Exception;
+
+    /**
+     * 更新余额和积分
+     *
+     * @param wxUserQueryParam
+     * @return
+     */
+    Integer updateBalanceAIntegral(@Param("param") WxUserQueryParam wxUserQueryParam);
 }
