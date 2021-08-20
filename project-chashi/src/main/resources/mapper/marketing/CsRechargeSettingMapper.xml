@@ -16,7 +16,7 @@
     <select id="getCsRechargeSettingPageList" resultType="com.io.yy.marketing.vo.CsRechargeSettingQueryVo">
         select
         <include refid="Base_Column_List"/>
-        from cs_recharge_setting
+        from cs_recharge_setting where deleted = 0
         <if test="param.status != null and param.status.trim() != ''">
             and status = #{param.status}
         </if>
