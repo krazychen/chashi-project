@@ -13,6 +13,12 @@
         from cs_recharge_record where id = #{id}
     </select>
 
+    <select id="getCsRechargeRecordByOutTradeNo" resultType="com.io.yy.marketing.vo.CsRechargeRecordQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_recharge_record where out_trade_no = #{outTradeNo}
+    </select>
+
     <select id="getCsRechargeRecordPageList" resultType="com.io.yy.marketing.vo.CsRechargeRecordQueryVo">
         select
         <include refid="Base_Column_List"/>

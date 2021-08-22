@@ -132,9 +132,9 @@ public interface CsMerchantService extends BaseService<CsMerchant> {
     /**
      * wx根据ID获取查询对象
      *
-     * @param id
+     * @param csMerchantQueryParam
      * @return
      * @throws Exception
      */
-    CsMerchantQueryVo getCsMerchantByIdForWx(Long id) throws Exception;
+    CsMerchantQueryVo getCsMerchantByIdForWx(CsMerchantQueryParam csMerchantQueryParam) throws Exception;
 }

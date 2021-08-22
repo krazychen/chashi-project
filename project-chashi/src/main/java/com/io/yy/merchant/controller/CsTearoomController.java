@@ -3,6 +3,7 @@ package com.io.yy.merchant.controller;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.io.yy.core.properties.WhyySystemProperties;
+import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
 import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.merchant.entity.CsTearoom;
 import com.io.yy.merchant.service.CsTearoomService;
@@ -13,6 +14,8 @@ import com.io.yy.common.controller.BaseController;
 import com.io.yy.util.UploadUtil;
 import com.io.yy.util.codec.EncodeUtils;
 import com.io.yy.util.lang.StringUtils;
+import com.io.yy.wxops.service.WxUserService;
+import com.io.yy.wxops.vo.WxUserQueryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +52,9 @@ public class CsTearoomController extends BaseController {
 
     @Autowired
     private CsTearoomService csTearoomService;
+
+    @Autowired
+    private WxUserService wxUserService;
 
     /**
      * 添加茶室管理
@@ -276,12 +282,20 @@ public class CsTearoomController extends BaseController {
     /**
      * 通过商户ID获取茶室管理小程序分页列表
      */
-    @PostMapping("/getRoomListForWx/{merchantId}")
+    @PostMapping("/getRoomListForWx")
     @ApiOperation(value = "通过商户ID获取茶室管理小程序分页列表", notes = "通过商户ID获取茶室管理小程序分页列表", response = CsTearoomQueryVo.class)
-    public ApiResult<Paging<CsTearoomQueryVo>> getRoomListForWx(@PathVariable("merchantId") Long merchantId) throws Exception {
-        CsTearoomQueryParam csTearoomQueryParam = new CsTearoomQueryParam();
-        csTearoomQueryParam.setMerchantId(merchantId);
+    public ApiResult<Paging<CsTearoomQueryVo>> getRoomListForWx(@Valid @RequestBody CsTearoomQueryParam csTearoomQueryParam) throws Exception {
         Paging<CsTearoomQueryVo> paging = csTearoomService.getCsTearoomPageListOrderBySort(csTearoomQueryParam);
+        //设置茶室的会员价，先获取当前的用户会员
+        if(StringUtils.isNotEmpty(csTearoomQueryParam.getOpenid())){
+            WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csTearoomQueryParam.getOpenid());
+            if(wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
+                CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
+                double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
+                paging.getRecords().stream().forEach(a->a.setMenberAmount(Double.valueOf(discount*a.getHoursAmount())));
+            }
+        }
+
         return ApiResult.ok(paging);
     }
 

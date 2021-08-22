@@ -38,7 +38,6 @@ public class CsRechargeRecord extends BaseEntity {
     private Double rechargeAmount;
 
     @ApiModelProperty(value = "赠送金额")
-    @NotNull(message = "赠送金额不能为空")
     private Double rechargeGived;
 
     @ApiModelProperty(value = "最终金额")

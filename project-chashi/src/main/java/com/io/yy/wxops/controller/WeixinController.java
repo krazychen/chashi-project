@@ -7,14 +7,17 @@ import com.io.yy.marketing.param.CsMembercardOrderQueryParam;
 import com.io.yy.marketing.param.CsRechargeRecordQueryParam;
 import com.io.yy.marketing.service.CsMembercardOrderService;
 import com.io.yy.marketing.service.CsRechargeRecordService;
+import com.io.yy.marketing.vo.CsRechargeRecordQueryVo;
 import com.io.yy.system.vo.SysConfigDataRedisVo;
 import com.io.yy.util.ConfigDataUtil;
 import com.io.yy.util.IpUtil;
 import com.io.yy.util.UUIDUtil;
 import com.io.yy.util.lang.DateUtils;
 import com.io.yy.util.lang.StringUtils;
+import com.io.yy.wxops.param.WxUserQueryParam;
 import com.io.yy.wxops.service.WxUserService;
 import com.io.yy.wxops.utils.PayUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
@@ -70,7 +73,7 @@ public class WeixinController extends WeixinSupport {
      */
     @RequestMapping("cardWxPay")
     @ApiOperation(value = "发起会员卡微信支付", notes = "发起会员卡微信支付", response = ApiResult.class)
-    public ApiResult<Boolean> cardWxPay(@ModelAttribute CsMembercardOrder csMembercardOrder, HttpServletRequest request) throws Exception{
+    public ApiResult<Boolean> cardWxPay(@ModelAttribute CsMembercardOrder csMembercardOrder, HttpServletRequest request) throws Exception {
         // 获取微信配置
         List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
 
@@ -88,10 +91,10 @@ public class WeixinController extends WeixinSupport {
         csMembercardOrder.setSourceType(1);
         csMembercardOrder.setOrderDate(new Date());
         csMembercardOrder.setStartTime(csMembercardOrder.getOrderDate());
-        csMembercardOrder.setEndTime(DateUtils.plusMonth(csMembercardOrder.getStartTime(),csMembercardOrder.getValidPeriod()));
-        String outTradeNo = "card_"+UUIDUtil.getUUIDBits(24);
-        csMembercardOrder.setOrderName(csMembercardOrder.getMembercardName()+'-'+
-                DateUtils.getYYYYMMDDHHMMSS(csMembercardOrder.getOrderDate())+'-'+ outTradeNo);
+        csMembercardOrder.setEndTime(DateUtils.plusMonth(csMembercardOrder.getStartTime(), csMembercardOrder.getValidPeriod()));
+        String outTradeNo = "card_" + UUIDUtil.getUUIDBits(24);
+        csMembercardOrder.setOrderName(csMembercardOrder.getMembercardName() + '-' +
+                DateUtils.getYYYYMMDDHHMMSS(csMembercardOrder.getOrderDate()) + '-' + outTradeNo);
         csMembercardOrder.setOutTradeNo(outTradeNo);
 
         try {
@@ -102,19 +105,19 @@ public class WeixinController extends WeixinSupport {
             //获取本机的ip地址
             String spbill_create_ip = IpUtil.getRequestIp(request);
 
-            Double moneyFen = csMembercardOrder.getOrderPrice()*100;
+            Double moneyFen = csMembercardOrder.getOrderPrice() * 100;
 
             String money = String.valueOf(moneyFen.intValue());
 
             Map<String, String> packageParams = new HashMap<String, String>();
-            packageParams.put("appid",appid);
+            packageParams.put("appid", appid);
             packageParams.put("mch_id", mch_id);
             packageParams.put("nonce_str", nonce_str);
             packageParams.put("body", body);
             packageParams.put("out_trade_no", csMembercardOrder.getOutTradeNo());//商户订单号
             packageParams.put("total_fee", money);//支付金额，这边需要转成字符串类型，否则后面的签名会失败
             packageParams.put("spbill_create_ip", spbill_create_ip);
-            packageParams.put("notify_url",notify_url);
+            packageParams.put("notify_url", notify_url);
             packageParams.put("trade_type", trade_type);
             packageParams.put("openid", openid);
 
@@ -154,9 +157,9 @@ public class WeixinController extends WeixinSupport {
 
             //返回给移动端需要的参数
             Map<String, Object> response = new HashMap<String, Object>();
-            if (!StringUtils.equals(return_code, "SUCCESS")){
+            if (!StringUtils.equals(return_code, "SUCCESS")) {
                 return ApiResult.fail((String) map.get("return_msg"));
-            }else{
+            } else {
 //            if (return_code == "SUCCESS" || return_code.equals(return_code)) {
                 // 业务结果
                 String prepay_id = (String) map.get("prepay_id");//返回的预付单信息
@@ -184,6 +187,27 @@ public class WeixinController extends WeixinSupport {
         } catch (Exception e) {
             e.printStackTrace();
             return ApiResult.fail("发起失败");
+        }
+    }
+
+    /**
+     * 取消会员卡微信支付
+     *
+     * @param csMembercardOrder
+     * @return
+     */
+    @RequestMapping("cancelCardWxPay")
+    @ApiOperation(value = "取消会员卡微信支付", notes = "取消会员卡微信支付", response = ApiResult.class)
+    public ApiResult<Boolean> cancelCardWxPay(@ModelAttribute CsMembercardOrder csMembercardOrder) throws Exception {
+       //根据outTradeNo 设置对应的订单的paymentstatus为4,取消支付
+        CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
+        csMembercardOrderQueryParam.setOutTradeNo(csMembercardOrder.getOutTradeNo());
+        csMembercardOrderQueryParam.setPaymentStatus(2);
+        boolean flag= csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
+        if(flag) {
+            return ApiResult.ok("取消支付成功！");
+        }else{
+            return ApiResult.fail("取消支付失败！");
         }
     }
 
@@ -313,12 +337,32 @@ public class WeixinController extends WeixinSupport {
     }
 
     /**
-     * 发起微信支付
+     * 取消充值微信支付
      *
-     * @param openid
-     * @param request
+     * @param csRechargeRecord
      * @return
      */
+    @RequestMapping("cancelRechargeWxPay")
+    @ApiOperation(value = "取消充值微信支付", notes = "取消充值微信支付", response = ApiResult.class)
+    public ApiResult<Boolean> cancelRechargeWxPay(@ModelAttribute CsRechargeRecord csRechargeRecord) throws Exception {
+        CsRechargeRecordQueryParam csRechargeRecordQueryParam = new CsRechargeRecordQueryParam();
+        csRechargeRecordQueryParam.setOutTradeNo(csRechargeRecord.getOutTradeNo());
+        csRechargeRecordQueryParam.setPaymentStatus(2);
+        boolean flag=csRechargeRecordService.updatePaymentStatus(csRechargeRecordQueryParam);
+        if(flag) {
+            return ApiResult.ok("取消支付成功！");
+        }else{
+            return ApiResult.fail("取消支付失败！");
+        }
+    }
+
+        /**
+         * 发起微信支付
+         *
+         * @param openid
+         * @param request
+         * @return
+         */
     @RequestMapping("wxPay")
     public ApiResult<Boolean> wxPay(String openid, HttpServletRequest request) {
         // 获取微信配置
@@ -466,7 +510,16 @@ public class WeixinController extends WeixinSupport {
                     CsRechargeRecordQueryParam csRechargeRecordQueryParam = new CsRechargeRecordQueryParam();
                     csRechargeRecordQueryParam.setOutTradeNo(outTradeNo);
                     csRechargeRecordQueryParam.setPaymentStatus(2);
-                    csRechargeRecordService.updatePaymentStatus(csRechargeRecordQueryParam);
+                    boolean flag=csRechargeRecordService.updatePaymentStatus(csRechargeRecordQueryParam);
+                    if(flag){
+                        //更新用户余额和积分，需要先获取用户ID
+                        CsRechargeRecordQueryVo csRechargeRecordQueryVo = csRechargeRecordService.getCsRechargeRecordByOutTradeNo(outTradeNo);
+                        WxUserQueryParam wxUserQueryParam = new WxUserQueryParam();
+                        wxUserQueryParam.setId(csRechargeRecordQueryVo.getWxuserId());
+                        wxUserQueryParam.setBalance(csRechargeRecordQueryVo.getRechargeFinal());
+                        wxUserQueryParam.setIntegral(csRechargeRecordQueryVo.getIntegral());
+                        wxUserService.updateBalanceAIntegral(wxUserQueryParam);
+                    }
                 }
 
                 /**此处添加自己的业务逻辑代码end**/
@@ -481,8 +534,15 @@ public class WeixinController extends WeixinSupport {
             if(StringUtils.isNotEmpty(outTradeNo)&&outTradeNo.indexOf("card_")!=-1){
                 CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
                 csMembercardOrderQueryParam.setOutTradeNo(outTradeNo);
-                csMembercardOrderQueryParam.setPaymentStatus(2);
+                csMembercardOrderQueryParam.setPaymentStatus(1);
                 csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
+            }
+            // 如果是充值订单,更新充值订单的付款状态
+            if(StringUtils.isNotEmpty(outTradeNo)&&outTradeNo.indexOf("rech_")!=-1) {
+                CsRechargeRecordQueryParam csRechargeRecordQueryParam = new CsRechargeRecordQueryParam();
+                csRechargeRecordQueryParam.setOutTradeNo(outTradeNo);
+                csRechargeRecordQueryParam.setPaymentStatus(1);
+                boolean flag = csRechargeRecordService.updatePaymentStatus(csRechargeRecordQueryParam);
             }
             /**此处添加自己的业务逻辑代码end**/
             resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"

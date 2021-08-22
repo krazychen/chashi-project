@@ -89,4 +89,13 @@ public interface CsRechargeRecordService extends BaseService<CsRechargeRecord> {
      * @return
      */
     boolean updatePaymentStatus(CsRechargeRecordQueryParam csRechargeRecordQueryParam);
+
+    /**
+     * 根据outTradeNo获取查询对象
+     *
+     * @param outTradeNo
+     * @return
+     * @throws Exception
+     */
+    CsRechargeRecordQueryVo getCsRechargeRecordByOutTradeNo(String outTradeNo) throws Exception;
 }

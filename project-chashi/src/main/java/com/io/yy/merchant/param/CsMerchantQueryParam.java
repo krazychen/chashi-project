@@ -66,4 +66,7 @@ public class CsMerchantQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "附近最大lat")
     private double maxlat;
+
+    @ApiModelProperty(value = "微信公众号openid")
+    private String openid;
 }

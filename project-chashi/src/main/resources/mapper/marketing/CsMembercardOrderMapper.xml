@@ -45,10 +45,8 @@
     <update id="updatePaymentStatus">
         update cs_membercard_order set payment_status = #{param.paymentStatus}
         where deleted = 0
-        <if test="param.id != null">
         and out_trade_no = #{param.outTradeNo}
-        and payment_status != 2
-        </if>
+        and payment_status != #{param.paymentStatus}
     </update>
 
 </mapper>

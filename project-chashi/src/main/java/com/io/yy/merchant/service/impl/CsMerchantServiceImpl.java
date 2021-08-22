@@ -1,6 +1,7 @@
 package com.io.yy.merchant.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
 import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.merchant.mapper.CsMerchantMapper;
 import com.io.yy.merchant.service.CsMerchantService;
@@ -17,6 +18,7 @@ import com.io.yy.system.service.SysUserRoleService;
 import com.io.yy.system.service.SysUserService;
 import com.io.yy.util.UUIDUtil;
 import com.io.yy.util.lang.StringUtils;
+import com.io.yy.wxops.vo.WxUserQueryVo;
 import com.spatial4j.core.context.SpatialContext;
 import com.spatial4j.core.distance.DistanceUtils;
 import com.spatial4j.core.shape.Rectangle;
@@ -290,13 +292,13 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
     /**
      * wx根据ID获取查询对象
      *
-     * @param id
+     * @param csMerchantQueryPara
      * @return
      * @throws Exception
      */
     @Override
-    public CsMerchantQueryVo getCsMerchantByIdForWx(Long id) throws Exception {
-        return csMerchantMapper.getCsMerchantByIdForWx(id);
+    public CsMerchantQueryVo getCsMerchantByIdForWx(CsMerchantQueryParam csMerchantQueryPara) throws Exception {
+        return csMerchantMapper.getCsMerchantByIdForWx(csMerchantQueryPara);
     }
 
     // 计算半径

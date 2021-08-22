@@ -60,12 +60,14 @@ public class CsRechargeRecordController extends BaseController {
         csRechargeRecord.setIntegral(csRechargeRecord.getRechargeAmount().intValue());
         boolean flag = csRechargeRecordService.saveCsRechargeRecord(csRechargeRecord);
 
-        //更新用户余额和积分
-        WxUserQueryParam wxUserQueryParam = new WxUserQueryParam();
-        wxUserQueryParam.setId(csRechargeRecord.getWxuserId());
-        wxUserQueryParam.setBalance(csRechargeRecord.getRechargeFinal());
-        wxUserQueryParam.setIntegral(csRechargeRecord.getIntegral());
-        wxUserService.updateBalanceAIntegral(wxUserQueryParam);
+        if(flag) {
+            //更新用户余额和积分
+            WxUserQueryParam wxUserQueryParam = new WxUserQueryParam();
+            wxUserQueryParam.setId(csRechargeRecord.getWxuserId());
+            wxUserQueryParam.setBalance(csRechargeRecord.getRechargeFinal());
+            wxUserQueryParam.setIntegral(csRechargeRecord.getIntegral());
+            wxUserService.updateBalanceAIntegral(wxUserQueryParam);
+        }
 
         return ApiResult.result(flag);
     }

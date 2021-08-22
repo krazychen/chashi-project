@@ -54,4 +54,12 @@ public interface CsRechargeRecordMapper extends BaseMapper<CsRechargeRecord> {
      * @return
      */
     Integer updatePaymentStatus(@Param("param") CsRechargeRecordQueryParam csRechargeRecordQueryParam);
+
+    /**
+     * 根据outTradeNo获取查询对象
+     *
+     * @param outTradeNo
+     * @return
+     */
+    CsRechargeRecordQueryVo getCsRechargeRecordByOutTradeNo(String outTradeNo);
 }

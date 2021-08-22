@@ -36,4 +36,7 @@ public class CsTearoomQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "商店id")
     private Long merchantId;
+
+    @ApiModelProperty(value = "微信公众号openid")
+    private String openid;
 }

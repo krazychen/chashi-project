@@ -1,6 +1,7 @@
 package com.io.yy.merchant.controller;
 
 import com.io.yy.core.properties.WhyySystemProperties;
+import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
 import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.merchant.service.CsMerchantService;
 import com.io.yy.merchant.param.CsMerchantQueryParam;
@@ -12,6 +13,8 @@ import com.io.yy.system.param.SysDictTypeStatusQueryParam;
 import com.io.yy.util.UploadUtil;
 import com.io.yy.util.codec.EncodeUtils;
 import com.io.yy.util.lang.StringUtils;
+import com.io.yy.wxops.service.WxUserService;
+import com.io.yy.wxops.vo.WxUserQueryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +52,8 @@ public class CsMerchantController extends BaseController {
     @Autowired
     private WhyySystemProperties whyySystemProperties;
 
+    @Autowired
+    private WxUserService wxUserService;
     /**
      * 添加商家管理
      */
@@ -277,10 +282,19 @@ public class CsMerchantController extends BaseController {
     /**
      * 获取wx商家管理
      */
-    @GetMapping("/infoForWx/{id}")
+    @GetMapping("/infoForWx")
     @ApiOperation(value = "获取wx CsMerchant对象详情", notes = "查看wx商家管理", response = CsMerchantQueryVo.class)
-    public ApiResult<CsMerchantQueryVo> getCsMerchantForWx(@PathVariable("id") Long id) throws Exception {
-        CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantByIdForWx(id);
+    public ApiResult<CsMerchantQueryVo> getCsMerchantForWx(@Valid @RequestBody CsMerchantQueryParam csMerchantQueryParam) throws Exception {
+        CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantByIdForWx(csMerchantQueryParam);
+        //设置茶室的会员价，先获取当前的用户会员
+        if(StringUtils.isNotEmpty(csMerchantQueryParam.getOpenid())){
+            WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csMerchantQueryParam.getOpenid());
+            if(wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
+                CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
+                double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
+                csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(discount*a.getHoursAmount())));
+            }
+        }
         return ApiResult.ok(csMerchantQueryVo);
     }
 }

@@ -86,4 +86,16 @@ public class CsRechargeRecordServiceImpl extends BaseServiceImpl<CsRechargeRecor
     public boolean updatePaymentStatus(CsRechargeRecordQueryParam csRechargeRecordQueryParam) {
         return csRechargeRecordMapper.updatePaymentStatus(csRechargeRecordQueryParam) > 0;
     }
+
+    /**
+     * 根据outTradeNo获取查询对象
+     *
+     * @param outTradeNo
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public CsRechargeRecordQueryVo getCsRechargeRecordByOutTradeNo(String outTradeNo) throws Exception {
+        return csRechargeRecordMapper.getCsRechargeRecordByOutTradeNo(outTradeNo);
+    }
 }
