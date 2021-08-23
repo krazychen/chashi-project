@@ -76,4 +76,23 @@ public class CsMemberCardServiceImpl extends BaseServiceImpl<CsMemberCardMapper,
         return csMemberCardMapper.updateStatus(csMemberCardQueryParam) > 0;
     }
 
+    /**
+     * 获取最低价格的会员卡
+     *
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public CsMemberCardQueryVo getCsMemberCardOfMin() throws Exception {
+        CsMemberCardQueryParam csMemberCardQueryParam = new CsMemberCardQueryParam();
+        csMemberCardQueryParam.setStatus("1");
+        Page page = setPageParam(csMemberCardQueryParam, OrderItem.asc("discount_off"));
+        IPage<CsMemberCardQueryVo> iPage = csMemberCardMapper.getCsMemberCardPageList(page, csMemberCardQueryParam);
+        if(iPage.getTotal()>0){
+            return iPage.getRecords().get(0);
+        }else{
+            return null;
+        }
+    }
+
 }

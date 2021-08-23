@@ -3,6 +3,8 @@ package com.io.yy.merchant.controller;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.io.yy.core.properties.WhyySystemProperties;
+import com.io.yy.marketing.service.CsMemberCardService;
+import com.io.yy.marketing.vo.CsMemberCardQueryVo;
 import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
 import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.merchant.entity.CsTearoom;
@@ -56,6 +58,8 @@ public class CsTearoomController extends BaseController {
     @Autowired
     private WxUserService wxUserService;
 
+    @Autowired
+    private CsMemberCardService csMemberCardService;
     /**
      * 添加茶室管理
      */
@@ -287,11 +291,24 @@ public class CsTearoomController extends BaseController {
     public ApiResult<Paging<CsTearoomQueryVo>> getRoomListForWx(@Valid @RequestBody CsTearoomQueryParam csTearoomQueryParam) throws Exception {
         Paging<CsTearoomQueryVo> paging = csTearoomService.getCsTearoomPageListOrderBySort(csTearoomQueryParam);
         //设置茶室的会员价，先获取当前的用户会员
+        boolean isNon=false;
         if(StringUtils.isNotEmpty(csTearoomQueryParam.getOpenid())){
             WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csTearoomQueryParam.getOpenid());
             if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
                 CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
                 double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
+                paging.getRecords().stream().forEach(a->a.setMenberAmount(Double.valueOf(discount*a.getHoursAmount())));
+            }else{
+                isNon=true;
+            }
+        }else{
+            isNon=true;
+        }
+        //没有登录，也不是会员，则取会员卡的最低价
+        if(isNon){
+            CsMemberCardQueryVo csMemberCardQueryVo=csMemberCardService.getCsMemberCardOfMin();
+            if(csMemberCardQueryVo!=null){
+                double discount=csMemberCardQueryVo.getDiscountOff()/10;
                 paging.getRecords().stream().forEach(a->a.setMenberAmount(Double.valueOf(discount*a.getHoursAmount())));
             }
         }
@@ -302,10 +319,32 @@ public class CsTearoomController extends BaseController {
     /**
      * 获取wx茶室管理
      */
-    @GetMapping("/infoForWx/{id}")
+    @GetMapping("/infoForWx/")
     @ApiOperation(value = "获取wx CsTearoom对象详情", notes = "查看wx茶室管理", response = CsTearoomQueryVo.class)
-    public ApiResult<CsTearoomQueryVo> getCsTearoomForWx(@PathVariable("id") Long id) throws Exception {
-        CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(id);
+    public ApiResult<CsTearoomQueryVo> getCsTearoomForWx(@Valid @RequestBody CsTearoomQueryParam csTearoomQueryParam) throws Exception {
+        CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csTearoomQueryParam.getId());
+        //设置茶室的会员价，先获取当前的用户会员
+        boolean isNon=false;
+        if(StringUtils.isNotEmpty(csTearoomQueryParam.getOpenid())){
+            WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csTearoomQueryParam.getOpenid());
+            if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
+                CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
+                double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
+                csTearoomQueryVo.setMenberAmount(Double.valueOf(discount*csTearoomQueryVo.getHoursAmount()));
+            }else{
+                isNon=true;
+            }
+        }else{
+            isNon=true;
+        }
+        //没有登录，也不是会员，则取会员卡的最低价
+        if(isNon){
+            CsMemberCardQueryVo csMemberCardQueryVo=csMemberCardService.getCsMemberCardOfMin();
+            if(csMemberCardQueryVo!=null){
+                double discount=csMemberCardQueryVo.getDiscountOff()/10;
+                csTearoomQueryVo.setMenberAmount(Double.valueOf(discount*csTearoomQueryVo.getHoursAmount()));
+            }
+        }
         return ApiResult.ok(csTearoomQueryVo);
     }
 }

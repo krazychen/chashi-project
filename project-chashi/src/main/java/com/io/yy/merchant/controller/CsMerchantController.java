@@ -1,6 +1,8 @@
 package com.io.yy.merchant.controller;
 
 import com.io.yy.core.properties.WhyySystemProperties;
+import com.io.yy.marketing.service.CsMemberCardService;
+import com.io.yy.marketing.vo.CsMemberCardQueryVo;
 import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
 import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.merchant.service.CsMerchantService;
@@ -54,6 +56,10 @@ public class CsMerchantController extends BaseController {
 
     @Autowired
     private WxUserService wxUserService;
+
+    @Autowired
+    private CsMemberCardService csMemberCardService;
+
     /**
      * 添加商家管理
      */
@@ -287,11 +293,25 @@ public class CsMerchantController extends BaseController {
     public ApiResult<CsMerchantQueryVo> getCsMerchantForWx(@Valid @RequestBody CsMerchantQueryParam csMerchantQueryParam) throws Exception {
         CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantByIdForWx(csMerchantQueryParam);
         //设置茶室的会员价，先获取当前的用户会员
+        boolean isNon=false;
         if(StringUtils.isNotEmpty(csMerchantQueryParam.getOpenid())){
             WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csMerchantQueryParam.getOpenid());
             if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
                 CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
                 double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
+                csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(discount*a.getHoursAmount())));
+            }else{
+                isNon=true;
+            }
+        }else{
+            isNon=true;
+        }
+
+        //没有登录，也不是会员，则取会员卡的最低价
+        if(isNon){
+            CsMemberCardQueryVo csMemberCardQueryVo=csMemberCardService.getCsMemberCardOfMin();
+            if(csMemberCardQueryVo!=null){
+                double discount=csMemberCardQueryVo.getDiscountOff()/10;
                 csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(discount*a.getHoursAmount())));
             }
         }

@@ -82,5 +82,11 @@ public interface CsMemberCardService extends BaseService<CsMemberCard> {
      */
      boolean updateStatus(CsMemberCardQueryParam csMemberCardQueryParam);
 
-
+    /**
+     * 获取最低价格的会员卡
+     *
+     * @return
+     * @throws Exception
+     */
+    CsMemberCardQueryVo getCsMemberCardOfMin() throws Exception;
 }
