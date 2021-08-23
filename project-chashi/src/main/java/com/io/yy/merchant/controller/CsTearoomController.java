@@ -289,7 +289,7 @@ public class CsTearoomController extends BaseController {
         //设置茶室的会员价，先获取当前的用户会员
         if(StringUtils.isNotEmpty(csTearoomQueryParam.getOpenid())){
             WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csTearoomQueryParam.getOpenid());
-            if(wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
+            if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
                 CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
                 double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
                 paging.getRecords().stream().forEach(a->a.setMenberAmount(Double.valueOf(discount*a.getHoursAmount())));
