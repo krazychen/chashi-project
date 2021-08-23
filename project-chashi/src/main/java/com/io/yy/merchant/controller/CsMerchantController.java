@@ -282,14 +282,14 @@ public class CsMerchantController extends BaseController {
     /**
      * 获取wx商家管理
      */
-    @GetMapping("/infoForWx")
+    @PostMapping("/infoForWx")
     @ApiOperation(value = "获取wx CsMerchant对象详情", notes = "查看wx商家管理", response = CsMerchantQueryVo.class)
     public ApiResult<CsMerchantQueryVo> getCsMerchantForWx(@Valid @RequestBody CsMerchantQueryParam csMerchantQueryParam) throws Exception {
         CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantByIdForWx(csMerchantQueryParam);
         //设置茶室的会员价，先获取当前的用户会员
         if(StringUtils.isNotEmpty(csMerchantQueryParam.getOpenid())){
             WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csMerchantQueryParam.getOpenid());
-            if(wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
+            if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
                 CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
                 double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
                 csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(discount*a.getHoursAmount())));

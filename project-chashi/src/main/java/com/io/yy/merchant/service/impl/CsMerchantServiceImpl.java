@@ -298,7 +298,7 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
      */
     @Override
     public CsMerchantQueryVo getCsMerchantByIdForWx(CsMerchantQueryParam csMerchantQueryPara) throws Exception {
-        return csMerchantMapper.getCsMerchantByIdForWx(csMerchantQueryPara);
+        return csMerchantMapper.getCsMerchantByIdForWx(csMerchantQueryPara.getId());
     }
 
     // 计算半径
