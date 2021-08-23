@@ -65,6 +65,9 @@ public class CsMembercardOrderQueryVo implements Serializable {
     @ApiModelProperty(value = "支付状态：支付中、支付失败、支付成功")
     private Integer paymentStatus;
 
+    @ApiModelProperty(value = "支付失败错误消息")
+    private Integer paymentMsg;
+
     @ApiModelProperty(value = "支付类型：余额支付、微信支付")
     private Integer paymentType;
 

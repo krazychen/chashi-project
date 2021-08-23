@@ -58,6 +58,9 @@ public class CsRechargeRecordQueryVo implements Serializable {
     @ApiModelProperty(value = "支付状态：支付中0、支付失败1、支付成功2，支付关闭3，充值失败后就将交易关闭，每次都是最新的")
     private Integer paymentStatus;
 
+    @ApiModelProperty(value = "支付失败错误消息")
+    private Integer paymentMsg;
+
     @ApiModelProperty(value = "会员卡来源：系统发放0、用户购买1")
     private Integer sourceType;
 

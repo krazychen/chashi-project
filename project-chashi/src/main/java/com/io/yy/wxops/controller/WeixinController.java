@@ -71,7 +71,7 @@ public class WeixinController extends WeixinSupport {
      * @param request
      * @return
      */
-    @RequestMapping("cardWxPay")
+    @RequestMapping("/cardWxPay")
     @ApiOperation(value = "发起会员卡微信支付", notes = "发起会员卡微信支付", response = ApiResult.class)
     public ApiResult<Boolean> cardWxPay(@ModelAttribute CsMembercardOrder csMembercardOrder, HttpServletRequest request) throws Exception {
         // 获取微信配置
@@ -182,6 +182,7 @@ public class WeixinController extends WeixinSupport {
             }
 
             response.put("appid", appid);
+            response.put("outTradeNo", csMembercardOrder.getOutTradeNo());
 
             return ApiResult.ok(response);
         } catch (Exception e) {
@@ -196,18 +197,40 @@ public class WeixinController extends WeixinSupport {
      * @param csMembercardOrder
      * @return
      */
-    @RequestMapping("cancelCardWxPay")
+    @RequestMapping("/cancelCardWxPay")
     @ApiOperation(value = "取消会员卡微信支付", notes = "取消会员卡微信支付", response = ApiResult.class)
     public ApiResult<Boolean> cancelCardWxPay(@ModelAttribute CsMembercardOrder csMembercardOrder) throws Exception {
        //根据outTradeNo 设置对应的订单的paymentstatus为4,取消支付
         CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
         csMembercardOrderQueryParam.setOutTradeNo(csMembercardOrder.getOutTradeNo());
-        csMembercardOrderQueryParam.setPaymentStatus(2);
+        csMembercardOrderQueryParam.setPaymentStatus(4);
         boolean flag= csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
         if(flag) {
             return ApiResult.ok("取消支付成功！");
         }else{
             return ApiResult.fail("取消支付失败！");
+        }
+    }
+
+    /**
+     * 会员卡微信支付失败
+     *
+     * @param csMembercardOrder
+     * @return
+     */
+    @RequestMapping("/failCardWxPay")
+    @ApiOperation(value = "会员卡微信支付失败", notes = "会员卡微信支付失败", response = ApiResult.class)
+    public ApiResult<Boolean> failCardWxPay(@ModelAttribute CsMembercardOrder csMembercardOrder) throws Exception {
+        //根据outTradeNo 设置对应的订单的paymentstatus为1,支付失败
+        CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
+        csMembercardOrderQueryParam.setOutTradeNo(csMembercardOrder.getOutTradeNo());
+        csMembercardOrderQueryParam.setPaymentStatus(1);
+        csMembercardOrderQueryParam.setPaymentMsg(csMembercardOrder.getPaymentMsg());
+        boolean flag= csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
+        if(flag) {
+            return ApiResult.ok("支付失败设置成功！");
+        }else{
+            return ApiResult.fail("支付失败设置失败！");
         }
     }
 
@@ -218,7 +241,7 @@ public class WeixinController extends WeixinSupport {
      * @param request
      * @return
      */
-    @RequestMapping("rechargeWxPay")
+    @RequestMapping("/rechargeWxPay")
     @ApiOperation(value = "发起充值微信支付", notes = "发起充值微信支付", response = ApiResult.class)
     public ApiResult<Boolean> rechargeWxPay(@ModelAttribute CsRechargeRecord csRechargeRecord, HttpServletRequest request) throws Exception{
         // 获取微信配置
@@ -252,7 +275,7 @@ public class WeixinController extends WeixinSupport {
             //获取本机的ip地址
             String spbill_create_ip = IpUtil.getRequestIp(request);
 
-            Double moneyFen = csRechargeRecord.getRechargeFinal()*100;
+            Double moneyFen = csRechargeRecord.getRechargeAmount()*100;
 
             String money = String.valueOf(moneyFen.intValue());
 
@@ -328,6 +351,7 @@ public class WeixinController extends WeixinSupport {
             }
 
             response.put("appid", appid);
+            response.put("outTradeNo", csRechargeRecord.getOutTradeNo());
 
             return ApiResult.ok(response);
         } catch (Exception e) {
@@ -342,17 +366,38 @@ public class WeixinController extends WeixinSupport {
      * @param csRechargeRecord
      * @return
      */
-    @RequestMapping("cancelRechargeWxPay")
+    @RequestMapping("/cancelRechargeWxPay")
     @ApiOperation(value = "取消充值微信支付", notes = "取消充值微信支付", response = ApiResult.class)
     public ApiResult<Boolean> cancelRechargeWxPay(@ModelAttribute CsRechargeRecord csRechargeRecord) throws Exception {
         CsRechargeRecordQueryParam csRechargeRecordQueryParam = new CsRechargeRecordQueryParam();
         csRechargeRecordQueryParam.setOutTradeNo(csRechargeRecord.getOutTradeNo());
-        csRechargeRecordQueryParam.setPaymentStatus(2);
+        csRechargeRecordQueryParam.setPaymentStatus(4);
         boolean flag=csRechargeRecordService.updatePaymentStatus(csRechargeRecordQueryParam);
         if(flag) {
             return ApiResult.ok("取消支付成功！");
         }else{
             return ApiResult.fail("取消支付失败！");
+        }
+    }
+
+    /**
+     * 充值微信支付失败
+     *
+     * @param csRechargeRecord
+     * @return
+     */
+    @RequestMapping("/failRechargeWxPay")
+    @ApiOperation(value = "充值微信支付失败", notes = "充值微信支付失败", response = ApiResult.class)
+    public ApiResult<Boolean> failRechargeWxPay(@ModelAttribute CsRechargeRecord csRechargeRecord) throws Exception {
+        CsRechargeRecordQueryParam csRechargeRecordQueryParam = new CsRechargeRecordQueryParam();
+        csRechargeRecordQueryParam.setOutTradeNo(csRechargeRecord.getOutTradeNo());
+        csRechargeRecordQueryParam.setPaymentStatus(1);
+        csRechargeRecordQueryParam.setPaymentMsg(csRechargeRecord.getPaymentMsg());
+        boolean flag=csRechargeRecordService.updatePaymentStatus(csRechargeRecordQueryParam);
+        if(flag) {
+            return ApiResult.ok("支付失败设置成功！");
+        }else{
+            return ApiResult.fail("支付失败设置失败！");
         }
     }
 

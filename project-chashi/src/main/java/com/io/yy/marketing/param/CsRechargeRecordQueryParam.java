@@ -34,4 +34,7 @@ public class CsRechargeRecordQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "32位的UUID")
     private String outTradeNo;
+
+    @ApiModelProperty(value = "支付失败错误消息")
+    private Integer paymentMsg;
 }

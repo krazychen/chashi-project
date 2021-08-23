@@ -35,10 +35,11 @@
 
     <update id="updatePaymentStatus">
         update cs_recharge_record set payment_status = #{param.paymentStatus}
-        where deleted = 0
-        <if test="param.id != null">
-            and out_trade_no = #{param.outTradeNo}
-            and payment_status != 2
+        <if test="param.paymentMsg != null and param.paymentMsg.trim() != ''">
+            and payment_msg = #{param.paymentMsg}
         </if>
+        where deleted = 0
+        and out_trade_no = #{param.outTradeNo}
+        and payment_status != #{param.paymentStatus}
     </update>
 </mapper>

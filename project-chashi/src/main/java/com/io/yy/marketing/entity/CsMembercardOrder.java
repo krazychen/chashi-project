@@ -76,6 +76,9 @@ public class CsMembercardOrder extends BaseEntity {
     @ApiModelProperty(value = "支付类型：余额支付、微信支付")
     private Integer paymentType;
 
+    @ApiModelProperty(value = "支付失败错误消息")
+    private Integer paymentMsg;
+
     @ApiModelProperty(value = "会员卡来源：系统发放0、用户购买1")
     private Integer sourceType;
 
