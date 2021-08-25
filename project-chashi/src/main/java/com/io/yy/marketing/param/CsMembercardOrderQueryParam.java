@@ -36,5 +36,5 @@ public class CsMembercardOrderQueryParam extends OrderQueryParam {
     private String outTradeNo;
 
     @ApiModelProperty(value = "支付失败错误消息")
-    private Integer paymentMsg;
+    private String paymentMsg;
 }

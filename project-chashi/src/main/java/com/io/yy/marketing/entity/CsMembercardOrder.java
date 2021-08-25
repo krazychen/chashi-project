@@ -77,7 +77,7 @@ public class CsMembercardOrder extends BaseEntity {
     private Integer paymentType;
 
     @ApiModelProperty(value = "支付失败错误消息")
-    private Integer paymentMsg;
+    private String paymentMsg;
 
     @ApiModelProperty(value = "会员卡来源：系统发放0、用户购买1")
     private Integer sourceType;
