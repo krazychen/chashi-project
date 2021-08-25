@@ -64,6 +64,7 @@
             <result column="m_start_time" property="startTime" javaType="java.util.Date"/>
             <result column="m_end_time" property="endTime" javaType="java.util.Date"/>
             <result column="order_price" property="orderPrice" javaType="java.lang.Double"/>
+            <result column="discount_off" property="discountOff" javaType="java.lang.Double"/>
         </association>
         <collection property="csCouponReleasedQueryVoList" ofType="com.io.yy.marketing.vo.CsCouponReleasedQueryVo">
             <id column="c_id" property="id" javaType="java.lang.Long" />
@@ -79,7 +80,8 @@
 
     <select id="getWxUserObjByOpenid" resultMap="wxUserObj">
         select wu.*,cmo.id as m_id,cmo.membercard_id,cmo.membercard_name,cmo.valid_period,cmo.order_date,cmo.start_time as m_start_time,
-        cmo.end_time as m_end_time,cmo.order_price,ccr.id as c_id,ccr.coupon_id,ccr.wxuser_id,ccr.released_time,ccr.is_used,
+        cmo.end_time as m_end_time,cmo.order_price,
+        (select cmc.discount_off from cs_member_card cmc where cmo.membercard_id = cmc.id) as discount_off,ccr.id as c_id,ccr.coupon_id,ccr.wxuser_id,ccr.released_time,ccr.is_used,
         ccr.used_time,cc.start_time as c_start_time, cc.end_time as c_end_time
         from wx_user wu
         left join cs_coupon_released ccr on ccr.wxuser_id = wu.id and is_used = 0

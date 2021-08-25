@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import com.io.yy.common.vo.Paging;
@@ -299,7 +300,8 @@ public class CsMerchantController extends BaseController {
             if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
                 CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
                 double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
-                csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(discount*a.getHoursAmount())));
+                DecimalFormat df = new DecimalFormat("0.00");
+                csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(discount*a.getHoursAmount()))));
             }else{
                 isNon=true;
             }
@@ -312,7 +314,8 @@ public class CsMerchantController extends BaseController {
             CsMemberCardQueryVo csMemberCardQueryVo=csMemberCardService.getCsMemberCardOfMin();
             if(csMemberCardQueryVo!=null){
                 double discount=csMemberCardQueryVo.getDiscountOff()/10;
-                csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(discount*a.getHoursAmount())));
+                DecimalFormat df = new DecimalFormat("0.00");
+                csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(discount*a.getHoursAmount()))));
             }
         }
         return ApiResult.ok(csMerchantQueryVo);
