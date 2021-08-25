@@ -319,7 +319,7 @@ public class CsTearoomController extends BaseController {
     /**
      * 获取wx茶室管理
      */
-    @GetMapping("/infoForWx/")
+    @PostMapping("/infoForWx")
     @ApiOperation(value = "获取wx CsTearoom对象详情", notes = "查看wx茶室管理", response = CsTearoomQueryVo.class)
     public ApiResult<CsTearoomQueryVo> getCsTearoomForWx(@Valid @RequestBody CsTearoomQueryParam csTearoomQueryParam) throws Exception {
         CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csTearoomQueryParam.getId());
