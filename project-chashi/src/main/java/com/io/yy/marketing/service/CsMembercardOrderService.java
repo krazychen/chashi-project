@@ -100,4 +100,12 @@ public interface CsMembercardOrderService extends BaseService<CsMembercardOrder>
      * @return
      */
     boolean updatePaymentStatus(CsMembercardOrderQueryParam csMembercardOrderQueryParam);
+
+    /**
+     * 更新剩余优惠时长和优惠金额
+     *
+     * @param csMembercardOrderQueryParam
+     * @return
+     */
+    boolean updateRest(CsMembercardOrderQueryParam csMembercardOrderQueryParam);
 }

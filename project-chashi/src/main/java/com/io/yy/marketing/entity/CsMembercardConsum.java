@@ -15,17 +15,17 @@ import javax.validation.constraints.NotNull;
 
 /**
  * <pre>
- * 充值记录
+ * 会员卡消费记录
  * </pre>
  *
  * @author kris
- * @since 2021-08-18
+ * @since 2021-08-24
  */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-@ApiModel(value = "CsRechargeRecord对象", description = "充值记录")
-public class CsRechargeRecord extends BaseEntity {
+@ApiModel(value = "CsMembercardConsum对象", description = "会员卡消费记录")
+public class CsMembercardConsum extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,47 +33,41 @@ public class CsRechargeRecord extends BaseEntity {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
-    @ApiModelProperty(value = "充值金额")
-    @NotNull(message = "充值金额不能为空")
-    private Double rechargeAmount;
-
-    @ApiModelProperty(value = "赠送金额")
-    @NotNull(message = "赠送金额不能为空")
-    private Double rechargeGived;
-
-    @ApiModelProperty(value = "最终金额")
-    @NotNull(message = "最终金额不能为空")
-    private Double rechargeFinal;
-
-    @ApiModelProperty(value = "积分")
-    private Integer integral;
-
     @ApiModelProperty(value = "微信用户ID")
+    @NotNull(message = "微信用户ID不能为空")
     private Long wxuserId;
 
-    @ApiModelProperty(value = "微信用户手机")
-    private String wxuserPhone;
+    @ApiModelProperty(value = "消费金额")
+    @NotNull(message = "消费金额不能为空")
+    private Double amount;
 
-    @ApiModelProperty(value = "微信用户openID")
-    private String openid;
+    @ApiModelProperty(value = "消费时间")
+    @NotNull(message = "消费时间不能为空")
+    private Date cousumDate;
 
-    @ApiModelProperty(value = "商品名称，充值+金额+预订日期+uuid")
-    private String orderName;
+    @ApiModelProperty(value = "茶室订单id")
+    @NotNull(message = "茶室订单id不能为空")
+    private Long roomOrderId;
 
-    @ApiModelProperty(value = "购买日期")
-    private Date orderDate;
+    @ApiModelProperty(value = "会员卡订单id")
+    @NotNull(message = "会员卡订单id不能为空")
+    private Long cardOrderId;
 
-    @ApiModelProperty(value = "32位的UUID")
-    private String outTradeNo;
+    @ApiModelProperty(value = "消费类型，0是时长减免，1是金额减免，2是折扣优惠，每一条一种类型")
+    @NotNull(message = "消费类型，0是时长减免，1是金额减免，2是折扣优惠，每一条一种类型不能为空")
+    private Integer consumType;
 
-    @ApiModelProperty(value = "支付状态：支付中0、支付失败1、支付成功2，支付关闭3，充值失败后就将交易关闭，每次都是最新的")
-    private Integer paymentStatus;
+    @ApiModelProperty(value = "减免时长")
+    private Integer consumTime;
 
-    @ApiModelProperty(value = "会员卡来源：系统发放0、用户购买1")
-    private Integer sourceType;
+    @ApiModelProperty(value = "减免金额")
+    private Double consumAmount;
+
+    @ApiModelProperty(value = "折扣优惠金额")
+    private Double consumDiscountAmount;
 
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
-    private Integer status;
+    private String status;
 
     @ApiModelProperty(value = "逻辑删除，0：未删除，1：已删除")
     private Integer deleted;

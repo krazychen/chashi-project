@@ -1,5 +1,7 @@
 package com.io.yy.marketing.param;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,6 +25,9 @@ import com.io.yy.common.param.OrderQueryParam;
 public class CsMembercardOrderQueryParam extends OrderQueryParam {
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty(value = "主键")
+    private Long id;
+
     @ApiModelProperty(value = "会员卡id")
     private Long membercardId;
 
@@ -37,4 +42,10 @@ public class CsMembercardOrderQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "支付失败错误消息")
     private String paymentMsg;
+
+    @ApiModelProperty(value = "剩余优惠时长")
+    private Double restDiscountTime;
+
+    @ApiModelProperty(value = "剩余优惠价格")
+    private Double restDiscountPrice;
 }

@@ -98,4 +98,12 @@ public interface CsCouponReleasedService extends BaseService<CsCouponReleased> {
      * @return
      */
     List<CsCouponReleasedQueryVo> getCsCouponReleasedByUserId(@Param("wxuserId") Long wxuserId);
+
+    /**
+     * 更新使用状态
+     *
+     * @param csCouponReleasedQueryParam
+     * @return
+     */
+    boolean updateUsedStatus(CsCouponReleasedQueryParam csCouponReleasedQueryParam);
 }

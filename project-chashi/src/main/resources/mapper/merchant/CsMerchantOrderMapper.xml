@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, merchant_id, tearoom_id, wxuser_id, wxuser_phone, openid, order_name, order_date, order_timerage, order_origin_timenum, order_timenum, order_unit_originPrice, order_unit_price, order_originPrice, order_cp_amount, order_mb_amount, order_price, out_trade_no, payment_status, payment_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, merchant_id, tearoom_id, room_name, wxuser_id, wxuser_phone, openid, order_name, order_date, order_timerage, order_origin_timenum, membercard_order_id, order_mb_timenum, order_timenum, order_unit_origin_price, order_unit_price, order_origin_price, coupon_released_id, order_cp_amount, order_mb_amount, order_price, out_trade_no, payment_status, payment_type,used_status, source_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <select id="getCsMerchantOrderById" resultType="com.io.yy.merchant.vo.CsMerchantOrderQueryVo">
@@ -15,8 +15,39 @@
 
     <select id="getCsMerchantOrderPageList" resultType="com.io.yy.merchant.vo.CsMerchantOrderQueryVo">
         select
-        <include refid="Base_Column_List"/>
-        from cs_merchant_order
+        cmo.id AS id, merchant_id, tearoom_id, wxuser_id, wxuser_phone, cmo.openid, order_name, order_date, order_timerage, order_origin_timenum,
+        membercard_order_id, order_mb_timenum,order_timenum, order_unit_origin_price, order_unit_price, order_origin_price, coupon_released_id, order_cp_amount,
+        order_mb_amount, order_price,out_trade_no, payment_status, payment_type,used_status, source_type, cmo.status, cmo.deleted, cmo.version, cmo.create_by,
+        cmo.create_time,cmo.update_by, cmo.update_time, wu.nickname AS nickname
+        from cs_merchant_order cmo
+        left join wx_user wu on cmo.wxuser_id=wu.id
+        <if test="param.nameAphone !=null and param.nameAphone.trim() != '' ">
+            and (cmo.wxuser_phone like concat('%', #{param.nameAphone}, '%') or wu.nickname like concat('%', #{param.nameAphone}, '%')
+        </if>
+        where 1=1 and cmo.deleted = 0
+        <if test="param.merchantId !=null">
+            and cmo.merchant_id = #{param.merchantId}
+        </if>
+        <if test="param.queryType == 2">
+            and cmo.payment_status=0
+        </if>
+        <if test="param.queryType == 3">
+            AND cmo.payment_status=2
+            AND cmo.used_status =0
+        </if>
+        <if test="param.queryType == 4">
+            AND cmo.payment_status=2
+            AND cmo.used_status =1
+        </if>
+        <if test="param.queryType == 5">
+            AND cmo.payment_status=2
+            AND cmo.used_status =3
+        </if>
+        <if test="param.queryType == 6">
+            AND cmo.payment_status=3
+        </if>
+        <if test="param.queryType == 7">
+        </if>
     </select>
 
     <update id="updateStatus">

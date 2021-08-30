@@ -36,4 +36,12 @@
             AND CURDATE() <![CDATA[ <= ]]> DATE(cc.end_time)
         WHERE ccr.wxuser_id=#{wxuserId}
     </select>
+
+    <update id="updateUsedStatus">
+        update cs_coupon_released set is_used = #{param.isUsed}, used_time = #{param.usedTime}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
 </mapper>

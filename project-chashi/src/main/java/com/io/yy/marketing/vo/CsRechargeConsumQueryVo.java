@@ -31,6 +31,9 @@ public class CsRechargeConsumQueryVo implements Serializable {
     @ApiModelProperty(value = "消费金额")
     private Double cousumAmount;
 
+    @ApiModelProperty(value = "消费时间")
+    private Date cousumDate;
+
     @ApiModelProperty(value = "茶室订单id")
     private Long roomOrderId;
 

@@ -59,6 +59,12 @@ public class CsMembercardOrderQueryVo implements Serializable {
     @ApiModelProperty(value = "实际总价")
     private Double orderPrice;
 
+    @ApiModelProperty(value = "剩余优惠时长")
+    private Double restDiscountTime;
+
+    @ApiModelProperty(value = "剩余优惠价格")
+    private Double restDiscountPrice;
+
     @ApiModelProperty(value = "32位的UUID")
     private String outTradeNo;
 

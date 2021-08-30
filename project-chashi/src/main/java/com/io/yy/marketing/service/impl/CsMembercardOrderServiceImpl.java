@@ -111,4 +111,15 @@ public class CsMembercardOrderServiceImpl extends BaseServiceImpl<CsMembercardOr
         return csMembercardOrderMapper.updatePaymentStatus(csMembercardOrderQueryParam) > 0;
     }
 
+    /**
+     * 更新剩余优惠时长和优惠金额
+     *
+     * @param csMembercardOrderQueryParam
+     * @return
+     */
+    @Override
+    public boolean updateRest(CsMembercardOrderQueryParam csMembercardOrderQueryParam) {
+        return csMembercardOrderMapper.updateRest(csMembercardOrderQueryParam) > 0;
+    }
+
 }

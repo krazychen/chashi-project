@@ -101,4 +101,15 @@ public class CsCouponReleasedServiceImpl extends BaseServiceImpl<CsCouponRelease
         return csCouponReleasedMapper.getCsCouponReleasedByUserId(wxuserId);
     }
 
+    /**
+     * 更新使用状态
+     *
+     * @param csCouponReleasedQueryParam
+     * @return
+     */
+    @Override
+    public boolean updateUsedStatus(CsCouponReleasedQueryParam csCouponReleasedQueryParam) {
+        return csCouponReleasedMapper.updateUsedStatus(csCouponReleasedQueryParam)> 0;
+    }
+
 }

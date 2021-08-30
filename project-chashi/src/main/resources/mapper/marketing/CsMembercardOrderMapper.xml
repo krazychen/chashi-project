@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, membercard_id, membercard_name, wxuser_id, wxuser_phone, openid, order_name, order_date, valid_period, start_time, end_time, order_price, out_trade_no, payment_status, payment_msg, payment_type, source_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, membercard_id, membercard_name, wxuser_id, wxuser_phone, openid, order_name, order_date, valid_period, start_time, end_time, order_price, rest_discount_price, rest_discount_time, out_trade_no, payment_status, payment_msg, payment_type, source_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <select id="getCsMembercardOrderById" resultType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
@@ -50,6 +50,14 @@
         where deleted = 0
         and out_trade_no = #{param.outTradeNo}
         and payment_status != #{param.paymentStatus}
+    </update>
+
+    <update id="updateRest">
+        update cs_membercard_order set rest_discount_time = rest_discount_time - #{param.restDiscountTime}, rest_discount_price = rest_discount_price - #{param.restDiscountPrice}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
     </update>
 
 </mapper>

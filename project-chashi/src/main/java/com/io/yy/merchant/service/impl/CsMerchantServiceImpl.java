@@ -218,7 +218,7 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
         switch (csMerchantQueryParam.getSize()){
             case 2:
                 //1.获取外接正方形, 经纬度为空，以厦门市的经纬度为准
-                if(StringUtils.isNotEmpty(csMerchantQueryParam.getUserLng())&&StringUtils.isNotEmpty(csMerchantQueryParam.getUserLat())){
+                if(StringUtils.isNotBlank(csMerchantQueryParam.getUserLng())&&StringUtils.isNotBlank(csMerchantQueryParam.getUserLat())){
                     rectangle = getRectangle(csMerchantQueryParam.getDistance(),Double.valueOf(csMerchantQueryParam.getUserLng()), Double.valueOf(csMerchantQueryParam.getUserLat()));
                 }else{
                     rectangle = getRectangle(csMerchantQueryParam.getDistance(),Double.valueOf("118.0894"), Double.valueOf("24.4798"));
@@ -243,7 +243,7 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
                 break;
             default:
                 //1.获取外接正方形, 经纬度为
-                if(StringUtils.isNotEmpty(csMerchantQueryParam.getUserLng())&&StringUtils.isNotEmpty(csMerchantQueryParam.getUserLat())){
+                if(StringUtils.isNotBlank(csMerchantQueryParam.getUserLng())&&StringUtils.isNotBlank(csMerchantQueryParam.getUserLat())){
                     rectangle = getRectangle(csMerchantQueryParam.getDistance(),Double.valueOf(csMerchantQueryParam.getUserLng()), Double.valueOf(csMerchantQueryParam.getUserLat()));
                     csMerchantQueryParam.setMinlng(rectangle.getMinX());
                     csMerchantQueryParam.setMaxlng(rectangle.getMaxX());
@@ -264,7 +264,7 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
 //        IPage<CsMerchantQueryVo> iPage = csMerchantMapper.getCsMerchantPageList(page, csMerchantQueryParam);
 
         //计算用户和商店的距离
-        if(StringUtils.isNotEmpty(csMerchantQueryParam.getUserLng())&&StringUtils.isNotEmpty(csMerchantQueryParam.getUserLat())) {
+        if(StringUtils.isNotBlank(csMerchantQueryParam.getUserLng())&&StringUtils.isNotBlank(csMerchantQueryParam.getUserLat())) {
             iPage.getRecords().stream().forEach(
                     a -> a.setMerchantDistance(
                             getDistance(Double.valueOf(a.getLongitude()), Double.valueOf(a.getLatitude()),

@@ -252,13 +252,13 @@ public class CsTearoomController extends BaseController {
 
         //banner
         MultipartFile[] bannerUploadfiles=csTearoom.getBannerUploadFileAdd();
-        String bannerFileUrls=StringUtils.isNotEmpty(csTearoom.getRoomBannerUrl())?csTearoom.getRoomBannerUrl():"";
-        String bannerFileNames=StringUtils.isNotEmpty(csTearoom.getRoomBannerName())?csTearoom.getRoomBannerName():"";
+        String bannerFileUrls=StringUtils.isNotBlank(csTearoom.getRoomBannerUrl())?csTearoom.getRoomBannerUrl():"";
+        String bannerFileNames=StringUtils.isNotBlank(csTearoom.getRoomBannerName())?csTearoom.getRoomBannerName():"";
         if(ArrayUtils.isNotEmpty(bannerUploadfiles)) {
             for (int i = 0; i < bannerUploadfiles.length; i++) {
                 MultipartFile uploadF = bannerUploadfiles[i];
                 String fileName = UploadUtil.upload(uploadPath, uploadF);
-                if (StringUtils.isNotEmpty(bannerFileNames)) {
+                if (StringUtils.isNotBlank(bannerFileNames)) {
                     bannerFileNames += "," + uploadF.getOriginalFilename() ;
                     bannerFileUrls += "," + whyySystemProperties.getConfigAccessUrl() + fileName;
                 } else {
@@ -293,7 +293,7 @@ public class CsTearoomController extends BaseController {
         Paging<CsTearoomQueryVo> paging = csTearoomService.getCsTearoomPageListOrderBySort(csTearoomQueryParam);
         //设置茶室的会员价，先获取当前的用户会员
         boolean isNon=false;
-        if(StringUtils.isNotEmpty(csTearoomQueryParam.getOpenid())){
+        if(StringUtils.isNotBlank(csTearoomQueryParam.getOpenid())){
             WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csTearoomQueryParam.getOpenid());
             if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
                 CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
@@ -328,7 +328,7 @@ public class CsTearoomController extends BaseController {
         CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csTearoomQueryParam.getId());
         //设置茶室的会员价，先获取当前的用户会员
         boolean isNon=false;
-        if(StringUtils.isNotEmpty(csTearoomQueryParam.getOpenid())){
+        if(StringUtils.isNotBlank(csTearoomQueryParam.getOpenid())){
             WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csTearoomQueryParam.getOpenid());
             if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
                 CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();

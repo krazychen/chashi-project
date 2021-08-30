@@ -102,8 +102,8 @@ public class CsMemberCardController extends BaseController {
 
         //logo 新增文件
         MultipartFile[] uploadfiles=csMemberCard.getUploadFileAdd();
-        String fileNames=StringUtils.isNotEmpty(csMemberCard.getLogoName())?csMemberCard.getLogoName():"";
-        String fileUrls= StringUtils.isNotEmpty(csMemberCard.getLogoUrl())?csMemberCard.getLogoUrl():"";
+        String fileNames=StringUtils.isNotBlank(csMemberCard.getLogoName())?csMemberCard.getLogoName():"";
+        String fileUrls= StringUtils.isNotBlank(csMemberCard.getLogoUrl())?csMemberCard.getLogoUrl():"";
         if(ArrayUtils.isNotEmpty(uploadfiles)) {
             for (int i = 0; i < uploadfiles.length; i++) {
                 MultipartFile uploadF = uploadfiles[i];

@@ -1,48 +1,37 @@
-package com.io.yy.marketing.entity;
+package com.io.yy.marketing.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import java.util.Date;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.io.yy.common.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import java.io.Serializable;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * <pre>
- * 充值消费
+ * 会员卡消费记录 查询结果对象
  * </pre>
  *
  * @author kris
- * @since 2021-08-18
+ * @date 2021-08-24
  */
 @Data
 @Accessors(chain = true)
-@EqualsAndHashCode(callSuper = true)
-@ApiModel(value = "CsRechargeConsum对象", description = "充值消费")
-public class CsRechargeConsum extends BaseEntity {
-
+@ApiModel(value = "CsMembercardConsumQueryVo对象", description = "会员卡消费记录查询参数")
+public class CsMembercardConsumQueryVo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "主键")
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     @ApiModelProperty(value = "微信用户ID")
-    @NotNull(message = "微信用户ID不能为空")
     private Long wxuserId;
 
     @ApiModelProperty(value = "消费金额")
-    @NotNull(message = "消费金额不能为空")
-    private Double cousumAmount;
+    private Double amount;
 
     @ApiModelProperty(value = "消费时间")
-    @NotNull(message = "消费金额不能为空")
     private Date cousumDate;
 
     @ApiModelProperty(value = "茶室订单id")
@@ -51,9 +40,17 @@ public class CsRechargeConsum extends BaseEntity {
     @ApiModelProperty(value = "会员卡订单id")
     private Long cardOrderId;
 
-    @ApiModelProperty(value = "消费类型，0是茶室订单，1是会员订单")
-    @NotNull(message = "消费类型，0是茶室订单，1是会员订单不能为空")
+    @ApiModelProperty(value = "消费类型，0是时长减免，1是金额减免，2是折扣优惠，每一条一种类型")
     private Integer consumType;
+
+    @ApiModelProperty(value = "减免时长")
+    private Integer consumTime;
+
+    @ApiModelProperty(value = "减免金额")
+    private Double consumAmount;
+
+    @ApiModelProperty(value = "折扣优惠金额")
+    private Double consumDiscountAmount;
 
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;

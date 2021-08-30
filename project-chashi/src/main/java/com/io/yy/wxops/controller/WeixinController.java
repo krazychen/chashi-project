@@ -544,14 +544,14 @@ public class WeixinController extends WeixinSupport {
                 /**此处添加自己的业务逻辑代码start**/
 
                 // 如果是会员卡订单,更新订单的付款状态
-                if(StringUtils.isNotEmpty(outTradeNo)&&outTradeNo.indexOf("card_")!=-1){
+                if(StringUtils.isNotBlank(outTradeNo)&&outTradeNo.indexOf("card_")!=-1){
                     CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
                     csMembercardOrderQueryParam.setOutTradeNo(outTradeNo);
                     csMembercardOrderQueryParam.setPaymentStatus(2);
                     csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
                 }
                 // 如果是充值订单,更新充值订单的付款状态
-                if(StringUtils.isNotEmpty(outTradeNo)&&outTradeNo.indexOf("rech_")!=-1){
+                if(StringUtils.isNotBlank(outTradeNo)&&outTradeNo.indexOf("rech_")!=-1){
                     CsRechargeRecordQueryParam csRechargeRecordQueryParam = new CsRechargeRecordQueryParam();
                     csRechargeRecordQueryParam.setOutTradeNo(outTradeNo);
                     csRechargeRecordQueryParam.setPaymentStatus(2);
@@ -576,14 +576,14 @@ public class WeixinController extends WeixinSupport {
         } else {
             /**此处添加自己的业务逻辑代码start**/
             // 如果是会员卡订单,更新订单的付款状态
-            if(StringUtils.isNotEmpty(outTradeNo)&&outTradeNo.indexOf("card_")!=-1){
+            if(StringUtils.isNotBlank(outTradeNo)&&outTradeNo.indexOf("card_")!=-1){
                 CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
                 csMembercardOrderQueryParam.setOutTradeNo(outTradeNo);
                 csMembercardOrderQueryParam.setPaymentStatus(1);
                 csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
             }
             // 如果是充值订单,更新充值订单的付款状态
-            if(StringUtils.isNotEmpty(outTradeNo)&&outTradeNo.indexOf("rech_")!=-1) {
+            if(StringUtils.isNotBlank(outTradeNo)&&outTradeNo.indexOf("rech_")!=-1) {
                 CsRechargeRecordQueryParam csRechargeRecordQueryParam = new CsRechargeRecordQueryParam();
                 csRechargeRecordQueryParam.setOutTradeNo(outTradeNo);
                 csRechargeRecordQueryParam.setPaymentStatus(1);

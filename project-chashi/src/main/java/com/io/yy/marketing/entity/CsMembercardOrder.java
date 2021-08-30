@@ -70,6 +70,12 @@ public class CsMembercardOrder extends BaseEntity {
     @ApiModelProperty(value = "32位的UUID")
     private String outTradeNo;
 
+    @ApiModelProperty(value = "剩余优惠时长")
+    private Double restDiscountTime;
+
+    @ApiModelProperty(value = "剩余优惠价格")
+    private Double restDiscountPrice;
+
     @ApiModelProperty(value = "支付状态：支付中、支付失败、支付成功")
     private Integer paymentStatus;
 

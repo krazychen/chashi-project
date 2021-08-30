@@ -249,7 +249,7 @@ public class CsMerchantController extends BaseController {
             for (int i = 0; i < bannerUploadfiles.length; i++) {
                 MultipartFile uploadF = bannerUploadfiles[i];
                 String fileName = UploadUtil.upload(uploadPath, uploadF);
-                if (StringUtils.isNotEmpty(bannerFileOriNames)) {
+                if (StringUtils.isNotBlank(bannerFileOriNames)) {
                     bannerFileOriNames += "," + uploadF.getOriginalFilename() ;
                     bannerFileNames += "," + whyySystemProperties.getConfigAccessUrl() + fileName;
                 } else {
@@ -295,7 +295,7 @@ public class CsMerchantController extends BaseController {
         CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantByIdForWx(csMerchantQueryParam);
         //设置茶室的会员价，先获取当前的用户会员
         boolean isNon=false;
-        if(StringUtils.isNotEmpty(csMerchantQueryParam.getOpenid())){
+        if(StringUtils.isNotBlank(csMerchantQueryParam.getOpenid())){
             WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csMerchantQueryParam.getOpenid());
             if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
                 CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();

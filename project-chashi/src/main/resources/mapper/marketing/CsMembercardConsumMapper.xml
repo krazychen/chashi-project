@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.marketing.mapper.CsMembercardConsumMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, wxuser_id, amount, cousum_date, room_order_id, card_order_id, consum_type, consum_time, consum_amount, consum_discount_amount, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getCsMembercardConsumById" resultType="com.io.yy.marketing.vo.CsMembercardConsumQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_membercard_consum where id = #{id}
+    </select>
+
+    <select id="getCsMembercardConsumPageList" resultType="com.io.yy.marketing.vo.CsMembercardConsumQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_membercard_consum
+    </select>
+
+    <update id="updateStatus">
+        update cs_membercard_consum set status = #{param.status}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
+</mapper>

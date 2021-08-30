@@ -208,7 +208,7 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
         WxLoginQueryVo wxLoginQueryVo = restTemplate.getForObject(loginUrl, WxLoginQueryVo.class);
         if(wxLoginQueryVo!=null){
             // 小程序 wx.checksession通过，currentSessionObj为空时。重新从服务端缓存中获取标识。1 为重新获取
-            if(StringUtils.isNotEmpty(wxLoginQueryParam.getReGetFlag()) && wxLoginQueryParam.getReGetFlag().equals("1")){
+            if(StringUtils.isNotBlank(wxLoginQueryParam.getReGetFlag()) && wxLoginQueryParam.getReGetFlag().equals("1")){
                 WxLoginQueryVo wxLoginQueryVoTemp = (WxLoginQueryVo) redisTemplate.opsForValue().get(wxLoginQueryVo.getOpenid());
                 if(wxLoginQueryVoTemp!=null){
                     wxLoginQueryVo = wxLoginQueryVoTemp;
@@ -250,6 +250,17 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
     @Override
     public Integer updateBalanceAIntegral(WxUserQueryParam wxUserQueryParam) {
         return wxUserMapper.updateBalanceAIntegral(wxUserQueryParam);
+    }
+
+    /**
+     * 减少余额
+     *
+     * @param wxUserQueryParam
+     * @return
+     */
+    @Override
+    public Integer reduceBalance(WxUserQueryParam wxUserQueryParam) {
+        return wxUserMapper.reduceBalance(wxUserQueryParam);
     }
 
 }

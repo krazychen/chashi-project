@@ -70,4 +70,12 @@ public interface WxUserMapper extends BaseMapper<WxUser> {
      * @return
      */
     Integer updateBalanceAIntegral(@Param("param") WxUserQueryParam wxUserQueryParam);
+
+    /**
+     * 减少余额
+     *
+     * @param wxUserQueryParam
+     * @return
+     */
+    Integer reduceBalance(@Param("param") WxUserQueryParam wxUserQueryParam);
 }

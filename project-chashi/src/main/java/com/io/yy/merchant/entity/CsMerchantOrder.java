@@ -42,6 +42,9 @@ public class CsMerchantOrder extends BaseEntity {
     @NotNull(message = "茶室ID不能为空")
     private Long tearoomId;
 
+    @ApiModelProperty(value = "茶室名称")
+    private String roomName;
+
     @ApiModelProperty(value = "微信用户ID")
     @NotNull(message = "微信用户ID不能为空")
     private Long wxuserId;
@@ -52,7 +55,7 @@ public class CsMerchantOrder extends BaseEntity {
 
     @ApiModelProperty(value = "微信用户openID")
     @NotNull(message = "微信用户openID不能为空")
-    private Long openid;
+    private String openid;
 
     @ApiModelProperty(value = "商品名称，用茶室名称+预订手机+预订日期+uuid")
     private String orderName;
@@ -66,17 +69,26 @@ public class CsMerchantOrder extends BaseEntity {
     @ApiModelProperty(value = "总的预订时间段数")
     private Integer orderOriginTimenum;
 
+    @ApiModelProperty(value = "会员卡订单ID")
+    private Long membercardOrderId;
+
+    @ApiModelProperty(value = "会员卡优惠时间段数")
+    private Integer orderMbTimenum;
+
     @ApiModelProperty(value = "会员卡优惠后的总的预订时间段数")
     private Integer orderTimenum;
 
     @ApiModelProperty(value = "预订原价")
     private Double orderUnitOriginPrice;
 
-    @ApiModelProperty(value = "预订实际价格- 优惠卷优惠后")
+    @ApiModelProperty(value = "会员卡折扣价格")
     private Double orderUnitPrice;
 
     @ApiModelProperty(value = "预订总价")
     private Double orderOriginPrice;
+
+    @ApiModelProperty(value = "用户优惠卷ID")
+    private Long couponReleasedId;
 
     @ApiModelProperty(value = "优惠卷优惠的价格")
     private Double orderCpAmount;
@@ -95,6 +107,12 @@ public class CsMerchantOrder extends BaseEntity {
 
     @ApiModelProperty(value = "支付类型：余额支付、微信支付")
     private Integer paymentType;
+
+    @ApiModelProperty(value = "使用状态：未使用0，已使用1，已取消2")
+    private Integer usedStatus;
+
+    @ApiModelProperty(value = "订单来源：系统新增0、用户购买1")
+    private Integer sourceType;
 
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;

@@ -56,4 +56,12 @@ public interface CsCouponReleasedMapper extends BaseMapper<CsCouponReleased> {
      */
     List<CsCouponReleasedQueryVo> getCsCouponReleasedByUserId(@Param("wxuserId") Long wxuserId);
 
+    /**
+     * 更新使用状态
+     *
+     * @param csCouponReleasedQueryParam
+     * @return
+     */
+    Integer updateUsedStatus(@Param("param") CsCouponReleasedQueryParam csCouponReleasedQueryParam);
+
 }

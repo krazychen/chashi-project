@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, wxuser_id, cousum_amount, room_order_id, card_order_id, consum_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, wxuser_id, cousum_amount, cousum_date, room_order_id, card_order_id, consum_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <select id="getCsRechargeConsumById" resultType="com.io.yy.marketing.vo.CsRechargeConsumQueryVo">

@@ -38,7 +38,7 @@ public class CsMerchantOrderQueryVo implements Serializable {
     private String wxuserPhone;
 
     @ApiModelProperty(value = "微信用户openID")
-    private Long openid;
+    private String openid;
 
     @ApiModelProperty(value = "商品名称，用茶室名称+预订手机+预订日期+uuid")
     private String orderName;
@@ -52,17 +52,26 @@ public class CsMerchantOrderQueryVo implements Serializable {
     @ApiModelProperty(value = "总的预订时间段数")
     private Integer orderOriginTimenum;
 
+    @ApiModelProperty(value = "会员卡订单ID")
+    private Long membercardOrderId;
+
+    @ApiModelProperty(value = "会员卡优惠时间段数")
+    private Integer orderMbTimenum;
+
     @ApiModelProperty(value = "会员卡优惠后的总的预订时间段数")
     private Integer orderTimenum;
 
     @ApiModelProperty(value = "预订原价")
     private Double orderUnitOriginPrice;
 
-    @ApiModelProperty(value = "预订实际价格- 优惠卷优惠后")
+    @ApiModelProperty(value = "会员卡折扣价格")
     private Double orderUnitPrice;
 
     @ApiModelProperty(value = "预订总价")
     private Double orderOriginPrice;
+
+    @ApiModelProperty(value = "用户优惠卷ID")
+    private Long couponReleasedId;
 
     @ApiModelProperty(value = "优惠卷优惠的价格")
     private Double orderCpAmount;
@@ -76,11 +85,17 @@ public class CsMerchantOrderQueryVo implements Serializable {
     @ApiModelProperty(value = "32位的UUID")
     private String outTradeNo;
 
-    @ApiModelProperty(value = "支付状态：支付中、支付失败、支付成功")
+    @ApiModelProperty(value = "支付状态：支付中0、支付失败1、支付成功2，支付取消3，支付失败4")
     private Integer paymentStatus;
 
     @ApiModelProperty(value = "支付类型：余额支付、微信支付")
     private Integer paymentType;
+
+    @ApiModelProperty(value = "使用状态：未使用0，已使用1，已取消2, 已完成3")
+    private Integer usedStatus;
+
+    @ApiModelProperty(value = "订单来源：系统新增0、用户购买1")
+    private Integer sourceType;
 
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
@@ -109,4 +124,9 @@ public class CsMerchantOrderQueryVo implements Serializable {
     @ApiModelProperty(value = "租户名称")
     private String corpName;
 
+    @ApiModelProperty(value = "微信用户名称")
+    private String nickname;
+
+    @ApiModelProperty(value = "茶室名称")
+    private String roomName;
 }
