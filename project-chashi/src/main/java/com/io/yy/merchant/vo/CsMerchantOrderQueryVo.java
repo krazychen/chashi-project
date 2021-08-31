@@ -91,6 +91,9 @@ public class CsMerchantOrderQueryVo implements Serializable {
     @ApiModelProperty(value = "支付类型：余额支付、微信支付")
     private Integer paymentType;
 
+    @ApiModelProperty(value = "支付失败错误消息")
+    private String paymentMsg;
+
     @ApiModelProperty(value = "使用状态：未使用0，已使用1，已取消2, 已完成3")
     private Integer usedStatus;
 

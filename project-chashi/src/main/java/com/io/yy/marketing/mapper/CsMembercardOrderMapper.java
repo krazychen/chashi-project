@@ -65,10 +65,18 @@ public interface CsMembercardOrderMapper extends BaseMapper<CsMembercardOrder> {
     Integer updatePaymentStatus(@Param("param") CsMembercardOrderQueryParam csMembercardOrderQueryParam);
 
     /**
-     * 更新剩余优惠时长和优惠金额
+     * 减少剩余优惠时长和优惠金额
      *
      * @param csMembercardOrderQueryParam
      * @return
      */
-    Integer updateRest(@Param("param") CsMembercardOrderQueryParam csMembercardOrderQueryParam);
+    Integer reduceRest(@Param("param") CsMembercardOrderQueryParam csMembercardOrderQueryParam);
+
+    /**
+     * 增加剩余优惠时长和优惠金额
+     *
+     * @param csMembercardOrderQueryParam
+     * @return
+     */
+    Integer addRest(@Param("param") CsMembercardOrderQueryParam csMembercardOrderQueryParam);
 }

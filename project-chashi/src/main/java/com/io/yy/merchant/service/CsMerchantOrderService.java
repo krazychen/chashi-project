@@ -90,4 +90,12 @@ public interface CsMerchantOrderService extends BaseService<CsMerchantOrder> {
      * @return
      */
     String getTimeRangeForWx(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
+
+    /**
+     * 更新支付状态
+     *
+     * @param csMerchantOrderQueryParam
+     * @return
+     */
+    boolean updatePaymentStatus(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 }

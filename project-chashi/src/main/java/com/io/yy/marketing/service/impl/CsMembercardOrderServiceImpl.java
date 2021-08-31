@@ -112,14 +112,25 @@ public class CsMembercardOrderServiceImpl extends BaseServiceImpl<CsMembercardOr
     }
 
     /**
-     * 更新剩余优惠时长和优惠金额
+     * 减少剩余优惠时长和优惠金额
      *
      * @param csMembercardOrderQueryParam
      * @return
      */
     @Override
-    public boolean updateRest(CsMembercardOrderQueryParam csMembercardOrderQueryParam) {
-        return csMembercardOrderMapper.updateRest(csMembercardOrderQueryParam) > 0;
+    public boolean reduceRest(CsMembercardOrderQueryParam csMembercardOrderQueryParam) {
+        return csMembercardOrderMapper.reduceRest(csMembercardOrderQueryParam) > 0;
+    }
+
+    /**
+     * 增加剩余优惠时长和优惠金额
+     *
+     * @param csMembercardOrderQueryParam
+     * @return
+     */
+    @Override
+    public boolean addRest(CsMembercardOrderQueryParam csMembercardOrderQueryParam) {
+        return csMembercardOrderMapper.reduceRest(csMembercardOrderQueryParam) > 0;
     }
 
 }

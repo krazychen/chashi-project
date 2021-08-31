@@ -52,7 +52,15 @@
         and payment_status != #{param.paymentStatus}
     </update>
 
-    <update id="updateRest">
+    <update id="addRest">
+        update cs_membercard_order set rest_discount_time = rest_discount_time + #{param.restDiscountTime}, rest_discount_price = rest_discount_price + #{param.restDiscountPrice}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
+
+    <update id="reduceRest">
         update cs_membercard_order set rest_discount_time = rest_discount_time - #{param.restDiscountTime}, rest_discount_price = rest_discount_price - #{param.restDiscountPrice}
         where deleted = 0
         <if test="param.id != null">

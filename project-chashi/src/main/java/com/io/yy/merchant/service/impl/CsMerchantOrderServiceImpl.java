@@ -96,4 +96,15 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         return timeRanges;
     }
 
+    /**
+     * 更新支付状态
+     *
+     * @param csMerchantOrderQueryParam
+     * @return
+     */
+    @Override
+    public boolean updatePaymentStatus(CsMerchantOrderQueryParam csMerchantOrderQueryParam) {
+        return csMerchantOrderMapper.updatePaymentStatus(csMerchantOrderQueryParam) > 0;
+    }
+
 }

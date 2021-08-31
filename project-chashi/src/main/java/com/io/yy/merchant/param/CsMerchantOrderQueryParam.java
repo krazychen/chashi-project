@@ -1,5 +1,7 @@
 package com.io.yy.merchant.param;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -25,6 +27,10 @@ import java.util.Date;
 public class CsMerchantOrderQueryParam extends OrderQueryParam {
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty(value = "主键")
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    private Long id;
+
     @ApiModelProperty(value = "商店id")
     private Long merchantId;
 
@@ -39,4 +45,13 @@ public class CsMerchantOrderQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "昵称和手机号")
     private String nameAphone;
+
+    @ApiModelProperty(value = "32位的UUID")
+    private String outTradeNo;
+
+    @ApiModelProperty(value = "支付状态：支付中、支付失败、支付成功")
+    private Integer paymentStatus;
+
+    @ApiModelProperty(value = "支付失败错误消息")
+    private String paymentMsg;
 }

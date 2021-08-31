@@ -29,16 +29,12 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
 import com.io.yy.common.vo.Paging;
-import com.io.yy.common.param.IdParam;
 
 /**
  * <pre>
@@ -79,6 +75,94 @@ public class CsMerchantOrderController extends BaseController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "添加CsMerchantOrder对象", notes = "添加商店茶室订单记录", response = ApiResult.class)
     public ApiResult<Boolean> addCsMerchantOrder(@Valid @RequestBody CsMerchantOrder csMerchantOrder) throws Exception {
+        return ApiResult.result(saveCsMerchantOrder(csMerchantOrder));
+    }
+
+    /**
+     * 修改商店茶室订单记录
+     */
+    @PostMapping("/update")
+    @RequiresPermissions("cs:merchant:order:update")
+    @ApiOperation(value = "修改CsMerchantOrder对象", notes = "修改商店茶室订单记录", response = ApiResult.class)
+    public ApiResult<Boolean> updateCsMerchantOrder(@Valid @RequestBody CsMerchantOrder csMerchantOrder) throws Exception {
+        boolean flag = csMerchantOrderService.updateCsMerchantOrder(csMerchantOrder);
+        return ApiResult.result(flag);
+    }
+
+    /**
+     * 删除商店茶室订单记录
+     */
+    @PostMapping("/delete/{id}")
+    @RequiresPermissions("cs:merchant:order:delete")
+    @ApiOperation(value = "删除CsMerchantOrder对象", notes = "删除商店茶室订单记录", response = ApiResult.class)
+    public ApiResult<Boolean> deleteCsMerchantOrder(@PathVariable("id") Long id) throws Exception {
+        boolean flag = csMerchantOrderService.deleteCsMerchantOrder(id);
+        return ApiResult.result(flag);
+    }
+
+    /**
+     * 批量删除商店茶室订单记录
+     */
+    @PostMapping("/delete")
+    @RequiresPermissions("cs:merchant:order:delete")
+    @ApiOperation(value = "批量删除CsMerchantOrder对象", notes = "批量删除商店茶室订单记录", response = ApiResult.class)
+    public ApiResult<Boolean> deleteCsMerchantOrder(@Valid @RequestBody List<String> idList) throws Exception {
+        boolean flag = csMerchantOrderService.deleteCsMerchantOrders(idList);
+        return ApiResult.result(flag);
+    }
+
+    /**
+     * 获取商店茶室订单记录
+     */
+    @GetMapping("/info/{id}")
+    @RequiresPermissions("cs:merchant:order:info")
+    @ApiOperation(value = "获取CsMerchantOrder对象详情", notes = "查看商店茶室订单记录", response = CsMerchantOrderQueryVo.class)
+    public ApiResult<CsMerchantOrderQueryVo> getCsMerchantOrder(@PathVariable("id") Long id) throws Exception {
+        CsMerchantOrderQueryVo csMerchantOrderQueryVo = csMerchantOrderService.getCsMerchantOrderById(id);
+        return ApiResult.ok(csMerchantOrderQueryVo);
+    }
+
+    /**
+     * 商店茶室订单记录分页列表
+     */
+    @PostMapping("/getPageList")
+    @RequiresPermissions("cs:merchant:order:page")
+    @ApiOperation(value = "获取CsMerchantOrder分页列表", notes = "商店茶室订单记录分页列表", response = CsMerchantOrderQueryVo.class)
+    public ApiResult<Paging<CsMerchantOrderQueryVo>> getCsMerchantOrderPageList(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        Paging<CsMerchantOrderQueryVo> paging = csMerchantOrderService.getCsMerchantOrderPageList(csMerchantOrderQueryParam);
+        return ApiResult.ok(paging);
+    }
+
+    /**
+     * 商店茶室订单记录修改状态
+     */
+    @PostMapping("/updateStatus")
+    @RequiresPermissions("cs:merchant:order:update")
+    @ApiOperation(value = "修改CsMerchantOrder状态", notes = "商店茶室订单记录修改状态", response = ApiResult.class)
+    public ApiResult<Boolean> updateStatus(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        return ApiResult.ok(csMerchantOrderService.updateStatus(csMerchantOrderQueryParam));
+    }
+
+    /**
+     * 根据tearoomid和预订日期获取当前茶室已经被预定的时间段，返回是时间段的一个包含","的字符串
+     */
+    @PostMapping("/getTimeRangeForWx")
+    @ApiOperation(value = "获取当前茶室已经被预定的时间段，返回是时间段的一个包含\",\"的字符串", notes = "获取当前茶室已经被预定的时间段", response = ApiResult.class)
+    public ApiResult<String> getTimeRangeForWx(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        return ApiResult.ok(csMerchantOrderService.getTimeRangeForWx(csMerchantOrderQueryParam));
+    }
+
+    /**
+     * 添加商店茶室订单记录 - 余额
+     */
+    @PostMapping("/addCsMerchantOrderForWx")
+    @ApiOperation(value = "添加CsMerchantOrder对象", notes = "添加商店茶室订单记录", response = ApiResult.class)
+    public ApiResult<Boolean> addCsMerchantOrderForWx(@Valid @RequestBody CsMerchantOrder csMerchantOrder) throws Exception {
+        return ApiResult.result(saveCsMerchantOrder(csMerchantOrder));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean saveCsMerchantOrder(CsMerchantOrder csMerchantOrder) throws Exception {
         // 保存茶室订单，订单保存成功后，即扣除优惠卷和会员优惠时长、金额，在支付失败、取消时，会重新删除优惠卷和优惠时长、金额的使用
         csMerchantOrder.setSourceType(0);
         csMerchantOrder.setPaymentStatus(2);
@@ -157,7 +241,7 @@ public class CsMerchantOrderController extends BaseController {
                 csMembercardOrderQueryParam.setId(csMerchantOrder.getMembercardOrderId());
                 csMembercardOrderQueryParam.setRestDiscountPrice(csMerchantOrder.getOrderMbAmount());
                 csMembercardOrderQueryParam.setRestDiscountTime(csMerchantOrder.getOrderMbTimenum().doubleValue());
-                csMembercardOrderService.updateRest(csMembercardOrderQueryParam);
+                csMembercardOrderService.reduceRest(csMembercardOrderQueryParam);
             }
         }
 
@@ -177,81 +261,7 @@ public class CsMerchantOrderController extends BaseController {
             csRechargeConsumService.saveCsRechargeConsum(csRechargeConsum);
         }
 
-        return ApiResult.result(flag);
-    }
-
-    /**
-     * 修改商店茶室订单记录
-     */
-    @PostMapping("/update")
-    @RequiresPermissions("cs:merchant:order:update")
-    @ApiOperation(value = "修改CsMerchantOrder对象", notes = "修改商店茶室订单记录", response = ApiResult.class)
-    public ApiResult<Boolean> updateCsMerchantOrder(@Valid @RequestBody CsMerchantOrder csMerchantOrder) throws Exception {
-        boolean flag = csMerchantOrderService.updateCsMerchantOrder(csMerchantOrder);
-        return ApiResult.result(flag);
-    }
-
-    /**
-     * 删除商店茶室订单记录
-     */
-    @PostMapping("/delete/{id}")
-    @RequiresPermissions("cs:merchant:order:delete")
-    @ApiOperation(value = "删除CsMerchantOrder对象", notes = "删除商店茶室订单记录", response = ApiResult.class)
-    public ApiResult<Boolean> deleteCsMerchantOrder(@PathVariable("id") Long id) throws Exception {
-        boolean flag = csMerchantOrderService.deleteCsMerchantOrder(id);
-        return ApiResult.result(flag);
-    }
-
-    /**
-     * 批量删除商店茶室订单记录
-     */
-    @PostMapping("/delete")
-    @RequiresPermissions("cs:merchant:order:delete")
-    @ApiOperation(value = "批量删除CsMerchantOrder对象", notes = "批量删除商店茶室订单记录", response = ApiResult.class)
-    public ApiResult<Boolean> deleteCsMerchantOrder(@Valid @RequestBody List<String> idList) throws Exception {
-        boolean flag = csMerchantOrderService.deleteCsMerchantOrders(idList);
-        return ApiResult.result(flag);
-    }
-
-    /**
-     * 获取商店茶室订单记录
-     */
-    @GetMapping("/info/{id}")
-    @RequiresPermissions("cs:merchant:order:info")
-    @ApiOperation(value = "获取CsMerchantOrder对象详情", notes = "查看商店茶室订单记录", response = CsMerchantOrderQueryVo.class)
-    public ApiResult<CsMerchantOrderQueryVo> getCsMerchantOrder(@PathVariable("id") Long id) throws Exception {
-        CsMerchantOrderQueryVo csMerchantOrderQueryVo = csMerchantOrderService.getCsMerchantOrderById(id);
-        return ApiResult.ok(csMerchantOrderQueryVo);
-    }
-
-    /**
-     * 商店茶室订单记录分页列表
-     */
-    @PostMapping("/getPageList")
-    @RequiresPermissions("cs:merchant:order:page")
-    @ApiOperation(value = "获取CsMerchantOrder分页列表", notes = "商店茶室订单记录分页列表", response = CsMerchantOrderQueryVo.class)
-    public ApiResult<Paging<CsMerchantOrderQueryVo>> getCsMerchantOrderPageList(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
-        Paging<CsMerchantOrderQueryVo> paging = csMerchantOrderService.getCsMerchantOrderPageList(csMerchantOrderQueryParam);
-        return ApiResult.ok(paging);
-    }
-
-    /**
-     * 商店茶室订单记录修改状态
-     */
-    @PostMapping("/updateStatus")
-    @RequiresPermissions("cs:merchant:order:update")
-    @ApiOperation(value = "修改CsMerchantOrder状态", notes = "商店茶室订单记录修改状态", response = ApiResult.class)
-    public ApiResult<Boolean> updateStatus(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
-        return ApiResult.ok(csMerchantOrderService.updateStatus(csMerchantOrderQueryParam));
-    }
-
-    /**
-     * 根据tearoomid和预订日期获取当前茶室已经被预定的时间段，返回是时间段的一个包含","的字符串
-     */
-    @PostMapping("/getTimeRangeForWx")
-    @ApiOperation(value = "获取当前茶室已经被预定的时间段，返回是时间段的一个包含\",\"的字符串", notes = "获取当前茶室已经被预定的时间段", response = ApiResult.class)
-    public ApiResult<String> getTimeRangeForWx(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
-        return ApiResult.ok(csMerchantOrderService.getTimeRangeForWx(csMerchantOrderQueryParam));
+        return flag;
     }
 }
 

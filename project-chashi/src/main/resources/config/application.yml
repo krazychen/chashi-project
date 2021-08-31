@@ -221,6 +221,7 @@ whyy-system:
       /csCouponReleased/saveCouponForCouponCenter=anon
       /csCoupon/getCsCouponListOfCouponCenter=anon
       /csRechargeSetting/getSettingListForWx=anon
+      /csMerchantOrder/addCsMerchantOrderForWx=anon
     # 权限配置
     permission:
       # 排除登陆登出相关

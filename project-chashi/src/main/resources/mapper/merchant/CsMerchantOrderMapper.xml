@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, merchant_id, tearoom_id, room_name, wxuser_id, wxuser_phone, openid, order_name, order_date, order_timerage, order_origin_timenum, membercard_order_id, order_mb_timenum, order_timenum, order_unit_origin_price, order_unit_price, order_origin_price, coupon_released_id, order_cp_amount, order_mb_amount, order_price, out_trade_no, payment_status, payment_type,used_status, source_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, merchant_id, tearoom_id, room_name, wxuser_id, wxuser_phone, openid, order_name, order_date, order_timerage, order_origin_timenum, membercard_order_id, order_mb_timenum, order_timenum, order_unit_origin_price, order_unit_price, order_origin_price, coupon_released_id, order_cp_amount, order_mb_amount, order_price, out_trade_no, payment_status, payment_msg, payment_type,used_status, source_type, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <select id="getCsMerchantOrderById" resultType="com.io.yy.merchant.vo.CsMerchantOrderQueryVo">
@@ -67,4 +67,14 @@
         and cmo.`payment_status` = 2
         and cmo.tearoom_id = #{param.tearoomId}
     </select>
+
+    <update id="updatePaymentStatus">
+        update cs_merchant_order set payment_status = #{param.paymentStatus}
+        <if test="param.paymentMsg != null and param.paymentMsg.trim() != ''">
+            and payment_msg = #{param.paymentMsg}
+        </if>
+        where deleted = 0
+        and id = #{param.id}
+        and payment_status != #{param.paymentStatus}
+    </update>
 </mapper>

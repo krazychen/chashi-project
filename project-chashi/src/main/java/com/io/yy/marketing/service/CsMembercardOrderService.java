@@ -6,6 +6,7 @@ import com.io.yy.marketing.param.CsMembercardOrderQueryParam;
 import com.io.yy.marketing.vo.CsMemberCardQueryVo;
 import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
 import com.io.yy.common.vo.Paging;
+import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
 import java.util.List;
@@ -102,10 +103,18 @@ public interface CsMembercardOrderService extends BaseService<CsMembercardOrder>
     boolean updatePaymentStatus(CsMembercardOrderQueryParam csMembercardOrderQueryParam);
 
     /**
-     * 更新剩余优惠时长和优惠金额
+     * 减少剩余优惠时长和优惠金额
      *
      * @param csMembercardOrderQueryParam
      * @return
      */
-    boolean updateRest(CsMembercardOrderQueryParam csMembercardOrderQueryParam);
+    boolean reduceRest(@Param("param") CsMembercardOrderQueryParam csMembercardOrderQueryParam);
+
+    /**
+     * 增加剩余优惠时长和优惠金额
+     *
+     * @param csMembercardOrderQueryParam
+     * @return
+     */
+    boolean addRest(@Param("param") CsMembercardOrderQueryParam csMembercardOrderQueryParam);
 }
