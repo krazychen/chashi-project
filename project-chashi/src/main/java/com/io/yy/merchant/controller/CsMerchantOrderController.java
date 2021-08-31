@@ -46,7 +46,7 @@ import com.io.yy.common.vo.Paging;
  */
 @Slf4j
 @RestController
-@RequestMapping("/csMerchantOrder")
+    @RequestMapping("/csMerchantOrder")
 @Api("商店茶室订单记录 API")
 public class CsMerchantOrderController extends BaseController {
 
@@ -159,6 +159,16 @@ public class CsMerchantOrderController extends BaseController {
     @ApiOperation(value = "添加CsMerchantOrder对象", notes = "添加商店茶室订单记录", response = ApiResult.class)
     public ApiResult<Boolean> addCsMerchantOrderForWx(@Valid @RequestBody CsMerchantOrder csMerchantOrder) throws Exception {
         return ApiResult.result(saveCsMerchantOrder(csMerchantOrder));
+    }
+
+    /**
+     * 商店茶室订单记录分页列表for Wx
+     */
+    @PostMapping("/getCsMerchantOrderListForWx")
+    @ApiOperation(value = "获取CsMerchantOrder列表", notes = "商店茶室订单记录列表", response = CsMerchantOrderQueryVo.class)
+    public ApiResult<Paging<CsMerchantOrderQueryVo>> getCsMerchantOrderListForWx(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        Paging<CsMerchantOrderQueryVo> paging = csMerchantOrderService.getCsMerchantOrderPageList(csMerchantOrderQueryParam);
+        return ApiResult.ok(paging);
     }
 
     @Transactional(rollbackFor = Exception.class)
