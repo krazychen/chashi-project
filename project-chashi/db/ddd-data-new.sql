@@ -257,7 +257,7 @@ CREATE TABLE `cs_membercard_order` (
   `rest_discount_time` double DEFAULT NULL COMMENT '剩余优惠时长',
   `rest_discount_price` double DEFAULT NULL COMMENT '剩余优惠价格',
   `out_trade_no` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '32位的UUID',
-  `payment_status` int DEFAULT NULL COMMENT '支付状态：支付中0、支付失败1、支付成功2，支付关闭3，会员卡失败后就将交易关闭，支付取消4每次都是最新的',
+  `payment_status` int DEFAULT NULL COMMENT '支付状态：支付中0、支付失败1、支付成功2，支付取消3，支付关闭4，支付退款5',
   `payment_msg` varchar(1000) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '支付失败错误消息',
   `payment_type` int DEFAULT NULL COMMENT '支付类型：余额支付、微信支付',
   `source_type` int DEFAULT NULL COMMENT '会员卡来源：系统发放0、用户购买1',
@@ -373,7 +373,9 @@ CREATE TABLE `cs_merchant_order` (
   `order_mb_amount` double DEFAULT NULL COMMENT '会员卡减少的价格',
   `order_price` double DEFAULT NULL COMMENT '实际总价',
   `out_trade_no` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '32位的UUID',
-  `payment_status` int DEFAULT NULL COMMENT '支付状态：支付中0、支付失败1、支付成功2，支付取消3，支付失败4',
+  `out_refund_no` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '订单退款单号',
+  `refund_date` timestamp NULL DEFAULT NULL COMMENT '退款时间',
+  `payment_status` int DEFAULT NULL COMMENT '支付状态：支付中0、支付失败1、支付成功2，支付取消3，支付关闭4，支付退款5',
   `payment_type` int DEFAULT NULL COMMENT '支付类型：余额支付、微信支付',
   `payment_msg` varchar(1000) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '支付失败错误消息',
   `used_status` int DEFAULT NULL COMMENT '使用状态：未使用0，已使用1，已取消2, 已完成3',
@@ -392,13 +394,13 @@ CREATE TABLE `cs_merchant_order` (
 
 /*Data for the table `cs_merchant_order` */
 
-insert  into `cs_merchant_order`(`id`,`merchant_id`,`tearoom_id`,`room_name`,`wxuser_id`,`wxuser_phone`,`openid`,`order_name`,`order_date`,`order_timerage`,`order_origin_timenum`,`membercard_order_id`,`order_mb_timenum`,`order_timenum`,`order_unit_origin_price`,`order_unit_price`,`order_origin_price`,`coupon_released_id`,`order_cp_amount`,`order_mb_amount`,`order_price`,`out_trade_no`,`payment_status`,`payment_type`,`payment_msg`,`used_status`,`source_type`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
-(1432274642808147970,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 17:29:35-15bcf36efe6640f188efeea668b3cb2c','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 17:30:59',NULL,NULL,NULL,NULL),
-(1432274840418537474,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 17:31:44-b679db6de4814f49bf1ce7c2b699a13a','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 17:31:47',NULL,NULL,NULL,NULL),
-(1432275108304539650,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 17:32:50-31e4fcdd36b142638d31f3ccee2f9e39','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 17:32:50',NULL,NULL,NULL,NULL),
-(1432283329215934466,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 00:00:00-92f43dccd25944f38fc5191fd8ec7a90','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 18:05:30',NULL,NULL,NULL,NULL),
-(1432283908365430785,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 00:00:00-12d2150d342e4464b9edf008dfdbb49c','2021-08-30 00:00:00','14:00-15:00,15:00-16:00,16:00-17:00,17:00-18:00,18:00-19:00,19:00-20:00',6,1429742681506004993,0,0,3,2.7,18,1425372743597076481,3,NULL,13.2,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 18:07:48',NULL,NULL,NULL,NULL),
-(1432361748934991873,12633691073126,12633691073129,'shangdian5-3',1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-3-2021-08-30 00:00:00-f3f92b74aefb4fc79300dc11e35a218d','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,2,0,13,11.7,26,NULL,0,NULL,0,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 23:17:07',NULL,NULL,NULL,NULL);
+insert  into `cs_merchant_order`(`id`,`merchant_id`,`tearoom_id`,`room_name`,`wxuser_id`,`wxuser_phone`,`openid`,`order_name`,`order_date`,`order_timerage`,`order_origin_timenum`,`membercard_order_id`,`order_mb_timenum`,`order_timenum`,`order_unit_origin_price`,`order_unit_price`,`order_origin_price`,`coupon_released_id`,`order_cp_amount`,`order_mb_amount`,`order_price`,`out_trade_no`,`out_refund_no`,`refund_date`,`payment_status`,`payment_type`,`payment_msg`,`used_status`,`source_type`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
+(1432274642808147970,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 17:29:35-15bcf36efe6640f188efeea668b3cb2c','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,NULL,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 17:30:59',NULL,NULL,NULL,NULL),
+(1432274840418537474,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 17:31:44-b679db6de4814f49bf1ce7c2b699a13a','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,NULL,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 17:31:47',NULL,NULL,NULL,NULL),
+(1432275108304539650,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 17:32:50-31e4fcdd36b142638d31f3ccee2f9e39','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,NULL,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 17:32:50',NULL,NULL,NULL,NULL),
+(1432283329215934466,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 00:00:00-92f43dccd25944f38fc5191fd8ec7a90','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,NULL,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 18:05:30',NULL,NULL,NULL,NULL),
+(1432283908365430785,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 00:00:00-12d2150d342e4464b9edf008dfdbb49c','2021-08-30 00:00:00','14:00-15:00,15:00-16:00,16:00-17:00,17:00-18:00,18:00-19:00,19:00-20:00',6,1429742681506004993,0,0,3,2.7,18,1425372743597076481,3,NULL,13.2,NULL,NULL,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 18:07:48',NULL,NULL,NULL,NULL),
+(1432361748934991873,12633691073126,12633691073129,'shangdian5-3',1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-3-2021-08-30 00:00:00-f3f92b74aefb4fc79300dc11e35a218d','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,2,0,13,11.7,26,NULL,0,NULL,0,NULL,NULL,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 23:17:07',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `cs_recharge_consum` */
 
@@ -778,7 +780,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 /*Data for the table `qrtz_scheduler_state` */
 
 insert  into `qrtz_scheduler_state`(`SCHED_NAME`,`INSTANCE_NAME`,`LAST_CHECKIN_TIME`,`CHECKIN_INTERVAL`) values 
-('quartzScheduler','krislaptop1630336353982',1630338842661,5000);
+('quartzScheduler','krislaptop1630381216136',1630381269464,5000);
 
 /*Table structure for table `qrtz_simple_triggers` */
 
@@ -1368,6 +1370,7 @@ CREATE TABLE `sys_config` (
 /*Data for the table `sys_config` */
 
 insert  into `sys_config`(`id`,`config_name`,`config_key`,`config_text_value`,`config_pic_value`,`config_pic_name`,`config_content_value`,`config_type`,`is_sys`,`remarks`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
+('21924ceb-cba7-4734-a0ff-e7a380b17c68','微信退款接口地址','refund_url','https://api.mch.weixin.qq.com/secapi/pay/refund','',NULL,'','0','1','',0,0,'88888888','2021-08-31 11:16:30','88888888','2021-08-31 11:16:30','0','whyy'),
 ('37b648b9-2337-40aa-9f41-02035ede48f3','支付后的服务器回调url','notify_url','https://6f53a60.cpolar.io/weixin/wxNotify','',NULL,'','0','1','',0,0,'88888888','2021-08-11 19:02:07','88888888','2021-08-11 19:02:07','0','whyy'),
 ('4fb0dc82-947a-447e-90ab-92b83793c086','微信统一下单接口地址','pay_url','https://api.mch.weixin.qq.com/pay/unifiedorder','',NULL,'','0','1','',0,0,'88888888','2021-08-11 19:02:35','88888888','2021-08-11 19:02:35','0','whyy'),
 ('4fbe1062-927f-45c4-b0bc-8862b0822d1d','小程序appid','appid','wxee67bc9ae0ead50b','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:02:39','88888888','2021-08-05 18:02:39','0','whyy'),
@@ -1375,6 +1378,7 @@ insert  into `sys_config`(`id`,`config_name`,`config_key`,`config_text_value`,`c
 ('884439c3-9c93-41fe-8007-f4707ebece56','API密钥','key','Sxj5566Sxj5566Sxj5566Sxj5566Sxj5','',NULL,'','0','1','',0,0,'88888888','2021-08-11 19:01:31','88888888','2021-08-11 19:01:31','0','whyy'),
 ('88a7a9a4-8ce3-48b7-b18c-f10e0d04648b','小程序登录URL','loginUrl','https://api.weixin.qq.com/sns/jscode2session','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:05:28','88888888','2021-08-05 18:05:28','0','whyy'),
 ('8ccd0296-1d4e-4e99-a323-d83bf274644b','微信登陆提醒消息','wx_login_infor_message','舰长，你已经成功登录！','',NULL,'','0','1','',0,0,'1','2020-05-24 23:38:13','1','2020-05-31 23:38:39','0','whyy'),
+('9cf65316-3af7-4741-b432-b5d879b26b62','退款子商户号','sub_mch_id','10031610','',NULL,'','0','1','',0,0,'88888888','2021-08-31 11:19:58','88888888','2021-08-31 11:19:58','0','whyy'),
 ('b30c7ee3-a871-4206-b06a-89abfc9540ce','小程序密钥','appSecret','3b855156e3d5f17885d62c30ee313555','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:02:57','88888888','2021-08-05 18:02:57','0','whyy'),
 ('c7d69cb2-1fdd-4ea4-b6de-4c2207fed5c5','首页图片','wx_homepage_static',NULL,'http://localhost:1111/config/resource/9b286c2a31e24d519f6301f5b95b350b202108071719M0FyYWJpYyBMYW5ndWFnZSBDb3Vyc2UgLSBHcmFtbWFyLmpwZw==.jpg','3Arabic Language Course - Grammar.jpg',NULL,'1','1','',0,0,'88888888','2021-08-07 17:19:14','88888888','2021-08-07 17:19:14','0','whyy'),
 ('d3a60654-fcdd-4548-a542-c62ccc652a2f','微信支付签名方式','sign_type','MD5','',NULL,'','0','1','',0,0,'88888888','2021-08-11 19:03:39','88888888','2021-08-11 19:03:39','0','whyy'),
