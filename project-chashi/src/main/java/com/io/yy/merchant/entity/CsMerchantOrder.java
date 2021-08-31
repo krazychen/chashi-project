@@ -102,7 +102,13 @@ public class CsMerchantOrder extends BaseEntity {
     @ApiModelProperty(value = "32位的UUID")
     private String outTradeNo;
 
-    @ApiModelProperty(value = "支付状态：支付中、支付失败、支付成功")
+    @ApiModelProperty(value = "订单退款单号")
+    private String outRefundNo;
+
+    @ApiModelProperty(value = "退款时间")
+    private Date refundDate;
+
+    @ApiModelProperty(value = "支付状态：支付中0、支付失败1、支付成功2，支付取消3，支付关闭4，支付退款5")
     private Integer paymentStatus;
 
     @ApiModelProperty(value = "支付失败错误消息")

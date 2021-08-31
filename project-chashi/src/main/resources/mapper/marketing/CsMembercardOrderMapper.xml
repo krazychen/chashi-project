@@ -47,6 +47,12 @@
         <if test="param.paymentMsg != null and param.paymentMsg.trim() != ''">
             ,payment_msg = #{param.paymentMsg}
         </if>
+        <if test="param.outRefundNo != null and param.outRefundNo.trim() != ''">
+            ,out_refund_no = #{param.outRefundNo}
+        </if>
+        <if test="param.refundDate != null ">
+            ,refund_date = #{param.refundDate}
+        </if>
         where deleted = 0
         and out_trade_no = #{param.outTradeNo}
         and payment_status != #{param.paymentStatus}

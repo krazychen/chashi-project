@@ -224,7 +224,7 @@ public class WeixinController extends WeixinSupport {
        //根据outTradeNo 设置对应的订单的paymentstatus为4,取消支付
         CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
         csMembercardOrderQueryParam.setOutTradeNo(csMembercardOrder.getOutTradeNo());
-        csMembercardOrderQueryParam.setPaymentStatus(4);
+        csMembercardOrderQueryParam.setPaymentStatus(3);
         boolean flag= csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
         if(flag) {
             return ApiResult.ok("取消支付成功！");
@@ -245,7 +245,7 @@ public class WeixinController extends WeixinSupport {
         //根据outTradeNo 设置对应的订单的paymentstatus为1,支付失败
         CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
         csMembercardOrderQueryParam.setOutTradeNo(csMembercardOrder.getOutTradeNo());
-        csMembercardOrderQueryParam.setPaymentStatus(1);
+        csMembercardOrderQueryParam.setPaymentStatus(4);
         csMembercardOrderQueryParam.setPaymentMsg(csMembercardOrder.getPaymentMsg());
         boolean flag= csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
         if(flag) {
@@ -392,7 +392,7 @@ public class WeixinController extends WeixinSupport {
     public ApiResult<Boolean> cancelRechargeWxPay(@ModelAttribute CsRechargeRecord csRechargeRecord) throws Exception {
         CsRechargeRecordQueryParam csRechargeRecordQueryParam = new CsRechargeRecordQueryParam();
         csRechargeRecordQueryParam.setOutTradeNo(csRechargeRecord.getOutTradeNo());
-        csRechargeRecordQueryParam.setPaymentStatus(4);
+        csRechargeRecordQueryParam.setPaymentStatus(3);
         boolean flag=csRechargeRecordService.updatePaymentStatus(csRechargeRecordQueryParam);
         if(flag) {
             return ApiResult.ok("取消支付成功！");
@@ -412,7 +412,7 @@ public class WeixinController extends WeixinSupport {
     public ApiResult<Boolean> failRechargeWxPay(@ModelAttribute CsRechargeRecord csRechargeRecord) throws Exception {
         CsRechargeRecordQueryParam csRechargeRecordQueryParam = new CsRechargeRecordQueryParam();
         csRechargeRecordQueryParam.setOutTradeNo(csRechargeRecord.getOutTradeNo());
-        csRechargeRecordQueryParam.setPaymentStatus(1);
+        csRechargeRecordQueryParam.setPaymentStatus(4);
         csRechargeRecordQueryParam.setPaymentMsg(csRechargeRecord.getPaymentMsg());
         boolean flag=csRechargeRecordService.updatePaymentStatus(csRechargeRecordQueryParam);
         if(flag) {
@@ -637,42 +637,8 @@ public class WeixinController extends WeixinSupport {
         //设置订单为取消支付
         CsMerchantOrderQueryParam csMerchantOrderQueryParam = new CsMerchantOrderQueryParam();
         csMerchantOrderQueryParam.setId(csMerchantOrder.getId());
-        csMerchantOrderQueryParam.setPaymentStatus(4);
-        boolean flag=csMerchantOrderService.updatePaymentStatus(csMerchantOrderQueryParam);
-
-        //获取数据库的csMerchantOrder对象
-        CsMerchantOrder newCsMerchantOrder=csMerchantOrderService.getById(csMerchantOrder.getId());
-        //判断是否有优惠卷，有的话将优惠卷设置为未使用；
-        if(newCsMerchantOrder.getCouponReleasedId()!=null && newCsMerchantOrder.getCouponReleasedId()!=0){
-            CsCouponReleasedQueryParam csCouponReleasedQueryParam = new CsCouponReleasedQueryParam();
-            csCouponReleasedQueryParam.setId(csMerchantOrder.getCouponReleasedId());
-            csCouponReleasedQueryParam.setIsUsed(0);
-            csCouponReleasedQueryParam.setUsedTime(null);
-            csCouponReleasedService.updateUsedStatus(csCouponReleasedQueryParam);
-        }
-
-        //判断是否有会员卡，有的话删除会员卡折扣、优惠数据，并更新会员卡的剩余优惠时长和金额
-        if(newCsMerchantOrder.getMembercardOrderId()!=null && newCsMerchantOrder.getMembercardOrderId()!=0){
-            QueryWrapper<CsMembercardConsum> csMembercardConsumQueryWrapper=new QueryWrapper<CsMembercardConsum>();
-            csMembercardConsumQueryWrapper.eq("room_order_id",csMerchantOrder.getId());
-            List<CsMembercardConsum> csMembercardConsumList=csMembercardConsumService.list(csMembercardConsumQueryWrapper);
-            csMembercardConsumList.stream().forEach(cc-> {
-                try {
-                    csMembercardConsumService.deleteCsMembercardConsum(cc.getId());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-
-            //更新会员卡的剩余时长和剩余金额
-            if(csMerchantOrder.getOrderMbAmount()!=0 || csMerchantOrder.getOrderMbTimenum()!=0) {
-                CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
-                csMembercardOrderQueryParam.setId(csMerchantOrder.getMembercardOrderId());
-                csMembercardOrderQueryParam.setRestDiscountPrice(csMerchantOrder.getOrderMbAmount());
-                csMembercardOrderQueryParam.setRestDiscountTime(csMerchantOrder.getOrderMbTimenum().doubleValue());
-                csMembercardOrderService.addRest(csMembercardOrderQueryParam);
-            }
-        }
+        csMerchantOrderQueryParam.setPaymentStatus(3);
+        boolean flag = orderFailCommonOP(csMerchantOrderQueryParam,csMerchantOrder);
 
         if(flag) {
             return ApiResult.ok("取消支付成功！");
@@ -691,11 +657,117 @@ public class WeixinController extends WeixinSupport {
     @RequestMapping("/failOrderWxPay")
     @ApiOperation(value = "订单微信支付失败", notes = "订单微信支付失败", response = ApiResult.class)
     public ApiResult<Boolean> failOrderWxPay(@ModelAttribute CsMerchantOrder csMerchantOrder) throws Exception {
-        //设置订单为取消支付
+        //设置订单为取消失败
         CsMerchantOrderQueryParam csMerchantOrderQueryParam = new CsMerchantOrderQueryParam();
         csMerchantOrderQueryParam.setId(csMerchantOrder.getId());
         csMerchantOrderQueryParam.setPaymentStatus(1);
         csMerchantOrderQueryParam.setPaymentMsg(csMerchantOrder.getPaymentMsg());
+        boolean flag = orderFailCommonOP(csMerchantOrderQueryParam,csMerchantOrder);
+
+        if(flag) {
+            return ApiResult.ok("支付失败设置成功！");
+        }else{
+            return ApiResult.fail("支付失败设置失败！");
+        }
+    }
+
+
+    /**
+     * 订单微信支付退款,适用余额支付和微信支付,需要传入id
+     *
+     * @param csMerchantOrder
+     * @return
+     */
+    @RequestMapping("/refundOrderWxPay")
+    @ApiOperation(value = "订单微信支付退款", notes = "订单微信支付退款", response = ApiResult.class)
+    public ApiResult<Boolean> refundOrderWxPay(@ModelAttribute CsMerchantOrder csMerchantOrder) throws Exception {
+
+        String return_code = null;
+        //判断订单是余额支付 0 还是微信支付 1, 如果是微信支付，则调用微信退款，否则就直接进行反向操作
+        if(csMerchantOrder.getPaymentType()!=null && csMerchantOrder.getPaymentType().equals(1)){
+            // 获取微信配置
+            List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
+
+            String appid = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("appid")).collect(Collectors.toList()).get(0).getConfigValue();
+            String mch_id = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("mch_id")).collect(Collectors.toList()).get(0).getConfigValue();
+            String key = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("key")).collect(Collectors.toList()).get(0).getConfigValue();
+            String sub_mch_id = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("sub_mch_id")).collect(Collectors.toList()).get(0).getConfigValue();
+            String refuse_url = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("refuse_url")).collect(Collectors.toList()).get(0).getConfigValue();
+
+            String outRefundNo = "reorder_"+UUIDUtil.getUUIDBits(24);
+            csMerchantOrder.setOutRefundNo(outRefundNo);
+
+            Double moneyFen = DoubleUtils.multiply(csMerchantOrder.getOrderPrice(),Double.valueOf("100"));
+            String money = String.valueOf(moneyFen.intValue());
+
+            //生成的随机字符串
+            String nonce_str = StringUtils.getRandomStringByLength(32);
+
+            Map<String, String> packageParams = new HashMap<String, String>();
+            packageParams.put("appid",appid);
+            packageParams.put("mch_id", mch_id);
+            packageParams.put("sub_mch_id", sub_mch_id);
+            packageParams.put("nonce_str", nonce_str);
+            packageParams.put("out_trade_no", csMerchantOrder.getOutTradeNo());//商户订单号
+            packageParams.put("out_refund_no", csMerchantOrder.getOutRefundNo());//商户退款单号
+            packageParams.put("total_fee", money);//支付金额，这边需要转成字符串类型，否则后面的签名会失败
+            packageParams.put("refund_fee", money);//申请退款金额
+            packageParams.put("refund_desc", "申请退款");
+
+            // 除去数组中的空值和签名参数
+            packageParams = PayUtil.paraFilter(packageParams);
+            String prestr = PayUtil.createLinkString(packageParams); // 把数组所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串
+
+            //MD5运算生成签名，这里是第一次签名，用于调用统一下单接口
+            String mysign = PayUtil.sign(prestr, key, "utf-8").toUpperCase();
+            logger.info("=======================第一次签名：" + mysign + "=====================");
+
+            //拼接统一下单接口使用的xml数据，要将上一步生成的签名一起拼接进去
+            String xml = "<xml>" + "<appid>" + appid + "</appid>"
+                    + "<mch_id>" + mch_id + "</mch_id>"
+                    + "<sub_mch_id>" + sub_mch_id + "</sub_mch_id>"
+                    + "<nonce_str>" + nonce_str + "</nonce_str>"
+                    + "<out_trade_no>" + csMerchantOrder.getOutTradeNo() + "</out_trade_no>"
+                    + "<out_refund_no>" + csMerchantOrder.getOutRefundNo() + "</out_refund_no>"
+                    + "<total_fee>" + money + "</total_fee>"
+                    + "<refund_fee>" + money + "</refund_fee>"
+                    + "<refund_desc>" + "申请退款" + "</refund_fee>"
+                    + "<sign>" + mysign + "</sign>"
+                    + "</xml>";
+
+            logger.info("调试模式_退款接口 请求XML数据：" + xml);
+
+            //调用统一下单接口，并接受返回的结果
+            String result = PayUtil.httpRequest(refuse_url, "POST", xml);
+
+            logger.info("调试模式_退款接口 返回XML数据：" + result);
+
+            // 将解析结果存储在HashMap中
+            Map map = PayUtil.doXMLParse(result);
+
+            return_code = (String) map.get("return_code");//返回状态码
+
+            if (!StringUtils.equals(return_code, "SUCCESS")){
+                return ApiResult.fail((String) map.get("return_msg"));
+            }
+        }
+
+        //设置订单为取消支付
+        CsMerchantOrderQueryParam csMerchantOrderQueryParam = new CsMerchantOrderQueryParam();
+        csMerchantOrderQueryParam.setId(csMerchantOrder.getId());
+        csMerchantOrderQueryParam.setPaymentStatus(5);
+        csMerchantOrderQueryParam.setRefundDate(new Date());
+        boolean flag = orderFailCommonOP(csMerchantOrderQueryParam,csMerchantOrder);
+
+        if(flag) {
+            return ApiResult.ok("支付失败设置成功！");
+        }else{
+            return ApiResult.fail("支付失败设置失败！");
+        }
+    }
+
+    public boolean orderFailCommonOP(CsMerchantOrderQueryParam csMerchantOrderQueryParam, CsMerchantOrder csMerchantOrder){
+
         boolean flag=csMerchantOrderService.updatePaymentStatus(csMerchantOrderQueryParam);
 
         //获取数据库的csMerchantOrder对象
@@ -706,7 +778,7 @@ public class WeixinController extends WeixinSupport {
             csCouponReleasedQueryParam.setId(csMerchantOrder.getCouponReleasedId());
             csCouponReleasedQueryParam.setIsUsed(0);
             csCouponReleasedQueryParam.setUsedTime(null);
-            csCouponReleasedService.updateUsedStatus(csCouponReleasedQueryParam);
+            flag = csCouponReleasedService.updateUsedStatus(csCouponReleasedQueryParam);
         }
 
         //判断是否有会员卡，有的话删除会员卡折扣、优惠数据，并更新会员卡的剩余优惠时长和金额
@@ -728,15 +800,10 @@ public class WeixinController extends WeixinSupport {
                 csMembercardOrderQueryParam.setId(csMerchantOrder.getMembercardOrderId());
                 csMembercardOrderQueryParam.setRestDiscountPrice(csMerchantOrder.getOrderMbAmount());
                 csMembercardOrderQueryParam.setRestDiscountTime(csMerchantOrder.getOrderMbTimenum().doubleValue());
-                csMembercardOrderService.addRest(csMembercardOrderQueryParam);
+                flag = csMembercardOrderService.addRest(csMembercardOrderQueryParam);
             }
         }
-
-        if(flag) {
-            return ApiResult.ok("支付失败设置成功！");
-        }else{
-            return ApiResult.fail("支付失败设置失败！");
-        }
+        return flag;
     }
 
     /**
