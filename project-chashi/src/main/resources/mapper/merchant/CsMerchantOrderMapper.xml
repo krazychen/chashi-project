@@ -21,10 +21,10 @@
         cmo.create_time,cmo.update_by, cmo.update_time, wu.nickname AS nickname
         from cs_merchant_order cmo
         left join wx_user wu on cmo.wxuser_id=wu.id
-        <if test="param.nameAphone !=null and param.nameAphone.trim() != '' ">
-            and (cmo.wxuser_phone like concat('%', #{param.nameAphone}, '%') or wu.nickname like concat('%', #{param.nameAphone}, '%')
-        </if>
         where 1=1 and cmo.deleted = 0
+        <if test="param.nameAphone !=null and param.nameAphone.trim() != '' ">
+            and (cmo.wxuser_phone like concat('%', #{param.nameAphone}, '%') or wu.nickname like concat('%', #{param.nameAphone}, '%'))
+        </if>
         <if test="param.merchantId !=null">
             and cmo.merchant_id = #{param.merchantId}
         </if>
