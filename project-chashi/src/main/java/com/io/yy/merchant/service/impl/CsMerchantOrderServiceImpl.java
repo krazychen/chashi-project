@@ -88,9 +88,9 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         String timeRanges = "";
         for(int i=0 ; i<list.size();i++){
             if(i != list.size()-1){
-                timeRanges += list.get(i)+",";
+                timeRanges += list.get(i).getOrderTimerage()+",";
             }else{
-                timeRanges += list.get(i);
+                timeRanges += list.get(i).getOrderTimerage();
             }
         }
         return timeRanges;
