@@ -53,7 +53,7 @@
         <result column="signtext" property="signtext" javaType="java.lang.String"/>
         <result column="openid" property="openid" javaType="java.lang.String"/>
         <result column="unionid" property="unionid" javaType="java.lang.String"/>
-        <result column="integral" property="integral" javaType="java.lang.String"/>
+        <result column="integral" property="integral" javaType="java.lang.Integer"/>
         <result column="balance" property="balance" javaType="java.lang.Double"/>
         <association property="csMembercardOrderQueryVo" javaType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
             <id column="m_id" property="id" javaType="java.lang.Long"/>
