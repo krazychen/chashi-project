@@ -84,7 +84,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
      */
     @Override
     public String getTimeRangeForWx(CsMerchantOrderQueryParam csMerchantOrderQueryParam) {
-        List<CsMerchantOrderQueryVo> list = csMerchantOrderMapper.getTimeRangeForWx(csMerchantOrderQueryParam);
+        List<String> list = csMerchantOrderMapper.getTimeRangeForWx(csMerchantOrderQueryParam);
         String timeRanges = "";
         for(int i=0 ; i<list.size();i++){
             if(i != list.size()-1){

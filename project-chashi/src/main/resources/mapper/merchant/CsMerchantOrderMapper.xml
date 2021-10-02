@@ -18,12 +18,13 @@
         cmo.id AS id, merchant_id, tearoom_id, room_name, wxuser_id, wxuser_phone, cmo.openid, order_name, order_date, order_timerage, order_origin_timenum,
         membercard_order_id, order_mb_timenum,order_timenum, order_unit_origin_price, order_unit_price, order_origin_price, coupon_released_id, order_cp_amount,
         order_mb_amount, order_price,out_trade_no, payment_status, payment_type,used_status, source_type, cmo.status, cmo.deleted, cmo.version, cmo.create_by,
-        cmo.create_time,cmo.update_by, cmo.update_time, wu.nickname AS nickname
+        cmo.create_time,cmo.update_by, cmo.update_time, wu.nickname AS nickname,cm.address
         from cs_merchant_order cmo
         left join wx_user wu on cmo.wxuser_id=wu.id
         <if test="param.nameAphone !=null and param.nameAphone.trim() != '' ">
             and (cmo.wxuser_phone like concat('%', #{param.nameAphone}, '%') or wu.nickname like concat('%', #{param.nameAphone}, '%')
         </if>
+        LEFT JOIN cs_merchant cm ON cmo.merchant_id=cm.id
         where 1=1 and cmo.deleted = 0
         <if test="param.merchantId !=null">
             and cmo.merchant_id = #{param.merchantId}
@@ -58,8 +59,7 @@
         </if>
     </update>
 
-
-    <select id="getTimeRangeForWx" resultType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
+    <select id="getTimeRangeForWx" resultType="java.lang.String">
         select cmo.order_timerage
         from cs_merchant_order cmo
         where 1=1

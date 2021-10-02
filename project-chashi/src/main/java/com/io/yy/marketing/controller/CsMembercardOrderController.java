@@ -1,13 +1,17 @@
 package com.io.yy.marketing.controller;
 
 import com.io.yy.marketing.entity.CsMembercardOrder;
+import com.io.yy.marketing.entity.CsRechargeConsum;
 import com.io.yy.marketing.service.CsMembercardOrderService;
 import com.io.yy.marketing.param.CsMembercardOrderQueryParam;
+import com.io.yy.marketing.service.CsRechargeConsumService;
 import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
 import com.io.yy.common.api.ApiResult;
 import com.io.yy.common.controller.BaseController;
 import com.io.yy.util.UUIDUtil;
 import com.io.yy.util.lang.DateUtils;
+import com.io.yy.wxops.param.WxUserQueryParam;
+import com.io.yy.wxops.service.WxUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +44,12 @@ public class CsMembercardOrderController extends BaseController {
 
     @Autowired
     private CsMembercardOrderService csMembercardOrderService;
+
+    @Autowired
+    private WxUserService wxUserService;
+
+    @Autowired
+    private CsRechargeConsumService csRechargeConsumService;
 
     /**
      * 添加会员卡购买记录
@@ -135,6 +145,44 @@ public class CsMembercardOrderController extends BaseController {
     public ApiResult<CsMembercardOrderQueryVo> getMemberCardForWx(@PathVariable("wxuserId") Long wxuserId) throws Exception {
         CsMembercardOrderQueryVo csMembercardOrderQueryVo = csMembercardOrderService.getMemberCardForWx(wxuserId);
         return ApiResult.ok(csMembercardOrderQueryVo);
+    }
+
+    /**
+     * 添加会员卡购买记录
+     */
+    @PostMapping("/saveMembercardOrder")
+    @ApiOperation(value = "添加CsMembercardOrder对象", notes = "添加会员卡购买记录", response = ApiResult.class)
+    public ApiResult<Boolean> saveCsMembercardOrder(@Valid @RequestBody CsMembercardOrder csMembercardOrder) throws Exception {
+        csMembercardOrder.setSourceType(1);
+        csMembercardOrder.setPaymentType(2);
+        csMembercardOrder.setPaymentStatus(2);
+        csMembercardOrder.setOrderDate(new Date());
+        csMembercardOrder.setStartTime(csMembercardOrder.getOrderDate());
+        csMembercardOrder.setEndTime(DateUtils.plusMonth(csMembercardOrder.getStartTime(),csMembercardOrder.getValidPeriod()));
+        csMembercardOrder.setOrderName(csMembercardOrder.getMembercardName()+'-'+
+                DateUtils.getYYYYMMDDHHMMSS(csMembercardOrder.getOrderDate())+'-'+ UUIDUtil.getUUID());
+        boolean flag = csMembercardOrderService.saveCsMembercardOrder(csMembercardOrder);
+
+        //余额支付，需要扣除余额的钱，增加余额消费记录
+        if(flag){
+            WxUserQueryParam wxUserQueryParam = new WxUserQueryParam();
+            wxUserQueryParam.setId(csMembercardOrder.getWxuserId());
+            wxUserQueryParam.setBalance(csMembercardOrder.getOrderPrice());
+            wxUserService.reduceBalance(wxUserQueryParam);
+
+            CsRechargeConsum csRechargeConsum = new CsRechargeConsum();
+            csRechargeConsum.setWxuserId(csMembercardOrder.getWxuserId());
+            csRechargeConsum.setCousumAmount(csMembercardOrder.getOrderPrice());
+            csRechargeConsum.setCousumDate(new Date());
+            csRechargeConsum.setRoomOrderId(csMembercardOrder.getId());
+            csRechargeConsum.setConsumType(0);
+            csRechargeConsumService.saveCsRechargeConsum(csRechargeConsum);
+        }
+
+        if(!flag){
+            return ApiResult.fail("用户已购买会员卡<"+csMembercardOrder.getMembercardId()+">");
+        }
+        return ApiResult.result(flag);
     }
 }
 

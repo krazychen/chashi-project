@@ -138,4 +138,7 @@ public class CsMerchantOrderQueryVo implements Serializable {
 
     @ApiModelProperty(value = "茶室名称")
     private String roomName;
+
+    @ApiModelProperty(value = "商店地址")
+    private String address;
 }

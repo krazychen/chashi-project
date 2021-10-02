@@ -46,7 +46,7 @@
         left join cs_merchant cm on ct.merchant_id = cm.id
         where 1=1
         <if test="param.merchantId != null">
-            and cm.merchant_id = #{param.merchantId}
+            and cm.id = #{param.merchantId}
         </if>
     </select>
 

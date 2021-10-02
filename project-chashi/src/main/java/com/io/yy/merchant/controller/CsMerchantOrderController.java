@@ -46,7 +46,7 @@ import com.io.yy.common.vo.Paging;
  */
 @Slf4j
 @RestController
-    @RequestMapping("/csMerchantOrder")
+@RequestMapping("/csMerchantOrder")
 @Api("商店茶室订单记录 API")
 public class CsMerchantOrderController extends BaseController {
 
@@ -141,6 +141,15 @@ public class CsMerchantOrderController extends BaseController {
     @ApiOperation(value = "修改CsMerchantOrder状态", notes = "商店茶室订单记录修改状态", response = ApiResult.class)
     public ApiResult<Boolean> updateStatus(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
         return ApiResult.ok(csMerchantOrderService.updateStatus(csMerchantOrderQueryParam));
+    }
+
+    /**
+     * 根据tearoomid和预订日期获取当前茶室已经被预定的时间段，返回是时间段的一个包含","的字符串
+     */
+    @PostMapping("/getTimeRange")
+    @ApiOperation(value = "获取当前茶室已经被预定的时间段，返回是时间段的一个包含\",\"的字符串", notes = "获取当前茶室已经被预定的时间段", response = ApiResult.class)
+    public ApiResult<String> getTimeRange(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        return ApiResult.ok(csMerchantOrderService.getTimeRangeForWx(csMerchantOrderQueryParam));
     }
 
     /**
@@ -272,6 +281,16 @@ public class CsMerchantOrderController extends BaseController {
         }
 
         return flag;
+    }
+
+    /**
+     * 获取商店茶室订单记录forWx
+     */
+    @GetMapping("/infoForWx")
+    @ApiOperation(value = "获取wxCsMerchantOrder对象详情", notes = "查看商店茶室订单记录", response = CsMerchantOrderQueryVo.class)
+    public ApiResult<CsMerchantOrderQueryVo> getCsMerchantOrderForWx(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        CsMerchantOrderQueryVo csMerchantOrderQueryVo = csMerchantOrderService.getCsMerchantOrderById(csMerchantOrderQueryParam.getId());
+        return ApiResult.ok(csMerchantOrderQueryVo);
     }
 }
 

@@ -54,7 +54,7 @@ public interface CsMerchantOrderMapper extends BaseMapper<CsMerchantOrder> {
      * @param csMerchantOrderQueryParam
      * @return
      */
-    List<CsMerchantOrderQueryVo> getTimeRangeForWx(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
+    List<String> getTimeRangeForWx(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 
     /**
      * 更新支付状态

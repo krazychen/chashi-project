@@ -219,10 +219,12 @@ whyy-system:
       /csCouponReleased/saveCouponForCouponCenter=anon
       /csMemberCard/getCsMemberCardListForWx=anon
       /csMembercardOrder/getMemberCardForWx/**=anon
+      /csMembercardOrder/saveMembercardOrder=anon
       /csRechargeSetting/getSettingListForWx=anon
       /csMerchantOrder/getTimeRangeForWx=anon
       /csMerchantOrder/addCsMerchantOrderForWx=anon
       /csMerchantOrder/getCsMerchantOrderListForWx=anon
+      /csMerchantOrder/infoForWx=anon
     # 权限配置
     permission:
       # 排除登陆登出相关

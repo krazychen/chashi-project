@@ -110,6 +110,7 @@ public class WeixinController extends WeixinSupport {
         String openid = csMembercardOrder.getOpenid();
 
         csMembercardOrder.setSourceType(1);
+        csMembercardOrder.setPaymentType(1);
         csMembercardOrder.setOrderDate(new Date());
         csMembercardOrder.setStartTime(csMembercardOrder.getOrderDate());
         csMembercardOrder.setEndTime(DateUtils.plusMonth(csMembercardOrder.getStartTime(), csMembercardOrder.getValidPeriod()));
