@@ -107,6 +107,18 @@ public class CsMerchantQueryVo implements Serializable {
     @ApiModelProperty(value = "用户和商店的距离")
     private Double merchantDistance;
 
+    @ApiModelProperty(value = "ttlock开放平台注册时分配的app_id")
+    private String ttlClientId;
+
+    @ApiModelProperty(value = "ttlock开放平台注册时分配的app_secret")
+    private String ttlClientSecret;
+
+    @ApiModelProperty(value = "科技侠或通通锁APP的登录账号")
+    private String ttlUsername;
+
+    @ApiModelProperty(value = "科技侠或通通锁APP的登录账号密码")
+    private String ttlPassword;
+
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
 

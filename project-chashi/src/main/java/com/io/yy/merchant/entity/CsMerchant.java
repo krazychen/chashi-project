@@ -119,6 +119,18 @@ public class CsMerchant extends BaseEntity {
     @ApiModelProperty(value = "结束营业时间")
     private String endTime;
 
+    @ApiModelProperty(value = "ttlock开放平台注册时分配的app_id")
+    private String ttlClientId;
+
+    @ApiModelProperty(value = "ttlock开放平台注册时分配的app_secret")
+    private String ttlClientSecret;
+
+    @ApiModelProperty(value = "科技侠或通通锁APP的登录账号")
+    private String ttlUsername;
+
+    @ApiModelProperty(value = "科技侠或通通锁APP的登录账号密码")
+    private String ttlPassword;
+
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
 

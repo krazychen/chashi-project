@@ -48,6 +48,7 @@
             AND cmo.payment_status=3
         </if>
         <if test="param.queryType == 7">
+            AND cmo.payment_status=5
         </if>
     </select>
 

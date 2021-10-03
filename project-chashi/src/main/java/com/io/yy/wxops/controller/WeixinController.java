@@ -627,6 +627,209 @@ public class WeixinController extends WeixinSupport {
     }
 
     /**
+     * 已经有订单，发起支付
+     *
+     * @param csMerchantOrder
+     * @param request
+     * @return
+     */
+    @RequestMapping("/orderReWxPay")
+    @ApiOperation(value = "已有订单发起微信支付", notes = "发起订单微信支付", response = ApiResult.class)
+    public ApiResult<Boolean> orderReWxPay(@ModelAttribute CsMerchantOrder csMerchantOrder, HttpServletRequest request) throws Exception{
+        // 获取微信配置
+        List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
+
+        String appid = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("appid")).collect(Collectors.toList()).get(0).getConfigValue();
+        String appSecret = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("appSecret")).collect(Collectors.toList()).get(0).getConfigValue();
+        String loginUrl = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("loginUrl")).collect(Collectors.toList()).get(0).getConfigValue();
+        String mch_id = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("mch_id")).collect(Collectors.toList()).get(0).getConfigValue();
+        String key = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("key")).collect(Collectors.toList()).get(0).getConfigValue();
+        String pay_url = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("pay_url")).collect(Collectors.toList()).get(0).getConfigValue();
+        String notify_url = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("notify_url")).collect(Collectors.toList()).get(0).getConfigValue();
+        String sign_type = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("sign_type")).collect(Collectors.toList()).get(0).getConfigValue();
+        String trade_type = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("trade_type")).collect(Collectors.toList()).get(0).getConfigValue();
+        String openid = csMerchantOrder.getOpenid();
+
+        // 这些都在订单内，不需要再赋值，怕漏先注释
+//        csMerchantOrder.setSourceType(1);
+//        csMerchantOrder.setPaymentType(2);
+//        csMerchantOrder.setPaymentStatus(0);
+//        Date now = new Date();
+//        LocalDate localDate=now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//        Date newDate=java.sql.Date.valueOf(localDate);
+//        csMerchantOrder.setOrderDate(newDate);
+//        csMerchantOrder.setOrderName(csMerchantOrder.getRoomName()+'-'+
+//                DateUtils.getYYYYMMDDHHMMSS(csMerchantOrder.getOrderDate())+'-'+ UUIDUtil.getUUID());
+//        csMerchantOrder.setUsedStatus(0);
+//
+//        String outTradeNo = "order_"+UUIDUtil.getUUIDBits(24);
+//        csMerchantOrder.setOutTradeNo(outTradeNo);
+
+        try {
+            //生成的随机字符串
+            String nonce_str = StringUtils.getRandomStringByLength(32);
+            //商品名称
+            String body = csMerchantOrder.getOrderName();
+            //获取本机的ip地址
+            String spbill_create_ip = IpUtil.getRequestIp(request);
+
+            Double moneyFen = DoubleUtils.multiply(csMerchantOrder.getOrderPrice(),Double.valueOf("100"));
+
+            String money = String.valueOf(moneyFen.intValue());
+
+            Map<String, String> packageParams = new HashMap<String, String>();
+            packageParams.put("appid",appid);
+            packageParams.put("mch_id", mch_id);
+            packageParams.put("nonce_str", nonce_str);
+            packageParams.put("body", body);
+            packageParams.put("out_trade_no", csMerchantOrder.getOutTradeNo());//商户订单号
+            packageParams.put("total_fee", money);//支付金额，这边需要转成字符串类型，否则后面的签名会失败
+            packageParams.put("spbill_create_ip", spbill_create_ip);
+            packageParams.put("notify_url",notify_url);
+            packageParams.put("trade_type", trade_type);
+            packageParams.put("openid", openid);
+
+            // 除去数组中的空值和签名参数
+            packageParams = PayUtil.paraFilter(packageParams);
+            String prestr = PayUtil.createLinkString(packageParams); // 把数组所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串
+
+            //MD5运算生成签名，这里是第一次签名，用于调用统一下单接口
+            String mysign = PayUtil.sign(prestr, key, "utf-8").toUpperCase();
+            logger.info("=======================第一次签名：" + mysign + "=====================");
+
+            //拼接统一下单接口使用的xml数据，要将上一步生成的签名一起拼接进去
+            String xml = "<xml>" + "<appid>" + appid + "</appid>"
+                    + "<body><![CDATA[" + body + "]]></body>"
+                    + "<mch_id>" + mch_id + "</mch_id>"
+                    + "<nonce_str>" + nonce_str + "</nonce_str>"
+                    + "<notify_url>" + notify_url + "</notify_url>"
+                    + "<openid>" + openid + "</openid>"
+                    + "<out_trade_no>" + csMerchantOrder.getOutTradeNo() + "</out_trade_no>"
+                    + "<spbill_create_ip>" + spbill_create_ip + "</spbill_create_ip>"
+                    + "<total_fee>" + money + "</total_fee>"
+                    + "<trade_type>" + trade_type + "</trade_type>"
+                    + "<sign>" + mysign + "</sign>"
+                    + "</xml>";
+
+            logger.info("调试模式_统一下单接口 请求XML数据：" + xml);
+
+            //调用统一下单接口，并接受返回的结果
+            String result = PayUtil.httpRequest(pay_url, "POST", xml);
+
+            logger.info("调试模式_统一下单接口 返回XML数据：" + result);
+
+            // 将解析结果存储在HashMap中
+            Map map = PayUtil.doXMLParse(result);
+
+            String return_code = (String) map.get("return_code");//返回状态码
+
+            //返回给移动端需要的参数
+            Map<String, Object> response = new HashMap<String, Object>();
+            if (!StringUtils.equals(return_code, "SUCCESS")){
+                return ApiResult.fail((String) map.get("return_msg"));
+            }else{
+//            if (return_code == "SUCCESS" || return_code.equals(return_code)) {
+                // 业务结果
+                String prepay_id = (String) map.get("prepay_id");//返回的预付单信息
+                response.put("nonceStr", nonce_str);
+                response.put("package", "prepay_id=" + prepay_id);
+                Long timeStamp = System.currentTimeMillis() / 1000;
+                response.put("timeStamp", timeStamp + "");//这边要将返回的时间戳转化成字符串，不然小程序端调用wx.requestPayment方法会报签名错误
+
+                String stringSignTemp = "appId=" + appid + "&nonceStr=" + nonce_str + "&package=prepay_id=" + prepay_id + "&signType=" + sign_type + "&timeStamp=" + timeStamp;
+                //再次签名，这个签名用于小程序端调用wx.requesetPayment方法
+                String paySign = PayUtil.sign(stringSignTemp, key, "utf-8").toUpperCase();
+                logger.info("=======================第二次签名：" + paySign + "=====================");
+
+                response.put("paySign", paySign);
+
+                // 这些都在订单内，不需要再赋值，怕漏先注释
+//                boolean flag = csMerchantOrderService.saveCsMerchantOrder(csMerchantOrder);
+//
+//                //如果有优惠卷，扣除优惠卷
+//                if(csMerchantOrder.getCouponReleasedId()!=null && csMerchantOrder.getCouponReleasedId()!=0){
+//                    CsCouponReleasedQueryParam csCouponReleasedQueryParam = new CsCouponReleasedQueryParam();
+//                    csCouponReleasedQueryParam.setId(csMerchantOrder.getCouponReleasedId());
+//                    csCouponReleasedQueryParam.setIsUsed(1);
+//                    csCouponReleasedQueryParam.setUsedTime(new Date());
+//                    csCouponReleasedService.updateUsedStatus(csCouponReleasedQueryParam);
+//                }
+//
+//                //如果是会员
+//                if(csMerchantOrder.getMembercardOrderId()!=null && csMerchantOrder.getMembercardOrderId()!=0){
+//                    // 记录折扣金额
+//                    CsMembercardConsum discountCsMembercardConsum = new CsMembercardConsum();
+//                    discountCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
+//                    discountCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
+//                    //记录消费原始价格
+//                    discountCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
+//                    discountCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
+//                    discountCsMembercardConsum.setConsumType(2);
+//                    //优惠单价*原始总时长
+//                    discountCsMembercardConsum.setConsumDiscountAmount(
+//                            DoubleUtils.subtract(csMerchantOrder.getOrderOriginPrice(),DoubleUtils.multiply(csMerchantOrder.getOrderUnitPrice(),csMerchantOrder.getOrderOriginTimenum().doubleValue())));
+//                    discountCsMembercardConsum.setCousumDate(new Date());
+//                    csMembercardConsumService.save(discountCsMembercardConsum);
+//
+//                    //如果使用优惠时长，扣除优惠时长
+//                    if(csMerchantOrder.getOrderMbTimenum()!=null && csMerchantOrder.getOrderMbTimenum()!=0){
+//                        CsMembercardConsum timeCsMembercardConsum = new CsMembercardConsum();
+//                        timeCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
+//                        timeCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
+//                        //记录消费原始价格
+//                        timeCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
+//                        timeCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
+//                        timeCsMembercardConsum.setConsumType(0);
+//                        //优惠单价*原始总时长
+//                        timeCsMembercardConsum.setConsumTime(csMerchantOrder.getOrderMbTimenum());
+//                        timeCsMembercardConsum.setCousumDate(new Date());
+//                        csMembercardConsumService.save(timeCsMembercardConsum);
+//                    }else{
+//                        csMerchantOrder.setOrderMbTimenum(0);
+//                    }
+//
+//                    //如果使用优惠金额，扣除优惠金额
+//                    if(csMerchantOrder.getOrderMbAmount()!=null && csMerchantOrder.getOrderMbAmount()!=0){
+//                        // 记录折扣金额
+//                        CsMembercardConsum amountCsMembercardConsum = new CsMembercardConsum();
+//                        amountCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
+//                        amountCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
+//                        //记录消费原始价格
+//                        amountCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
+//                        amountCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
+//                        amountCsMembercardConsum.setConsumType(1);
+//                        //优惠单价*原始总时长
+//                        amountCsMembercardConsum.setConsumAmount(csMerchantOrder.getOrderMbAmount());
+//                        amountCsMembercardConsum.setCousumDate(new Date());
+//                        csMembercardConsumService.save(amountCsMembercardConsum);
+//                    }else{
+//                        csMerchantOrder.setOrderMbAmount(new Double(0));
+//                    }
+//
+//                    //更新会员卡的剩余时长和剩余金额
+//                    if(csMerchantOrder.getOrderMbAmount()!=0 || csMerchantOrder.getOrderMbTimenum()!=0) {
+//                        CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
+//                        csMembercardOrderQueryParam.setId(csMerchantOrder.getMembercardOrderId());
+//                        csMembercardOrderQueryParam.setRestDiscountPrice(csMerchantOrder.getOrderMbAmount());
+//                        csMembercardOrderQueryParam.setRestDiscountTime(csMerchantOrder.getOrderMbTimenum().doubleValue());
+//                        csMembercardOrderService.reduceRest(csMembercardOrderQueryParam);
+//                    }
+//                }
+                //业务逻辑代码
+            }
+
+            response.put("appid", appid);
+            response.put("outTradeNo", csMerchantOrder.getOutTradeNo());
+            response.put("id",csMerchantOrder.getId());
+
+            return ApiResult.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ApiResult.fail("发起失败");
+        }
+    }
+
+    /**
      * 取消订单微信支付，适用余额支付和微信支付,需要传入id
      *
      * @param csMerchantOrder
