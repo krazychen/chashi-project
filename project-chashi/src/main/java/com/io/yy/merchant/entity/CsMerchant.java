@@ -125,6 +125,9 @@ public class CsMerchant extends BaseEntity {
     @ApiModelProperty(value = "ttlock开放平台注册时分配的app_secret")
     private String ttlClientSecret;
 
+    @ApiModelProperty(value = "ttlock锁的id")
+    private String ttlLockId;
+
     @ApiModelProperty(value = "科技侠或通通锁APP的登录账号")
     private String ttlUsername;
 

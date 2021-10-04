@@ -98,4 +98,12 @@ public interface CsMerchantOrderService extends BaseService<CsMerchantOrder> {
      * @return
      */
     boolean updatePaymentStatus(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
+
+    /**
+     * 返回订单的门锁key
+     *
+     * @param csMerchantOrderQueryParam
+     * @return
+     */
+    String getLockKey(CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception;
 }

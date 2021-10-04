@@ -1,13 +1,21 @@
 package com.io.yy.merchant.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.io.yy.merchant.entity.CsMerchantOrder;
+import com.io.yy.merchant.mapper.CsMerchantMapper;
 import com.io.yy.merchant.mapper.CsMerchantOrderMapper;
 import com.io.yy.merchant.service.CsMerchantOrderService;
 import com.io.yy.merchant.param.CsMerchantOrderQueryParam;
 import com.io.yy.merchant.vo.CsMerchantOrderQueryVo;
 import com.io.yy.common.service.impl.BaseServiceImpl;
 import com.io.yy.common.vo.Paging;
+import com.io.yy.merchant.vo.CsMerchantQueryVo;
+import com.io.yy.util.lang.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +25,11 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -34,6 +46,12 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
 
     @Autowired
     private CsMerchantOrderMapper csMerchantOrderMapper;
+
+    @Autowired
+    private CsMerchantMapper csMerchantMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -105,6 +123,112 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
     @Override
     public boolean updatePaymentStatus(CsMerchantOrderQueryParam csMerchantOrderQueryParam) {
         return csMerchantOrderMapper.updatePaymentStatus(csMerchantOrderQueryParam) > 0;
+    }
+
+    @Override
+    public String getLockKey(CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        // 先去订单里面取，看是否已经存在key，存在则不需要再去请求，不存在则进行判断
+        CsMerchantOrderQueryVo csMerchantOrderQueryVo = this.getCsMerchantOrderById(csMerchantOrderQueryParam.getId());
+        if(StringUtils.isNotBlank(csMerchantOrderQueryVo.getKeyboardPwdId())&&StringUtils.isNotBlank((csMerchantOrderQueryVo.getKeyboardPwd()))){
+            return csMerchantOrderQueryVo.getKeyboardPwd();
+        }
+
+        // 取merchant的clientId，lockId
+        CsMerchantQueryVo csMerchantQueryVo = csMerchantMapper.getCsMerchantById(csMerchantOrderQueryVo.getMerchantId());
+        String clientId = csMerchantQueryVo.getTtlClientId();
+        String clientSecret = csMerchantQueryVo.getTtlClientSecret();
+        String ttlUserName = csMerchantQueryVo.getTtlUsername();
+        String ttlPassword = csMerchantQueryVo.getTtlPassword();
+        String lockId = csMerchantQueryVo.getTtlLockId();
+
+        // 获取ttlock token的redis key，若不存在则需要去取key；
+        String token = (String)redisTemplate.opsForValue().get("TTLOCK_TOKEN");
+        if(StringUtils.isBlank(token)){
+            String requestParam = "client_id="+clientId +
+                    "&client_secret="+clientSecret +
+                    "&username="+ttlUserName +
+                    "&password="+ DigestUtils.md5Hex(ttlPassword);
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+            RequestBody body = RequestBody.create(mediaType, requestParam);
+            Request request = new Request.Builder()
+                    .url("https://api.ttlock.com/oauth2/token")
+                    .method("POST", body)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .build();
+            Response response = client.newCall(request).execute();
+            String responseBody = response.body().string();
+            log.info(responseBody);
+            JSONObject jsonObject = JSON.parseObject(responseBody);
+            String errorCode = jsonObject.getString("errcode");
+            // 如果有错误代码，返回错误信息
+            if(StringUtils.isNotBlank(errorCode)){
+                return (String) jsonObject.get("description");
+            }
+            token = jsonObject.getString("access_token");
+            Long expires_in = jsonObject.getLong("expires_in");
+            redisTemplate.opsForValue().set("TTLOCK_TOKEN",token,expires_in, TimeUnit.SECONDS);
+        }
+
+        // 获取ttlock token的redis key，如果存在则开始新增key；
+        // 随机6位开锁密码
+        long random = Math.abs(new Random().nextLong());
+        String lockKey = String.valueOf(random).substring(0, 6);
+
+        // 拼开始时间和结束时间
+        Date orderDate = csMerchantOrderQueryVo.getOrderDate();
+        String[] times=csMerchantOrderQueryVo.getOrderTimerage().split("-");
+        int startMin = Integer.valueOf(times[0].split(":")[0]).intValue();
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(orderDate);
+        startCal.set(Calendar.HOUR_OF_DAY, startMin);
+        Date startDate = startCal.getTime();
+
+        int endMin = Integer.valueOf(times[times.length-1].split(":")[0]).intValue();
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTime(orderDate);
+        endCal.set(Calendar.HOUR_OF_DAY, endMin);
+        Date endDate = endCal.getTime();
+
+        Date nowDate = new Date();
+
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        String requestParam = "clientId=" +clientId +
+                "&accessToken=" + token+
+                "&lockId=" + lockId +
+                "&keyboardPwd=" +lockKey +
+                "&startDate=" + startDate.getTime() +
+                "&endDate=" + endDate.getTime() +
+                "&date="+ nowDate.getTime() +
+                "&addType=2";
+        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        RequestBody body = RequestBody.create(mediaType, requestParam);
+        Request request = new Request.Builder()
+                .url("https://api.ttlock.com/v3/keyboardPwd/add")
+                .method("POST", body)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        Response response = client.newCall(request).execute();
+        String responseBody = response.body().string();
+        log.info(responseBody);
+        JSONObject jsonObject = JSON.parseObject(responseBody);
+        String errorCode = jsonObject.getString("errcode");
+        // 如果有错误代码，返回错误信息
+        if(StringUtils.isNotBlank(errorCode)){
+            return (String) jsonObject.get("description");
+        }
+        String keyboardPwdId = jsonObject.getString("keyboardPwdId");
+
+        csMerchantOrderQueryParam.setKeyboardPwdId(keyboardPwdId);
+        csMerchantOrderQueryParam.setKeyboardPwd(lockKey);
+        //响应正常，则将lockkey和lock的id存到订单内；
+        int flag = csMerchantOrderMapper.updateLockKey(csMerchantOrderQueryParam);
+        if(flag>0){
+            return lockKey;
+        }
+        return "获取开锁密码失败，请联系管理员！";
     }
 
 }

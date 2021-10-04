@@ -3,7 +3,6 @@ package com.io.yy.wxops.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.io.yy.marketing.entity.CsCouponReleased;
-import com.io.yy.marketing.mapper.CsCouponMapper;
 import com.io.yy.marketing.service.CsCouponReleasedService;
 import com.io.yy.marketing.service.CsCouponService;
 import com.io.yy.marketing.vo.CsCouponQueryVo;

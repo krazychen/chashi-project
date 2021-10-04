@@ -60,4 +60,10 @@ public class CsMerchantOrderQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "退款时间")
     private Date refundDate;
+
+    @ApiModelProperty(value = "键盘密码ID")
+    private String keyboardPwdId;
+
+    @ApiModelProperty(value = "键盘密码")
+    private String keyboardPwd;
 }

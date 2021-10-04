@@ -292,5 +292,14 @@ public class CsMerchantOrderController extends BaseController {
         CsMerchantOrderQueryVo csMerchantOrderQueryVo = csMerchantOrderService.getCsMerchantOrderById(csMerchantOrderQueryParam.getId());
         return ApiResult.ok(csMerchantOrderQueryVo);
     }
+
+    /**
+     * 获取商店茶室订单的开锁密码记录forWx，需要传入茶室订单id
+     */
+    @GetMapping("/lockKeyForWx")
+    @ApiOperation(value = "获取wxCsMerchantOrder对象详情", notes = "查看商店茶室订单记录", response = CsMerchantOrderQueryVo.class)
+    public ApiResult<CsMerchantOrderQueryVo> lockKeyForWx(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        return ApiResult.ok(csMerchantOrderService.getLockKey(csMerchantOrderQueryParam));
+    }
 }
 

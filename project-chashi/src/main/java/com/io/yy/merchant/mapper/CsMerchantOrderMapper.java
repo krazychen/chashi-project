@@ -63,4 +63,12 @@ public interface CsMerchantOrderMapper extends BaseMapper<CsMerchantOrder> {
      * @return
      */
     Integer updatePaymentStatus(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
+
+    /**
+     * 更新开锁密码
+     *
+     * @param csMerchantOrderQueryParam
+     * @return
+     */
+    Integer updateLockKey(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 }

@@ -100,6 +100,12 @@ public class CsMerchantOrderQueryVo implements Serializable {
     @ApiModelProperty(value = "支付失败错误消息")
     private String paymentMsg;
 
+    @ApiModelProperty(value = "键盘密码ID")
+    private String keyboardPwdId;
+
+    @ApiModelProperty(value = "键盘密码")
+    private String keyboardPwd;
+
     @ApiModelProperty(value = "使用状态：未使用0，已使用1，已取消2, 已完成3")
     private Integer usedStatus;
 
