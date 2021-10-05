@@ -286,10 +286,10 @@ public class CsMerchantOrderController extends BaseController {
     /**
      * 获取商店茶室订单记录forWx
      */
-    @GetMapping("/infoForWx")
+    @GetMapping("/infoForWx/{id}")
     @ApiOperation(value = "获取wxCsMerchantOrder对象详情", notes = "查看商店茶室订单记录", response = CsMerchantOrderQueryVo.class)
-    public ApiResult<CsMerchantOrderQueryVo> getCsMerchantOrderForWx(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
-        CsMerchantOrderQueryVo csMerchantOrderQueryVo = csMerchantOrderService.getCsMerchantOrderById(csMerchantOrderQueryParam.getId());
+    public ApiResult<CsMerchantOrderQueryVo> getCsMerchantOrderForWx(@PathVariable("id") String id) throws Exception {
+        CsMerchantOrderQueryVo csMerchantOrderQueryVo = csMerchantOrderService.getCsMerchantOrderById(id);
         return ApiResult.ok(csMerchantOrderQueryVo);
     }
 

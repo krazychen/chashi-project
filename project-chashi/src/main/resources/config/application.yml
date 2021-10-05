@@ -224,7 +224,7 @@ whyy-system:
       /csMerchantOrder/getTimeRangeForWx=anon
       /csMerchantOrder/addCsMerchantOrderForWx=anon
       /csMerchantOrder/getCsMerchantOrderListForWx=anon
-      /csMerchantOrder/infoForWx=anon
+      /csMerchantOrder/infoForWx/**=anon
       /csMerchantOrder/lockKeyForWx=anon
     # 权限配置
     permission:
