@@ -887,8 +887,8 @@ public class WeixinController extends WeixinSupport {
     public ApiResult<Boolean> refundOrderWxPay(@ModelAttribute CsMerchantOrder csMerchantOrder) throws Exception {
 
         String return_code = null;
-        //判断订单是余额支付 0 还是微信支付 1, 如果是微信支付，则调用微信退款，否则就直接进行反向操作
-        if(csMerchantOrder.getPaymentType()!=null && csMerchantOrder.getPaymentType().equals(1)){
+        //判断订单是余额支付 1 还是微信支付 2, 如果是微信支付，则调用微信退款，否则就直接进行反向操作
+        if(csMerchantOrder.getPaymentType()!=null && csMerchantOrder.getPaymentType().equals(2)){
             // 获取微信配置
             List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
 
