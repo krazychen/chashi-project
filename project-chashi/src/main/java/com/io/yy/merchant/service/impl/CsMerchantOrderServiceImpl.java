@@ -79,7 +79,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
 
     @Override
     public CsMerchantOrderQueryVo getCsMerchantOrderById(Serializable id) throws Exception {
-        return csMerchantOrderMapper.getCsMerchantOrderById(id);
+        return csMerchantOrderMapper.getCsMerchantOrderDetailById(id);
     }
 
     @Override

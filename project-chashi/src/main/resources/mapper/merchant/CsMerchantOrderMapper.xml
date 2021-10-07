@@ -17,6 +17,13 @@
         from cs_merchant_order where id = #{id}
     </select>
 
+    <select id="getCsMerchantOrderDetailById" resultType="com.io.yy.merchant.vo.CsMerchantOrderQueryVo">
+        SELECT cmo.*,ct.room_logo_url,ct.room_logo_name,ct.hours_amount
+        FROM cs_merchant_order cmo
+        LEFT JOIN cs_tearoom ct ON cmo.tearoom_id=ct.id
+         where cmo.id = #{id}
+    </select>
+
     <select id="getCsMerchantOrderPageList" resultType="com.io.yy.merchant.vo.CsMerchantOrderQueryVo">
         select
         cmo.id AS id, cmo.out_trade_no,merchant_id, tearoom_id, room_name, wxuser_id, wxuser_phone, cmo.openid, order_name, order_date, order_timerage, order_origin_timenum,

@@ -32,6 +32,14 @@ public interface CsMerchantOrderMapper extends BaseMapper<CsMerchantOrder> {
     CsMerchantOrderQueryVo getCsMerchantOrderById(Serializable id);
 
     /**
+     * 根据ID获取查询详细对象
+     *
+     * @param id
+     * @return
+     */
+    CsMerchantOrderQueryVo getCsMerchantOrderDetailById(Serializable id);
+
+    /**
      * 获取分页对象
      *
      * @param page
