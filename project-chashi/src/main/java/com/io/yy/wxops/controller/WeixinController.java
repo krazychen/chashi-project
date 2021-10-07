@@ -30,6 +30,7 @@ import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -84,6 +86,9 @@ public class WeixinController extends WeixinSupport {
 
     @Autowired
     private CsMerchantOrderService csMerchantOrderService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 发起会员卡微信支付
@@ -200,6 +205,12 @@ public class WeixinController extends WeixinSupport {
                 //更新订单信息
                 csMembercardOrder.setPaymentStatus(0);
                 boolean flag = csMembercardOrderService.saveCsMembercardOrder(csMembercardOrder);
+                // 设置redis，10分钟后自动设置交易状态为关闭4
+                if(flag){
+                    redisTemplate.opsForValue().set("CARD_ORDER]"+csMembercardOrder.getOutTradeNo(),csMembercardOrder.getOutTradeNo(),10, TimeUnit.MINUTES);
+                }else{
+                    throw new Exception("生成微信支付订单失败！");
+                }
                 //业务逻辑代码
             }
 
@@ -228,6 +239,7 @@ public class WeixinController extends WeixinSupport {
         csMembercardOrderQueryParam.setPaymentStatus(3);
         boolean flag= csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
         if(flag) {
+            redisTemplate.delete("CARD_ORDER_"+csMembercardOrder.getOutTradeNo());
             return ApiResult.ok("取消支付成功！");
         }else{
             return ApiResult.fail("取消支付失败！");
@@ -250,6 +262,7 @@ public class WeixinController extends WeixinSupport {
         csMembercardOrderQueryParam.setPaymentMsg(csMembercardOrder.getPaymentMsg());
         boolean flag= csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
         if(flag) {
+            redisTemplate.delete("CARD_ORDER_"+csMembercardOrder.getOutTradeNo());
             return ApiResult.ok("支付失败设置成功！");
         }else{
             return ApiResult.fail("支付失败设置失败！");
@@ -369,6 +382,11 @@ public class WeixinController extends WeixinSupport {
 
                 //更新订单信息
                 boolean flag = csRechargeRecordService.saveCsRechargeRecord(csRechargeRecord);
+                if(flag){
+                    redisTemplate.opsForValue().set("RECHARGE_ORDER]"+csRechargeRecord.getOutTradeNo(),csRechargeRecord.getOutTradeNo(),10, TimeUnit.MINUTES);
+                }else{
+                    throw new Exception("生成微信支付订单失败！");
+                }
                 //业务逻辑代码
             }
 
@@ -396,6 +414,7 @@ public class WeixinController extends WeixinSupport {
         csRechargeRecordQueryParam.setPaymentStatus(3);
         boolean flag=csRechargeRecordService.updatePaymentStatus(csRechargeRecordQueryParam);
         if(flag) {
+            redisTemplate.delete("RECHARGE_ORDER_"+csRechargeRecord.getOutTradeNo());
             return ApiResult.ok("取消支付成功！");
         }else{
             return ApiResult.fail("取消支付失败！");
@@ -417,6 +436,7 @@ public class WeixinController extends WeixinSupport {
         csRechargeRecordQueryParam.setPaymentMsg(csRechargeRecord.getPaymentMsg());
         boolean flag=csRechargeRecordService.updatePaymentStatus(csRechargeRecordQueryParam);
         if(flag) {
+            redisTemplate.delete("RECHARGE_ORDER_"+csRechargeRecord.getOutTradeNo());
             return ApiResult.ok("支付失败设置成功！");
         }else{
             return ApiResult.fail("支付失败设置失败！");
@@ -543,75 +563,82 @@ public class WeixinController extends WeixinSupport {
                 //更新订单信息
                 boolean flag = csMerchantOrderService.saveCsMerchantOrder(csMerchantOrder);
 
-                //如果有优惠卷，扣除优惠卷
-                if(csMerchantOrder.getCouponReleasedId()!=null && csMerchantOrder.getCouponReleasedId()!=0){
-                    CsCouponReleasedQueryParam csCouponReleasedQueryParam = new CsCouponReleasedQueryParam();
-                    csCouponReleasedQueryParam.setId(csMerchantOrder.getCouponReleasedId());
-                    csCouponReleasedQueryParam.setIsUsed(1);
-                    csCouponReleasedQueryParam.setUsedTime(new Date());
-                    csCouponReleasedService.updateUsedStatus(csCouponReleasedQueryParam);
-                }
+                if(flag){
+                    redisTemplate.opsForValue().set("MERCHANT_ORDER]"+csMerchantOrder.getId(),csMerchantOrder.getId(),10, TimeUnit.MINUTES);
 
-                //如果是会员
-                if(csMerchantOrder.getMembercardOrderId()!=null && csMerchantOrder.getMembercardOrderId()!=0){
-                    // 记录折扣金额
-                    CsMembercardConsum discountCsMembercardConsum = new CsMembercardConsum();
-                    discountCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
-                    discountCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
-                    //记录消费原始价格
-                    discountCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
-                    discountCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
-                    discountCsMembercardConsum.setConsumType(2);
-                    //优惠单价*原始总时长
-                    discountCsMembercardConsum.setConsumDiscountAmount(
-                            DoubleUtils.subtract(csMerchantOrder.getOrderOriginPrice(),DoubleUtils.multiply(csMerchantOrder.getOrderUnitPrice(),csMerchantOrder.getOrderOriginTimenum().doubleValue())));
-                    discountCsMembercardConsum.setCousumDate(new Date());
-                    csMembercardConsumService.save(discountCsMembercardConsum);
-
-                    //如果使用优惠时长，扣除优惠时长
-                    if(csMerchantOrder.getOrderMbTimenum()!=null && csMerchantOrder.getOrderMbTimenum()!=0){
-                        CsMembercardConsum timeCsMembercardConsum = new CsMembercardConsum();
-                        timeCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
-                        timeCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
-                        //记录消费原始价格
-                        timeCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
-                        timeCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
-                        timeCsMembercardConsum.setConsumType(0);
-                        //优惠单价*原始总时长
-                        timeCsMembercardConsum.setConsumTime(csMerchantOrder.getOrderMbTimenum());
-                        timeCsMembercardConsum.setCousumDate(new Date());
-                        csMembercardConsumService.save(timeCsMembercardConsum);
-                    }else{
-                        csMerchantOrder.setOrderMbTimenum(0);
+                    //如果有优惠卷，扣除优惠卷
+                    if(csMerchantOrder.getCouponReleasedId()!=null && csMerchantOrder.getCouponReleasedId()!=0){
+                        CsCouponReleasedQueryParam csCouponReleasedQueryParam = new CsCouponReleasedQueryParam();
+                        csCouponReleasedQueryParam.setId(csMerchantOrder.getCouponReleasedId());
+                        csCouponReleasedQueryParam.setIsUsed(1);
+                        csCouponReleasedQueryParam.setUsedTime(new Date());
+                        csCouponReleasedService.updateUsedStatus(csCouponReleasedQueryParam);
                     }
 
-                    //如果使用优惠金额，扣除优惠金额
-                    if(csMerchantOrder.getOrderMbAmount()!=null && csMerchantOrder.getOrderMbAmount()!=0){
+                    //如果是会员
+                    if(csMerchantOrder.getMembercardOrderId()!=null && csMerchantOrder.getMembercardOrderId()!=0){
                         // 记录折扣金额
-                        CsMembercardConsum amountCsMembercardConsum = new CsMembercardConsum();
-                        amountCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
-                        amountCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
+                        CsMembercardConsum discountCsMembercardConsum = new CsMembercardConsum();
+                        discountCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
+                        discountCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
                         //记录消费原始价格
-                        amountCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
-                        amountCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
-                        amountCsMembercardConsum.setConsumType(1);
+                        discountCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
+                        discountCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
+                        discountCsMembercardConsum.setConsumType(2);
                         //优惠单价*原始总时长
-                        amountCsMembercardConsum.setConsumAmount(csMerchantOrder.getOrderMbAmount());
-                        amountCsMembercardConsum.setCousumDate(new Date());
-                        csMembercardConsumService.save(amountCsMembercardConsum);
-                    }else{
-                        csMerchantOrder.setOrderMbAmount(new Double(0));
-                    }
+                        discountCsMembercardConsum.setConsumDiscountAmount(
+                                DoubleUtils.subtract(csMerchantOrder.getOrderOriginPrice(),DoubleUtils.multiply(csMerchantOrder.getOrderUnitPrice(),csMerchantOrder.getOrderOriginTimenum().doubleValue())));
+                        discountCsMembercardConsum.setCousumDate(new Date());
+                        csMembercardConsumService.save(discountCsMembercardConsum);
 
-                    //更新会员卡的剩余时长和剩余金额
-                    if(csMerchantOrder.getOrderMbAmount()!=0 || csMerchantOrder.getOrderMbTimenum()!=0) {
-                        CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
-                        csMembercardOrderQueryParam.setId(csMerchantOrder.getMembercardOrderId());
-                        csMembercardOrderQueryParam.setRestDiscountPrice(csMerchantOrder.getOrderMbAmount());
-                        csMembercardOrderQueryParam.setRestDiscountTime(csMerchantOrder.getOrderMbTimenum().doubleValue());
-                        csMembercardOrderService.reduceRest(csMembercardOrderQueryParam);
+                        //如果使用优惠时长，扣除优惠时长
+                        if(csMerchantOrder.getOrderMbTimenum()!=null && csMerchantOrder.getOrderMbTimenum()!=0){
+                            CsMembercardConsum timeCsMembercardConsum = new CsMembercardConsum();
+                            timeCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
+                            timeCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
+                            //记录消费原始价格
+                            timeCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
+                            timeCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
+                            timeCsMembercardConsum.setConsumType(0);
+                            //优惠单价*原始总时长
+                            timeCsMembercardConsum.setConsumTime(csMerchantOrder.getOrderMbTimenum());
+                            timeCsMembercardConsum.setCousumDate(new Date());
+                            csMembercardConsumService.save(timeCsMembercardConsum);
+                        }else{
+                            csMerchantOrder.setOrderMbTimenum(0);
+                        }
+
+                        //如果使用优惠金额，扣除优惠金额
+                        if(csMerchantOrder.getOrderMbAmount()!=null && csMerchantOrder.getOrderMbAmount()!=0){
+                            // 记录折扣金额
+                            CsMembercardConsum amountCsMembercardConsum = new CsMembercardConsum();
+                            amountCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
+                            amountCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
+                            //记录消费原始价格
+                            amountCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
+                            amountCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
+                            amountCsMembercardConsum.setConsumType(1);
+                            //优惠单价*原始总时长
+                            amountCsMembercardConsum.setConsumAmount(csMerchantOrder.getOrderMbAmount());
+                            amountCsMembercardConsum.setCousumDate(new Date());
+                            csMembercardConsumService.save(amountCsMembercardConsum);
+                        }else{
+                            csMerchantOrder.setOrderMbAmount(new Double(0));
+                        }
+
+                        //更新会员卡的剩余时长和剩余金额
+                        if(csMerchantOrder.getOrderMbAmount()!=0 || csMerchantOrder.getOrderMbTimenum()!=0) {
+                            CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
+                            csMembercardOrderQueryParam.setId(csMerchantOrder.getMembercardOrderId());
+                            csMembercardOrderQueryParam.setRestDiscountPrice(csMerchantOrder.getOrderMbAmount());
+                            csMembercardOrderQueryParam.setRestDiscountTime(csMerchantOrder.getOrderMbTimenum().doubleValue());
+                            csMembercardOrderService.reduceRest(csMembercardOrderQueryParam);
+                        }
                     }
+                }else{
+                    throw new Exception("生成微信支付订单失败！");
                 }
+
                 //业务逻辑代码
             }
 
@@ -664,6 +691,13 @@ public class WeixinController extends WeixinSupport {
 //
 //        String outTradeNo = "order_"+UUIDUtil.getUUIDBits(24);
 //        csMerchantOrder.setOutTradeNo(outTradeNo);
+
+        // 需要加个是否订单已经关闭的控制 ****
+
+        CsMerchantOrder csMerchantOrder1=csMerchantOrderService.getById(csMerchantOrder.getId());
+        if(csMerchantOrder1.getPaymentStatus().equals(4)){
+            return ApiResult.fail("订单已关闭，请重新发起订单");
+        }
 
         try {
             //生成的随机字符串
@@ -845,6 +879,7 @@ public class WeixinController extends WeixinSupport {
         boolean flag = orderFailCommonOP(csMerchantOrderQueryParam,csMerchantOrder);
 
         if(flag) {
+            redisTemplate.delete("MERCHANT_ORDER_"+csMerchantOrder.getId());
             return ApiResult.ok("取消支付成功！");
         }else{
             return ApiResult.fail("取消支付失败！");
@@ -869,6 +904,7 @@ public class WeixinController extends WeixinSupport {
         boolean flag = orderFailCommonOP(csMerchantOrderQueryParam,csMerchantOrder);
 
         if(flag) {
+            redisTemplate.delete("MERCHANT_ORDER_"+csMerchantOrder.getId());
             return ApiResult.ok("支付失败设置成功！");
         }else{
             return ApiResult.fail("支付失败设置失败！");
