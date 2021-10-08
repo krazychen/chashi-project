@@ -14,6 +14,7 @@ import com.io.yy.marketing.vo.CsRechargeRecordQueryVo;
 import com.io.yy.merchant.entity.CsMerchantOrder;
 import com.io.yy.merchant.param.CsMerchantOrderQueryParam;
 import com.io.yy.merchant.service.CsMerchantOrderService;
+import com.io.yy.system.entity.SysUser;
 import com.io.yy.system.vo.SysConfigDataRedisVo;
 import com.io.yy.util.ConfigDataUtil;
 import com.io.yy.util.IpUtil;
@@ -1000,9 +1001,9 @@ public class WeixinController extends WeixinSupport {
         boolean flag = orderFailCommonOP(csMerchantOrderQueryParam,csMerchantOrder);
 
         if(flag) {
-            return ApiResult.ok("支付失败设置成功！");
+            return ApiResult.ok("支付退款设置成功！");
         }else{
-            return ApiResult.fail("支付失败设置失败！");
+            return ApiResult.fail("支付退款设置失败！");
         }
     }
 
@@ -1043,6 +1044,24 @@ public class WeixinController extends WeixinSupport {
                 flag = csMembercardOrderService.addRest(csMembercardOrderQueryParam);
             }
         }
+        //更新余额和积分
+        //如果是余额支付，则需要更新账户余额信息
+        if(csMerchantOrder.getPaymentType().equals(1)){
+            WxUserQueryParam wxUserQueryParam = new WxUserQueryParam();
+            wxUserQueryParam.setId(csMerchantOrder.getWxuserId());
+            wxUserQueryParam.setBalance(csMerchantOrder.getOrderPrice());
+            wxUserQueryParam.setIntegral(0);
+            wxUserService.updateBalanceAIntegral(wxUserQueryParam);
+
+            CsRechargeConsum csRechargeConsum = csRechargeConsumService.getOne(new QueryWrapper<CsRechargeConsum>().eq("roomOrderId", csMerchantOrder.getId()));
+            csRechargeConsum.setStatus("0");
+            try {
+                csRechargeConsumService.saveCsRechargeConsum(csRechargeConsum);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         return flag;
     }
 
@@ -1207,6 +1226,22 @@ public class WeixinController extends WeixinSupport {
                         WxUserQueryParam wxUserQueryParam = new WxUserQueryParam();
                         wxUserQueryParam.setId(csRechargeRecordQueryVo.getWxuserId());
                         wxUserQueryParam.setBalance(csRechargeRecordQueryVo.getRechargeFinal());
+                        wxUserQueryParam.setIntegral(csRechargeRecordQueryVo.getIntegral());
+                        wxUserService.updateBalanceAIntegral(wxUserQueryParam);
+                    }
+                }
+
+                // 如果是茶室订单,更新茶室订单的付款状态
+                if(StringUtils.isNotBlank(outTradeNo)&&outTradeNo.indexOf("order_")!=-1) {
+                    CsMerchantOrderQueryParam csMerchantOrderQueryParam = new CsMerchantOrderQueryParam();
+                    csMerchantOrderQueryParam.setOutTradeNo(outTradeNo);
+                    csMerchantOrderQueryParam.setPaymentStatus(2);
+                    boolean flag=csMerchantOrderService.updatePaymentStatus(csMerchantOrderQueryParam);
+                    if(flag){
+                        //更新用户积分，需要先获取用户ID
+                        CsRechargeRecordQueryVo csRechargeRecordQueryVo = csRechargeRecordService.getCsRechargeRecordByOutTradeNo(outTradeNo);
+                        WxUserQueryParam wxUserQueryParam = new WxUserQueryParam();
+                        wxUserQueryParam.setId(csRechargeRecordQueryVo.getWxuserId());
                         wxUserQueryParam.setIntegral(csRechargeRecordQueryVo.getIntegral());
                         wxUserService.updateBalanceAIntegral(wxUserQueryParam);
                     }

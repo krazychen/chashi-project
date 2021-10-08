@@ -91,7 +91,8 @@
     </select>
 
     <update id="updateBalanceAIntegral">
-        update wx_user set balance = balance + #{param.balance}, integral = integral + #{param.integral}
+        update wx_user
+        set balance = balance + #{param.balance},integral = integral + #{param.integral}
         where deleted = 0
         <if test="param.id != null">
             and id = #{param.id}
