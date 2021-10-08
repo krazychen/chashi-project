@@ -4,20 +4,62 @@ whyy-system:
   # 是否启用验证码
   enable-verify-code: true
   # 是否学员扫描微信登陆
-  enable-hw-xueyuan-wx: true
+  enable-hw-xueyuan-wx: false
 
   # AOP配置
   aop:
     # Aop日志配置
     log:
+      # 请求日志在控制台是否格式化输出，local环境建议开启，服务器环境设置为false
       request-log-format: false
       # 响应日志在控制台是否格式化输出，local环境建议开启，服务器环境设置为false
       response-log-format: false
+      # 排除的路径
+      exclude-paths: /,/csrf,/verificationCode/getBase64Image,/wx/checkLoginQr
+    # 操作日志配置
+    operation-log:
+      # 是否启用
+      enable: true
+      # 排除的路径
+      exclude-paths: '/**/get**,/**/get**/**,/**/find**,/**/find**/**,/**/info**,/**/info**/**,/**/check**,/**/check**/**'
+    login-log:
+      # 是否启用
+      enable: false
+      # 登录地址
+      login-path: /login,/wx/callback
+      # 登出地址
+      logout-path: /logout
+
+  # 文件上传下载配置
+  # 上传路径配置
+  upload-path: /opt/upload/
+  # 资源访问路径
+  resource-access-path: /resource/
+  # 资源访问路径匹配：/resource/**
+  resource-access-patterns: ${whyy-system.resource-access-path}**
+  # 资源访问全路径前缀：http://localhost:8888/resource/
+  resource-access-url: https://www.rongjingtea.com${server.servlet.context-path}${whyy-system.resource-access-path}
+  # 全局允许上传的类型
+  allow-upload-file-extensions: jpg,png,docx,xlsx,pptx,pdf
+  allow-download-file-extensions: jpg,png,docx,xlsx,pptx,pdf
+
+  # 配置分享二维码图片上传路径配置
+  config-upload-path: /opt/config/image/
+  # 资源访问路径
+  config-access-path: config/resource/
+  # 资源访问路径匹配：/resource/**
+  config-access-patterns: ${whyy-system.config-access-path}**
+  # 资源访问全路径前缀：http://localhost:8888/resource/
+  config-access-url: https://www.rongjingtea.com${server.servlet.context-path}${whyy-system.config-access-path}
 
 server:
   port: 1111
   servlet:
-    context-path: /
+    context-path: /prod-api
+  forward-headers-strategy: framework
+  tomcat:
+    remote-ip-header: X-Real-IP
+    protocol-header: X-Forwarded-Proto
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/chashi-system?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
