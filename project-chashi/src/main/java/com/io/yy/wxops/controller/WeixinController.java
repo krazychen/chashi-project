@@ -1035,7 +1035,8 @@ public class WeixinController extends WeixinSupport {
             });
 
             //更新会员卡的剩余时长和剩余金额
-            if(newCsMerchantOrder.getOrderMbAmount()!=0 || newCsMerchantOrder.getOrderMbTimenum()!=0) {
+            if(newCsMerchantOrder.getOrderMbAmount()!=null && newCsMerchantOrder.getOrderMbAmount()!=0
+                    || newCsMerchantOrder.getOrderMbTimenum()!=null && newCsMerchantOrder.getOrderMbTimenum()!=0) {
                 CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
                 csMembercardOrderQueryParam.setId(newCsMerchantOrder.getMembercardOrderId());
                 csMembercardOrderQueryParam.setRestDiscountPrice(newCsMerchantOrder.getOrderMbAmount());

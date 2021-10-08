@@ -156,4 +156,7 @@ public class CsMerchantOrderQueryVo implements Serializable {
 
     @ApiModelProperty(value = "小时金额")
     private Double hoursAmount;
+
+    @ApiModelProperty(value = "联系手机(客服电话)")
+    private String contactPhonse;
 }

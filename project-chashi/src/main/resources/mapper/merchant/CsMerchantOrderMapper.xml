@@ -18,9 +18,10 @@
     </select>
 
     <select id="getCsMerchantOrderDetailById" resultType="com.io.yy.merchant.vo.CsMerchantOrderQueryVo">
-        SELECT cmo.*,ct.room_logo_url,ct.room_logo_name,ct.hours_amount
+        SELECT cmo.*,cm.address,cm.contact_phonse,ct.room_logo_url,ct.room_logo_name,ct.hours_amount
         FROM cs_merchant_order cmo
         LEFT JOIN cs_tearoom ct ON cmo.tearoom_id=ct.id
+        LEFT JOIN cs_merchant cm ON cmo.merchant_id=cm.id
          where cmo.id = #{id}
     </select>
 
