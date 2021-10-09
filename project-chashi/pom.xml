@@ -122,8 +122,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>com.io.yy.ProjectParentApplication</mainClass>
-                    <classifier>exec</classifier>
+                    <mainClass>com.io.yy.ProjectChashiApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -212,6 +211,33 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <artifactItems>
+                        <!--把project-chashi/target目录下的war拷贝到target下-->
+                        <artifactItem>
+                            <groupId>${project.parent.groupId}</groupId>
+                            <artifactId>${project.parent.artifactId}</artifactId>
+                            <version>${project.parent.version}</version>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${project.build.directory}/target</outputDirectory>
+                        </artifactItem>
+                    </artifactItems>
+                </configuration>
             </plugin>
 
         </plugins>
