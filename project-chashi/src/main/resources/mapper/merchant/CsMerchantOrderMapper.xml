@@ -97,7 +97,7 @@
     </update>
 
     <update id="updateLockKey">
-        update cs_merchant_order set keyboard_pwd_id = #{keyboardPwdId} and keyboard_pwd = #{param.keyboardPwd}
+        update cs_merchant_order set keyboard_pwd_id = #{param.keyboardPwdId}, keyboard_pwd = #{param.keyboardPwd}
         where deleted = 0
         and id = #{param.id}
     </update>

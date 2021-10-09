@@ -32,10 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.weixin4j.WeixinSupport;
 
 import javax.servlet.ServletInputStream;
@@ -663,7 +660,7 @@ public class WeixinController extends WeixinSupport {
      */
     @RequestMapping("/orderReWxPay")
     @ApiOperation(value = "已有订单发起微信支付", notes = "发起订单微信支付", response = ApiResult.class)
-    public ApiResult<Boolean> orderReWxPay(@ModelAttribute CsMerchantOrder csMerchantOrder, HttpServletRequest request) throws Exception{
+    public ApiResult<Boolean> orderReWxPay(@RequestBody CsMerchantOrder csMerchantOrder, HttpServletRequest request) throws Exception{
         // 获取微信配置
         List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
 
@@ -933,7 +930,7 @@ public class WeixinController extends WeixinSupport {
             String mch_id = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("mch_id")).collect(Collectors.toList()).get(0).getConfigValue();
             String key = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("key")).collect(Collectors.toList()).get(0).getConfigValue();
             String sub_mch_id = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("sub_mch_id")).collect(Collectors.toList()).get(0).getConfigValue();
-            String refuse_url = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("refuse_url")).collect(Collectors.toList()).get(0).getConfigValue();
+            String refuse_url = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("refund_url")).collect(Collectors.toList()).get(0).getConfigValue();
 
             String outRefundNo = "reorder_"+UUIDUtil.getUUIDBits(24);
             csMerchantOrder.setOutRefundNo(outRefundNo);
@@ -1054,7 +1051,7 @@ public class WeixinController extends WeixinSupport {
             wxUserQueryParam.setIntegral(0);
             wxUserService.updateBalanceAIntegral(wxUserQueryParam);
 
-            CsRechargeConsum csRechargeConsum = csRechargeConsumService.getOne(new QueryWrapper<CsRechargeConsum>().eq("roomOrderId", csMerchantOrder.getId()));
+            CsRechargeConsum csRechargeConsum = csRechargeConsumService.getOne(new QueryWrapper<CsRechargeConsum>().eq("room_order_id", csMerchantOrder.getId()));
             csRechargeConsum.setStatus("0");
             try {
                 csRechargeConsumService.saveCsRechargeConsum(csRechargeConsum);
