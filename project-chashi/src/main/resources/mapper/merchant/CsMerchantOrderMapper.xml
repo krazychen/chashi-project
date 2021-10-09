@@ -87,7 +87,12 @@
             and payment_msg = #{param.paymentMsg}
         </if>
         where deleted = 0
-        and id = #{param.id}
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+        <if test="param.outTradeNo != null">
+            and out_trade_no = #{param.outTradeNo}
+        </if>
         and payment_status != #{param.paymentStatus}
     </update>
 
