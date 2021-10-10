@@ -445,3 +445,7 @@ spring:
             threadPriority: 5
             threadsInheritContextClassLoaderOfInitializingThread: true
 #################################### Spring boot quartz end ###################################
+#################################### Spring boot UDP start ###################################
+udp:
+  port: 6666
+#################################### Spring boot UDP end ###################################
