@@ -15,6 +15,7 @@ import org.springframework.integration.ip.dsl.Udp;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 
+import javax.xml.bind.DatatypeConverter;
 import java.util.Map;
 
 @Slf4j
@@ -52,8 +53,11 @@ public class MandunServer {
      */
     @Transformer(inputChannel = "udpChannel", outputChannel = "udpFilter")
     public String transformer(@Payload byte[] payload, @Headers Map<String, Object> headers) {
-        String message = new String(payload);
-        log.info(message);
+
+        headers.entrySet().forEach(e -> log.info(e));
+        log.info("transformer：--"+payload[16]);
+        String message = DatatypeConverter.printHexBinary(payload);//把接收的数据转化为字符串
+        log.info("transformer：--"+message);
         // 转换为大写
         // message = message.toUpperCase();
         // 向客户端响应，还不知道怎么写
