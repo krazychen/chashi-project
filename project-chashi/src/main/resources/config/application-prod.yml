@@ -54,9 +54,9 @@ whyy-system:
 
 server:
   port: 1111
-  ssl:
-    key-store: rongjingtea.com.jks
-    key-store-password: l5k4b208p0p
+#  ssl:
+#    key-store: rongjingtea.com.jks
+#    key-store-password: l5k4b208p0p
   servlet:
     context-path: /prod-api
   forward-headers-strategy: framework
