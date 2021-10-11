@@ -1,5 +1,6 @@
 package com.io.yy.mandun.udp;
 
+import com.io.yy.util.lang.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 
@@ -55,7 +56,7 @@ public class MandunServer {
     public String transformer(@Payload byte[] payload, @Headers Map<String, Object> headers) {
 
         headers.entrySet().forEach(e -> log.info(e.toString()));
-        log.info("transformer：--"+payload[16]);
+        log.info("transformer：--"+payload.toString());
         String message = DatatypeConverter.printHexBinary(payload);//把接收的数据转化为字符串
         log.info("transformer：--"+message);
         // 转换为大写
@@ -98,8 +99,6 @@ public class MandunServer {
      * @param headers
      * @return java.lang.String
      * @throws
-     * @author wliduo[i@dolyw.com]
-     * @date 2020/5/20 15:35
      */
     @Router(inputChannel = "udpRouter")
     public String router(String message, @Headers Map<String, Object> headers) {
@@ -112,9 +111,13 @@ public class MandunServer {
 
         log.info("udp -router"+id+":"+ip+":"+port+":"+message);
         // 筛选，走那个处理器
-        if (false) {
-            return "udpHandle2";
+        String PVER = message.substring(0,1);
+        log.info(PVER);
+        //注册信息
+        if(StringUtils.isNotEmpty(PVER)){
+            return "registerHandle";
         }
+
         return "udpHandle1";
     }
 
@@ -124,8 +127,6 @@ public class MandunServer {
      * @param message
      * @return void
      * @throws
-     * @author wliduo[i@dolyw.com]
-     * @date 2020/5/20 15:12
      */
     @ServiceActivator(inputChannel = "udpHandle1")
     public void udpMessageHandle(String message) throws Exception {
@@ -139,11 +140,15 @@ public class MandunServer {
      * @param message
      * @return void
      * @throws
-     * @author wliduo[i@dolyw.com]
-     * @date 2020/5/14 11:02
      */
-    @ServiceActivator(inputChannel = "udpHandle2")
-    public void udpMessageHandle2(String message) throws Exception {
+    @ServiceActivator(inputChannel = "registerHandle")
+    public void registerHandle(String message) throws Exception {
+        String PVER = message.substring(0,1);
+        String CMD = message.substring(2,3);
+        String PARA = message.substring(4,5);
+        String CMDNO = message.substring(12,15);
+
+        log.info(PVER+":"+CMD+":"+PARA+":"+CMDNO);
         log.info("UDP2:" + message);
     }
 }
