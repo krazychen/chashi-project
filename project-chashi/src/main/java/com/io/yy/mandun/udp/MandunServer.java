@@ -54,7 +54,7 @@ public class MandunServer {
     @Transformer(inputChannel = "udpChannel", outputChannel = "udpFilter")
     public String transformer(@Payload byte[] payload, @Headers Map<String, Object> headers) {
 
-        headers.entrySet().forEach(e -> log.info(e));
+        headers.entrySet().forEach(e -> log.info(e.toString()));
         log.info("transformer：--"+payload[16]);
         String message = DatatypeConverter.printHexBinary(payload);//把接收的数据转化为字符串
         log.info("transformer：--"+message);
