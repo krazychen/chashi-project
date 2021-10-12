@@ -92,7 +92,7 @@
     </dependencies>
 
     <build>
-        <finalName>project-chashi</finalName>
+        <finalName>project-chashi-${profileActive}</finalName>
 
         <resources>
             <!-- 资源文件配置 -->

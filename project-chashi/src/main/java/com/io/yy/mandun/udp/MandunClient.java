@@ -24,7 +24,7 @@ public class MandunClient {
     @Value("${udp.port}")
     private Integer udpPort;
 
-    public void redisterMessage(String message){
+    public void sendMessage(String message){
         log.info("发送UDP: {}", message);
         InetSocketAddress inetSocketAddress = new InetSocketAddress("localhost", udpPort);
         byte[] udpMessage = message.getBytes();
@@ -39,7 +39,7 @@ public class MandunClient {
 
     }
 
-    public void sendMessage(String message) {
+    public void redisterMessage(String message) {
         log.info("发送 redisterMessage: {}", message);
         //计算crc
         CRC32 crc32 = new CRC32();

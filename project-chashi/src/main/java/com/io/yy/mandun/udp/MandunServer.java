@@ -61,7 +61,7 @@ public class MandunServer {
     public String transformer(@Payload byte[] payload, @Headers Map<String, Object> headers) {
 
         headers.entrySet().forEach(e -> log.info(e.toString()));
-        log.info("transformer：--"+payload.toString());
+//        log.info("transformer：--"+payload.toString());
         String message = DatatypeConverter.printHexBinary(payload);//把接收的数据转化为字符串
         log.info("transformer：--"+message);
         // 转换为大写
@@ -119,11 +119,11 @@ public class MandunServer {
         String PVER = message.substring(0,1);
         log.info(PVER);
         //注册信息
-        if(StringUtils.isNotEmpty(PVER)){
+        if(StringUtils.isNotEmpty(PVER)&&"F1".equals(PVER)){
             return "registerHandle";
         }
 
-        return "udpHandle1";
+        return "errorHandle";
     }
 
     /**
@@ -133,10 +133,10 @@ public class MandunServer {
      * @return void
      * @throws
      */
-    @ServiceActivator(inputChannel = "udpHandle1")
+    @ServiceActivator(inputChannel = "errorHandle")
     public void udpMessageHandle(String message) throws Exception {
         // 可以进行异步处理
-        log.info("UDP1:" + message);
+        log.info("非正常消息:" + message);
     }
 
     /**
