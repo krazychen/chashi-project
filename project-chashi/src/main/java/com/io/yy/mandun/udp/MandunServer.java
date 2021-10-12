@@ -2,6 +2,7 @@ package com.io.yy.mandun.udp;
 
 import com.io.yy.util.lang.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,7 @@ import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 
 import javax.xml.bind.DatatypeConverter;
+import java.util.Date;
 import java.util.Map;
 
 @Slf4j
@@ -25,6 +27,9 @@ public class MandunServer {
 
     @Value("${udp.port}")
     private Integer udpPort;
+
+    @Autowired
+    private MandunClient mandunClient;
 
     /**
      * UDP消息接收服务写法二
@@ -143,12 +148,24 @@ public class MandunServer {
      */
     @ServiceActivator(inputChannel = "registerHandle")
     public void registerHandle(String message) throws Exception {
-        String PVER = message.substring(0,1);
-        String CMD = message.substring(2,3);
-        String PARA = message.substring(4,5);
-        String CMDNO = message.substring(12,15);
+        String PVER = message.substring(0,2);
+        String CMD = message.substring(2,4);
+        String PARA = message.substring(4,6);
+        String CMDNO = message.substring(12,16);
 
-        log.info(PVER+":"+CMD+":"+PARA+":"+CMDNO);
-        log.info("UDP2:" + message);
+        String ECHO = "00";
+        String Len = "0000";
+
+        Date nowDate = new Date();
+        String nowTime = Long.toHexString(nowDate.getTime());
+
+        String UID = "FFFFFF80";
+
+        //拼装应答
+        String respMessage = PVER+CMD+PARA+ECHO+Len+CMDNO+nowTime+UID;
+
+//        log.info(PVER+":"+CMD+":"+PARA+":"+CMDNO);
+        log.info("registerHandle:" + respMessage);
+        mandunClient.redisterMessage(respMessage);
     }
 }
