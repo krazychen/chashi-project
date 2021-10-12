@@ -114,10 +114,10 @@ public class MandunServer {
         // 获取来源Port
         String port = headers.get("ip_port").toString();
 
-        log.info("udp -router"+id+":"+ip+":"+port+":"+message);
+//        log.info("udp -router"+id+":"+ip+":"+port+":"+message);
         // 筛选，走那个处理器
-        String PVER = message.substring(0,1);
-        log.info(PVER);
+        String PVER = message.substring(0,2);
+//        log.info(PVER);
         //注册信息
         if(StringUtils.isNotEmpty(PVER)&&"F1".equals(PVER)){
             return "registerHandle";
