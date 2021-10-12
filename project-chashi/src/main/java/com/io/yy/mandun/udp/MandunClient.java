@@ -13,7 +13,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
@@ -46,6 +48,8 @@ public class MandunClient {
         crc32.update(Hex.decode(message.getBytes()));
         String crc32str = Long.toHexString(crc32.getValue());
         log.info(crc32str);
+        message = message + crc32str.toUpperCase();
+        log.info(message);
         InetSocketAddress inetSocketAddress = new InetSocketAddress("localhost", udpPort);
         byte[] udpMessage = message.getBytes();
         DatagramPacket datagramPacket = null;
@@ -85,11 +89,16 @@ public class MandunClient {
         log.info(nowDate.getTime()+"");
         long time2 = 1546308000;
         Long.toHexString(1546308000);
-        log.info( Long.toHexString(1546308000));
+        log.info( "2:"+Long.toHexString(1546308000));
+
+        SimpleDateFormat dateFormat=new SimpleDateFormat("YYYY-MM-dd HH");
+        log.info("3:"+System.currentTimeMillis()/1000L);
+        log.info( Long.toHexString(System.currentTimeMillis()/1000L));
 
         String tt= "F1B00000000000015E93CA88FFFFFF80";
+        String t1= "F1B000000000008161651819FFFFFF80";
         CRC32 crc32 = new CRC32();
-        crc32.update(Hex.decode(tt.getBytes()));
+        crc32.update(Hex.decode(t1.getBytes()));
         log.info(Long.toHexString(crc32.getValue()));
         log.info("CRC32：" + DatatypeConverter.printHexBinary(calCrc32(tt.getBytes())));
 

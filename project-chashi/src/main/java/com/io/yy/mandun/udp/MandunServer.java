@@ -19,6 +19,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 @Slf4j
@@ -156,8 +157,7 @@ public class MandunServer {
         String ECHO = "00";
         String Len = "0000";
 
-        Date nowDate = new Date();
-        String nowTime = Long.toHexString(nowDate.getTime());
+        String nowTime = Long.toHexString(System.currentTimeMillis()/1000L).toUpperCase();
 
         String UID = "FFFFFF80";
 
