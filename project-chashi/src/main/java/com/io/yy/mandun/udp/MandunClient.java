@@ -51,7 +51,7 @@ public class MandunClient {
         message = message + crc32str.toUpperCase();
         log.info(message);
         InetSocketAddress inetSocketAddress = new InetSocketAddress("localhost", udpPort);
-        byte[] udpMessage = message.getBytes();
+        byte[] udpMessage = DatatypeConverter.parseBase64Binary(message);
         DatagramPacket datagramPacket = null;
         try (DatagramSocket datagramSocket = new DatagramSocket()) {
             datagramPacket = new DatagramPacket(udpMessage, udpMessage.length, inetSocketAddress);
