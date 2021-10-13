@@ -26,21 +26,6 @@ public class MandunClient {
     @Value("${udp.port}")
     private Integer udpPort;
 
-    public void sendMessage(String message){
-        log.info("发送UDP: {}", message);
-        InetSocketAddress inetSocketAddress = new InetSocketAddress("localhost", udpPort);
-        byte[] udpMessage = message.getBytes();
-        DatagramPacket datagramPacket = null;
-        try (DatagramSocket datagramSocket = new DatagramSocket()) {
-            datagramPacket = new DatagramPacket(udpMessage, udpMessage.length, inetSocketAddress);
-            datagramSocket.send(datagramPacket);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-        }
-        log.info("发送成功");
-
-    }
-
     public void redisterMessage(String message) {
         log.info("发送 redisterMessage: {}", message);
         //计算crc
@@ -50,7 +35,7 @@ public class MandunClient {
         log.info(crc32str);
         message = message + crc32str.toUpperCase();
         log.info(message);
-        InetSocketAddress inetSocketAddress = new InetSocketAddress("localhost", udpPort);
+        InetSocketAddress inetSocketAddress = new InetSocketAddress("139.155.252.167", 6666);
         byte[] udpMessage = DatatypeConverter.parseBase64Binary(message);
         DatagramPacket datagramPacket = null;
         try (DatagramSocket datagramSocket = new DatagramSocket()) {
