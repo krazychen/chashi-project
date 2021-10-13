@@ -29,6 +29,10 @@ public class MandunServer {
     @Value("${udp.port}")
     private Integer udpPort;
 
+    private String serverIp = null;
+
+    private String serverPort = null;
+
     @Autowired
     private MandunClient mandunClient;
 
@@ -111,9 +115,9 @@ public class MandunServer {
         // 获取来源Id
         String id = headers.get("id").toString();
         // 获取来源IP，可以进行IP过滤
-        String ip = headers.get("ip_address").toString();
+        serverIp = headers.get("ip_address").toString();
         // 获取来源Port
-        String port = headers.get("ip_port").toString();
+        serverPort = headers.get("ip_port").toString();
 
 //        log.info("udp -router"+id+":"+ip+":"+port+":"+message);
         // 筛选，走那个处理器
@@ -166,6 +170,6 @@ public class MandunServer {
 
 //        log.info(PVER+":"+CMD+":"+PARA+":"+CMDNO);
         log.info("registerHandle:" + respMessage);
-        mandunClient.redisterMessage(respMessage);
+        mandunClient.redisterMessage(respMessage,serverIp,serverPort);
     }
 }

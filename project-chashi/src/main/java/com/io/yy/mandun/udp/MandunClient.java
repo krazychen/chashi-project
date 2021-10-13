@@ -1,6 +1,7 @@
 package com.io.yy.mandun.udp;
 
 import com.io.yy.util.codec.EncodeUtils;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -26,7 +28,13 @@ public class MandunClient {
     @Value("${udp.port}")
     private Integer udpPort;
 
-    public void redisterMessage(String message) {
+    // 服务器端口
+    public static final int SERVER_PORT = 6666;
+    // 本地发送端口
+    public static final int LOCAL_PORT = 7777;
+
+
+    public void redisterMessage(String message,String serverIp,String serverPort) {
         log.info("发送 redisterMessage: {}", message);
         //计算crc
         CRC32 crc32 = new CRC32();
@@ -35,8 +43,9 @@ public class MandunClient {
         log.info(crc32str);
         message = message + crc32str.toUpperCase();
         log.info(message);
-        InetSocketAddress inetSocketAddress = new InetSocketAddress("139.155.252.167", 6666);
-        byte[] udpMessage = DatatypeConverter.parseBase64Binary(message);
+        InetSocketAddress inetSocketAddress = new InetSocketAddress(serverIp, Integer.valueOf(serverPort));
+        byte[] udpMessage = getHexBytes(message);;
+        log.info(DatatypeConverter.printHexBinary(udpMessage));
         DatagramPacket datagramPacket = null;
         try (DatagramSocket datagramSocket = new DatagramSocket()) {
             datagramPacket = new DatagramPacket(udpMessage, udpMessage.length, inetSocketAddress);
@@ -66,6 +75,16 @@ public class MandunClient {
         return crc32;
     }
 
+    public static byte[] getHexBytes(String str) {
+        str = str.replaceAll(" ", "");
+        byte[] bytes = new byte[str.length() / 2];
+        for (int i = 0; i < str.length() / 2; i++) {
+            String subStr = str.substring(i * 2, i * 2 + 2);
+            bytes[i] = (byte) Integer.parseInt(subStr, 16);
+        }
+        return bytes;
+    }
+
     public static void main(String[] args){
         String message="";
 
@@ -81,11 +100,9 @@ public class MandunClient {
         log.info( Long.toHexString(System.currentTimeMillis()/1000L));
 
         String tt= "F1B00000000000015E93CA88FFFFFF80";
-        String t1= "F1B000000000008161651819FFFFFF80";
-        CRC32 crc32 = new CRC32();
-        crc32.update(Hex.decode(t1.getBytes()));
-        log.info(Long.toHexString(crc32.getValue()));
-        log.info("CRC32：" + DatatypeConverter.printHexBinary(calCrc32(tt.getBytes())));
+        byte[] t = getHexBytes(tt);
+        log.info(DatatypeConverter.printHexBinary(t));
+
 
 
     }
