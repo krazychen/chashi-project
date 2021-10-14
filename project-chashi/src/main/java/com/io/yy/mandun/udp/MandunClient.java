@@ -35,7 +35,7 @@ public class MandunClient {
 
 
     public void redisterMessage(String message,String serverIp,String serverPort) {
-        log.info("发送 redisterMessage: {}", message);
+        log.info("发送 redisterMessage: {}", message+":ip:"+serverIp+":port:"+serverPort);
         //计算crc
         CRC32 crc32 = new CRC32();
         crc32.update(Hex.decode(message.getBytes()));

@@ -69,9 +69,6 @@ public class MandunServer {
 //        log.info("transformer：--"+payload.toString());
         String message = DatatypeConverter.printHexBinary(payload);//把接收的数据转化为字符串
         log.info("transformer：--"+message);
-        // 转换为大写
-        // message = message.toUpperCase();
-        // 向客户端响应，还不知道怎么写
         return message;
     }
 
