@@ -122,10 +122,15 @@ public class MandunServer {
 //        log.info("udp -router"+id+":"+ip+":"+port+":"+message);
         // 筛选，走那个处理器
         String PVER = message.substring(0,2);
+        String CMD = message.substring(2,4);
 //        log.info(PVER);
         //注册信息
-        if(StringUtils.isNotEmpty(PVER)&&"F1".equals(PVER)){
+        if(StringUtils.isNotEmpty(PVER)&&"F1".equals(PVER)&&"BO".equals(CMD)){
             return "registerHandle";
+        }
+
+        if(StringUtils.isNotEmpty(PVER)&&"F1".equals(PVER)&&"AC".equals(CMD)){
+            return "acHandle";
         }
 
         return "errorHandle";
@@ -171,5 +176,18 @@ public class MandunServer {
 //        log.info(PVER+":"+CMD+":"+PARA+":"+CMDNO);
         log.info("registerHandle:" + respMessage);
         mandunClient.redisterMessage(respMessage,serverIp,serverPort);
+    }
+
+    /**
+     * 最终处理器2
+     *
+     * @param message
+     * @return void
+     * @throws
+     */
+    @ServiceActivator(inputChannel = "acHandle")
+    public void acHandle(String message) throws Exception {
+
+        log.info("acHandle:" + message);
     }
 }

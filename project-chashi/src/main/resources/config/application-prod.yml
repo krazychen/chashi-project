@@ -46,7 +46,7 @@ whyy-system:
   # 配置分享二维码图片上传路径配置
   config-upload-path: /opt/config/image/
   # 资源访问路径
-  config-access-path: config/resource/
+  config-access-path: /config/resource/
   # 资源访问路径匹配：/resource/**
   config-access-patterns: ${whyy-system.config-access-path}**
   # 资源访问全路径前缀：http://localhost:8888/resource/
