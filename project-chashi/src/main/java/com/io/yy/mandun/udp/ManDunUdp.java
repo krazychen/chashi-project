@@ -61,6 +61,10 @@ public class ManDunUdp implements ApplicationRunner {
                         sendStr = this.switchMessage(message);
                     }
 
+                    if(StringUtils.isNotEmpty(PVER)&&"F1".equals(PVER)&&"AC".equals(CMD)){
+                        sendStr = this.ACMessage(message);
+                    }
+
                     log.info(sendStr);
                     if(StringUtils.isNotEmpty(sendStr)){
                         byte[] udpMessage = getHexBytes(sendStr);;
@@ -147,6 +151,35 @@ public class ManDunUdp implements ApplicationRunner {
     }
 
     private String switchMessage(String message){
+        String PVER = message.substring(0,2);
+        String CMD = message.substring(2,4);
+        String PARA = message.substring(4,6);
+        String CMDNO = message.substring(12,16);
+
+        String ECHO = "00";
+        String Len = "0000";
+
+        String nowTime = Long.toHexString(System.currentTimeMillis()/1000L).toUpperCase();
+
+        String UID = "FFFFFF80";
+
+        //拼装应答
+        String respMessage = PVER+CMD+PARA+ECHO+Len+CMDNO+nowTime+UID;
+
+//        log.info(PVER+":"+CMD+":"+PARA+":"+CMDNO);
+        log.info("registerHandle:" + respMessage);
+
+        //计算crc
+        CRC32 crc32 = new CRC32();
+        crc32.update(Hex.decode(respMessage.getBytes()));
+        String crc32str = Long.toHexString(crc32.getValue());
+        log.info(crc32str);
+        respMessage = respMessage + crc32str.toUpperCase();
+        log.info(respMessage);
+        return respMessage;
+    }
+
+    private String ACMessage(String message){
         String PVER = message.substring(0,2);
         String CMD = message.substring(2,4);
         String PARA = message.substring(4,6);
