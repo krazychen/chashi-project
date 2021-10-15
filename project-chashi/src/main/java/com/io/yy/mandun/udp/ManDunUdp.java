@@ -51,21 +51,30 @@ public class ManDunUdp implements ApplicationRunner {
                     String sendStr = null;
                     //注册信息
                     if(StringUtils.isNotEmpty(PVER)&&"F1".equals(PVER)&&"B0".equals(CMD)){
+
                         sendStr = this.redisterMessage(message);
                     }
+                    if(StringUtils.isNotEmpty(PVER)&&"F1".equals(PVER)&&"B2".equals(CMD)){
+                        sendStr = this.networkMessage(message);
+                    }
+                    if(StringUtils.isNotEmpty(PVER)&&"F1".equals(PVER)&&"B4".equals(CMD)){
+                        sendStr = this.switchMessage(message);
+                    }
 
-                    byte[] udpMessage = getHexBytes(sendStr);;
-                    log.info(DatatypeConverter.printHexBinary(udpMessage));
-                    // DatagramPacket packet_send = new DatagramPacket( sendStr.getBytes(),sendStr.length(),packet_receive.getAddress(),9999 );
-                    //sendStr.length()为求字符串的长度，它的长度与该字符串转化为字节数组的长度不一致，可能会造成数据末尾丢失,所以改为如下
+                    log.info(sendStr);
+                    if(StringUtils.isNotEmpty(sendStr)){
+                        byte[] udpMessage = getHexBytes(sendStr);;
+                        log.info(DatatypeConverter.printHexBinary(udpMessage));
+                        // DatagramPacket packet_send = new DatagramPacket( sendStr.getBytes(),sendStr.length(),packet_receive.getAddress(),9999 );
+                        //sendStr.length()为求字符串的长度，它的长度与该字符串转化为字节数组的长度不一致，可能会造成数据末尾丢失,所以改为如下
 
-                    DatagramPacket packet_send = new DatagramPacket( udpMessage,udpMessage.length,packet_receive.getAddress(),packet_receive.getPort() );
-                    datagramSocket.send( packet_send );
-                    //由于packet_receive在接收了数据之后，其内部消息长度值会变为实际接收消息的字节数
-                    //所以这里要将packet_receive的内部消息长度重新设置为1024
-                    packet_receive.setLength( 1024 );
+                        DatagramPacket packet_send = new DatagramPacket( udpMessage,udpMessage.length,packet_receive.getAddress(),packet_receive.getPort() );
+                        datagramSocket.send( packet_send );
+                        //由于packet_receive在接收了数据之后，其内部消息长度值会变为实际接收消息的字节数
+                        //所以这里要将packet_receive的内部消息长度重新设置为1024
+                        packet_receive.setLength( 1024 );
+                    }
                 }
-
                 datagramSocket.close();
             }catch (SocketException e){
                 System.out.println(TAG+e.getMessage());
@@ -80,6 +89,64 @@ public class ManDunUdp implements ApplicationRunner {
     }
 
     private String redisterMessage(String message){
+        String PVER = message.substring(0,2);
+        String CMD = message.substring(2,4);
+        String PARA = message.substring(4,6);
+        String CMDNO = message.substring(12,16);
+
+        String ECHO = "00";
+        String Len = "0000";
+
+        String nowTime = Long.toHexString(System.currentTimeMillis()/1000L).toUpperCase();
+
+        String UID = "FFFFFF80";
+
+        //拼装应答
+        String respMessage = PVER+CMD+PARA+ECHO+Len+CMDNO+nowTime+UID;
+
+//        log.info(PVER+":"+CMD+":"+PARA+":"+CMDNO);
+        log.info("registerHandle:" + respMessage);
+
+        //计算crc
+        CRC32 crc32 = new CRC32();
+        crc32.update(Hex.decode(respMessage.getBytes()));
+        String crc32str = Long.toHexString(crc32.getValue());
+        log.info(crc32str);
+        respMessage = respMessage + crc32str.toUpperCase();
+        log.info(respMessage);
+        return respMessage;
+    }
+
+    private String networkMessage(String message){
+        String PVER = message.substring(0,2);
+        String CMD = message.substring(2,4);
+        String PARA = message.substring(4,6);
+        String CMDNO = message.substring(12,16);
+
+        String ECHO = "00";
+        String Len = "0000";
+
+        String nowTime = Long.toHexString(System.currentTimeMillis()/1000L).toUpperCase();
+
+        String UID = "FFFFFF80";
+
+        //拼装应答
+        String respMessage = PVER+CMD+PARA+ECHO+Len+CMDNO+nowTime+UID;
+
+//        log.info(PVER+":"+CMD+":"+PARA+":"+CMDNO);
+        log.info("registerHandle:" + respMessage);
+
+        //计算crc
+        CRC32 crc32 = new CRC32();
+        crc32.update(Hex.decode(respMessage.getBytes()));
+        String crc32str = Long.toHexString(crc32.getValue());
+        log.info(crc32str);
+        respMessage = respMessage + crc32str.toUpperCase();
+        log.info(respMessage);
+        return respMessage;
+    }
+
+    private String switchMessage(String message){
         String PVER = message.substring(0,2);
         String CMD = message.substring(2,4);
         String PARA = message.substring(4,6);
