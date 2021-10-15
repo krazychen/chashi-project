@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @Slf4j
+//@Configuration
 public class MandunServer {
 
     @Value("${udp.port}")
@@ -121,7 +122,7 @@ public class MandunServer {
         String CMD = message.substring(2,4);
 //        log.info(PVER);
         //注册信息
-        if(StringUtils.isNotEmpty(PVER)&&"F1".equals(PVER)&&"BO".equals(CMD)){
+        if(StringUtils.isNotEmpty(PVER)&&"F1".equals(PVER)&&"B0".equals(CMD)){
             return "registerHandle";
         }
 

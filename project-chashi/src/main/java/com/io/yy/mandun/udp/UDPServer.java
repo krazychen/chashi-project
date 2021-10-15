@@ -15,7 +15,7 @@ import java.net.*;
 import java.util.zip.CRC32;
 
 @Slf4j
-@Component
+//@Component
 public class UDPServer implements ApplicationRunner {
 
     public static final int MAX_UDP_DATA_SIZE = 4096;
