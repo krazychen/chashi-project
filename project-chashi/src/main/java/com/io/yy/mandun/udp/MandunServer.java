@@ -23,7 +23,6 @@ import java.util.Locale;
 import java.util.Map;
 
 @Slf4j
-@Configuration
 public class MandunServer {
 
     @Value("${udp.port}")
