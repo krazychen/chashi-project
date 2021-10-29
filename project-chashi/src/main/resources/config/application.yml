@@ -205,6 +205,8 @@ whyy-system:
       /wxUser/wxLogin=anon
       /wxUser/wxLoginForSK=anon
       /wxUser/wxUserUpdateNickName=anon
+      /wxUser/infoForWx/**=anon
+      /wxUser/getWxQRCode/**=anon
       /csAdvertise/getBannerListForWx=anon
       /csMerchant/getPageListForWx=anon
       /csMerchant/infoForWx/**=anon
@@ -213,7 +215,6 @@ whyy-system:
       /sysArea/getReleaseCityWx=anon
       /sysConfig/getAllConfigDataCache=anon
       /weixin/*=anon
-      /wxUser/infoForWx/**=anon
       /csCoupon/getCsCouponListOfCouponCenter=anon
       /csCouponReleased/getCouponForWx/**=anon
       /csCouponReleased/saveCouponForCouponCenter=anon
