@@ -72,6 +72,12 @@ public class WxUser extends BaseEntity {
     @ApiModelProperty(value = "余额")
     private Double balance;
 
+    @ApiModelProperty(value = "推荐二维码")
+    private String recommendQr;
+
+    @ApiModelProperty(value = "推荐人的ID")
+    private Long recommendId;
+
     @ApiModelProperty(value = "备注信息")
     private String remarks;
 

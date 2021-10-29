@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, nickname, password, salt, email, phone_number,gender, avatar_url, signtext, openid, unionid, menber_type, integral, balance, remarks, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, nickname, password, salt, email, phone_number,gender, avatar_url, signtext, openid, unionid, menber_type, integral, balance, remarks, status, recommend_qr, recommend_id, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <select id="getWxUserById" resultType="com.io.yy.wxops.vo.WxUserQueryVo">
@@ -55,6 +55,8 @@
         <result column="unionid" property="unionid" javaType="java.lang.String"/>
         <result column="integral" property="integral" javaType="java.lang.Integer"/>
         <result column="balance" property="balance" javaType="java.lang.Double"/>
+        <result column="recommend_qr" property="recommendQr" javaType="java.lang.String"/>
+        <result column="recommend_id" property="recommendId" javaType="java.lang.Long"/>
         <association property="csMembercardOrderQueryVo" javaType="com.io.yy.marketing.vo.CsMembercardOrderQueryVo">
             <id column="m_id" property="id" javaType="java.lang.Long"/>
             <result column="membercard_id" property="membercardId" javaType="java.lang.Long"/>

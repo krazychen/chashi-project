@@ -132,4 +132,6 @@ public interface WxUserService extends BaseService<WxUser> {
      * @return
      */
     Integer reduceBalance(@Param("param") WxUserQueryParam wxUserQueryParam);
+
+    String getwxacodeunlimit(Long userId) throws Exception ;
 }

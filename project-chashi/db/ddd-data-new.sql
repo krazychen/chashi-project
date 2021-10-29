@@ -41,8 +41,8 @@ CREATE TABLE `cs_advertise` (
 /*Data for the table `cs_advertise` */
 
 insert  into `cs_advertise`(`id`,`pic_url`,`pic_name`,`jump_link`,`sort`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
-(12633691073114,'http://localhost:1111/config/resource/143509a65eed4b669040efc9b54d507f202108031435M2Jpb2xvZ3kuanBn.jpg','3biology.jpg','111111',1,1,0,0,NULL,'2021-08-03 14:35:19',NULL,NULL,NULL,NULL),
-(12633691073116,'http://localhost:1111/config/resource/fe6cb78fdf394611b1d91e0247a3fd38202108041648M2Jpb2xvZ3kuanBn.jpg','3biology.jpg','222',2,1,0,0,NULL,'2021-08-04 16:48:53',NULL,NULL,NULL,NULL);
+(12633691073114,'http://localhost:1111/config/resource/1a0c9ba28f5a45b59f355d0ead591a70202110271841My5qcGc=.jpg','3.jpg','111111',1,1,0,0,NULL,'2021-08-03 14:35:19',NULL,NULL,NULL,NULL),
+(12633691073116,'http://localhost:1111/config/resource/04e2068a44e544ed999cbeba07e884b3202110271837aGVhZC5qcGc=.jpg','head.jpg','222',2,1,0,0,NULL,'2021-08-04 16:48:53',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `cs_coupon` */
 
@@ -391,6 +391,8 @@ CREATE TABLE `cs_merchant_order` (
   `payment_msg` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '支付失败错误消息',
   `used_status` int DEFAULT NULL COMMENT '使用状态：未使用0，已使用1，已取消2, 已完成3',
   `source_type` int DEFAULT NULL COMMENT '订单来源：系统新增0、用户购买1',
+  `keyboard_pwd_id` varchar(32) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '键盘密码ID',
+  `keyboard_pwd` varchar(32) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '键盘密码',
   `status` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
   `deleted` int NOT NULL DEFAULT '0' COMMENT '逻辑删除，0：未删除，1：已删除',
   `version` int NOT NULL DEFAULT '0' COMMENT '版本',
@@ -405,13 +407,13 @@ CREATE TABLE `cs_merchant_order` (
 
 /*Data for the table `cs_merchant_order` */
 
-insert  into `cs_merchant_order`(`id`,`merchant_id`,`tearoom_id`,`room_name`,`wxuser_id`,`wxuser_phone`,`openid`,`order_name`,`order_date`,`order_timerage`,`order_origin_timenum`,`membercard_order_id`,`order_mb_timenum`,`order_timenum`,`order_unit_origin_price`,`order_unit_price`,`order_origin_price`,`coupon_released_id`,`order_cp_amount`,`order_mb_amount`,`order_price`,`out_trade_no`,`out_refund_no`,`refund_date`,`payment_status`,`payment_type`,`payment_msg`,`used_status`,`source_type`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
-(1432274642808147970,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 17:29:35-15bcf36efe6640f188efeea668b3cb2c','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,NULL,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 17:30:59',NULL,NULL,NULL,NULL),
-(1432274840418537474,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 17:31:44-b679db6de4814f49bf1ce7c2b699a13a','2021-08-30 00:00:00','16:00-17:00,17:00-18:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,NULL,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 17:31:47',NULL,NULL,NULL,NULL),
-(1432275108304539650,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 17:32:50-31e4fcdd36b142638d31f3ccee2f9e39','2021-08-30 00:00:00','18:00-19:00,19:00-20:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,NULL,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 17:32:50',NULL,NULL,NULL,NULL),
-(1432283329215934466,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 00:00:00-92f43dccd25944f38fc5191fd8ec7a90','2021-08-30 00:00:00','20:00-21:00,21:00-22:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,NULL,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 18:05:30',NULL,NULL,NULL,NULL),
-(1432283908365430785,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 00:00:00-12d2150d342e4464b9edf008dfdbb49c','2021-08-30 00:00:00','14:00-15:00,15:00-16:00,16:00-17:00,17:00-18:00,18:00-19:00,19:00-20:00',6,1429742681506004993,0,0,3,2.7,18,1425372743597076481,3,NULL,13.2,NULL,NULL,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 18:07:48',NULL,NULL,NULL,NULL),
-(1432361748934991873,12633691073126,12633691073129,'shangdian5-3',1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-3-2021-08-30 00:00:00-f3f92b74aefb4fc79300dc11e35a218d','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,2,0,13,11.7,26,NULL,0,NULL,0,NULL,NULL,NULL,2,1,NULL,0,0,1,0,0,NULL,'2021-08-30 23:17:07',NULL,NULL,NULL,NULL);
+insert  into `cs_merchant_order`(`id`,`merchant_id`,`tearoom_id`,`room_name`,`wxuser_id`,`wxuser_phone`,`openid`,`order_name`,`order_date`,`order_timerage`,`order_origin_timenum`,`membercard_order_id`,`order_mb_timenum`,`order_timenum`,`order_unit_origin_price`,`order_unit_price`,`order_origin_price`,`coupon_released_id`,`order_cp_amount`,`order_mb_amount`,`order_price`,`out_trade_no`,`out_refund_no`,`refund_date`,`payment_status`,`payment_type`,`payment_msg`,`used_status`,`source_type`,`keyboard_pwd_id`,`keyboard_pwd`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
+(1432274642808147970,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 17:29:35-15bcf36efe6640f188efeea668b3cb2c','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,NULL,NULL,2,1,NULL,0,0,NULL,NULL,1,0,0,NULL,'2021-08-30 17:30:59',NULL,NULL,NULL,NULL),
+(1432274840418537474,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 17:31:44-b679db6de4814f49bf1ce7c2b699a13a','2021-08-30 00:00:00','16:00-17:00,17:00-18:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,NULL,NULL,2,1,NULL,0,0,NULL,NULL,1,0,0,NULL,'2021-08-30 17:31:47',NULL,NULL,NULL,NULL),
+(1432275108304539650,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 17:32:50-31e4fcdd36b142638d31f3ccee2f9e39','2021-08-30 00:00:00','18:00-19:00,19:00-20:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,NULL,NULL,2,1,NULL,0,0,NULL,NULL,1,0,0,NULL,'2021-08-30 17:32:50',NULL,NULL,NULL,NULL),
+(1432283329215934466,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 00:00:00-92f43dccd25944f38fc5191fd8ec7a90','2021-08-30 00:00:00','20:00-21:00,21:00-22:00',2,1429742681506004993,0,0,3,2.7,6,NULL,0,NULL,5.4,NULL,NULL,NULL,2,1,NULL,0,0,NULL,NULL,1,0,0,NULL,'2021-08-30 18:05:30',NULL,NULL,NULL,NULL),
+(1432283908365430785,12633691073126,12633691073127,NULL,1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-1-2021-08-30 00:00:00-12d2150d342e4464b9edf008dfdbb49c','2021-08-30 00:00:00','14:00-15:00,15:00-16:00,16:00-17:00,17:00-18:00,18:00-19:00,19:00-20:00',6,1429742681506004993,0,0,3,2.7,18,1425372743597076481,3,NULL,13.2,NULL,NULL,NULL,2,1,NULL,0,0,NULL,NULL,1,0,0,NULL,'2021-08-30 18:07:48',NULL,NULL,NULL,NULL),
+(1432361748934991873,12633691073126,12633691073129,'shangdian5-3',1425650854943322113,'13950019129','oS2ws5OZJFdBNtuhdqM9v4OJjkOY','shangdian5-3-2021-08-30 00:00:00-f3f92b74aefb4fc79300dc11e35a218d','2021-08-30 00:00:00','14:00-15:00,15:00-16:00',2,1429742681506004993,2,0,13,11.7,26,NULL,0,NULL,0,NULL,NULL,NULL,2,1,NULL,0,0,NULL,NULL,1,0,0,NULL,'2021-08-30 23:17:07',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `cs_recharge_consum` */
 
@@ -791,7 +793,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 /*Data for the table `qrtz_scheduler_state` */
 
 insert  into `qrtz_scheduler_state`(`SCHED_NAME`,`INSTANCE_NAME`,`LAST_CHECKIN_TIME`,`CHECKIN_INTERVAL`) values 
-('quartzScheduler','XYKJ-CYCHAO1633363307862',1633363508918,5000);
+('quartzScheduler','XYKJ-CYCHAO1635477563875',1635477613785,5000);
 
 /*Table structure for table `qrtz_simple_triggers` */
 
@@ -1385,10 +1387,12 @@ insert  into `sys_config`(`id`,`config_name`,`config_key`,`config_text_value`,`c
 ('37b648b9-2337-40aa-9f41-02035ede48f3','支付后的服务器回调url','notify_url','https://6f53a60.cpolar.io/weixin/wxNotify','',NULL,'','0','1','',0,0,'88888888','2021-08-11 19:02:07','88888888','2021-08-11 19:02:07','0','whyy'),
 ('4fb0dc82-947a-447e-90ab-92b83793c086','微信统一下单接口地址','pay_url','https://api.mch.weixin.qq.com/pay/unifiedorder','',NULL,'','0','1','',0,0,'88888888','2021-08-11 19:02:35','88888888','2021-08-11 19:02:35','0','whyy'),
 ('4fbe1062-927f-45c4-b0bc-8862b0822d1d','小程序appid','appid','wxee67bc9ae0ead50b','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:02:39','88888888','2021-08-05 18:02:39','0','whyy'),
+('69c00e6f-7ba2-4363-b701-f14a5bbd722e','微信accessToken api的url','accessTokenApiUrl','https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential','',NULL,'','0','1','',0,0,'88888888','2021-10-29 10:53:46','88888888','2021-10-29 10:53:46','0','whyy'),
 ('6d9d7514-bd2c-499b-b127-089dadca09e3','微信支付商户号','mch_id','10031610','',NULL,'','0','1','',0,0,'88888888','2021-08-11 18:58:41','88888888','2021-08-11 18:58:41','0','whyy'),
 ('884439c3-9c93-41fe-8007-f4707ebece56','API密钥','key','Sxj5566Sxj5566Sxj5566Sxj5566Sxj5','',NULL,'','0','1','',0,0,'88888888','2021-08-11 19:01:31','88888888','2021-08-11 19:01:31','0','whyy'),
 ('88a7a9a4-8ce3-48b7-b18c-f10e0d04648b','小程序登录URL','loginUrl','https://api.weixin.qq.com/sns/jscode2session','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:05:28','88888888','2021-08-05 18:05:28','0','whyy'),
 ('8ccd0296-1d4e-4e99-a323-d83bf274644b','微信登陆提醒消息','wx_login_infor_message','舰长，你已经成功登录！','',NULL,'','0','1','',0,0,'1','2020-05-24 23:38:13','1','2020-05-31 23:38:39','0','whyy'),
+('9be1fea6-c2d7-4d82-b9ca-6cda48bc38af','获取微信二维码api url','getwxacodeunlimitUrl','https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=','',NULL,'','0','1','',0,0,'88888888','2021-10-29 10:54:47','88888888','2021-10-29 10:54:47','0','whyy'),
 ('9cf65316-3af7-4741-b432-b5d879b26b62','退款子商户号','sub_mch_id','10031610','',NULL,'','0','1','',0,0,'88888888','2021-08-31 11:19:58','88888888','2021-08-31 11:19:58','0','whyy'),
 ('b30c7ee3-a871-4206-b06a-89abfc9540ce','小程序密钥','appSecret','3b855156e3d5f17885d62c30ee313555','',NULL,'','0','1','',0,0,'88888888','2021-08-05 18:02:57','88888888','2021-08-05 18:02:57','0','whyy'),
 ('c7d69cb2-1fdd-4ea4-b6de-4c2207fed5c5','首页图片','wx_homepage_static',NULL,'http://localhost:1111/config/resource/9b286c2a31e24d519f6301f5b95b350b202108071719M0FyYWJpYyBMYW5ndWFnZSBDb3Vyc2UgLSBHcmFtbWFyLmpwZw==.jpg','3Arabic Language Course - Grammar.jpg',NULL,'1','1','',0,0,'88888888','2021-08-07 17:19:14','88888888','2021-08-07 17:19:14','0','whyy'),
@@ -1586,41 +1590,6 @@ insert  into `sys_dict_type`(`id`,`dict_name`,`dict_type`,`is_sys`,`deleted`,`ve
 ('minutes','任务间隔单位','sys_job_freq','1',0,0,'1','1','2019-12-30 15:00:52','1','2019-12-30 15:00:52','分钟'),
 ('seconds','任务间隔单位','sys_job_freq','1',0,0,'1','1','2019-12-30 14:59:49','1','2019-12-30 14:59:49','秒'),
 ('simple','任务类型','sys_job_type','1',0,0,'1','1','2019-12-30 15:02:47','1','2019-12-30 15:02:47','SimpleTrigger');
-
-/*Table structure for table `sys_login_log` */
-
-DROP TABLE IF EXISTS `sys_login_log`;
-
-CREATE TABLE `sys_login_log` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `request_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '请求ID',
-  `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '用户名称',
-  `ip` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'IP',
-  `area` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '区域',
-  `operator` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '运营商',
-  `token` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'tokenMd5值',
-  `type` int DEFAULT NULL COMMENT '1:登录，2：登出',
-  `success` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否成功 true:成功/false:失败',
-  `code` int DEFAULT NULL COMMENT '响应码',
-  `exception_message` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '失败消息记录',
-  `user_agent` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '浏览器名称',
-  `browser_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '浏览器名称',
-  `browser_version` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '浏览器版本',
-  `engine_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '浏览器引擎名称',
-  `engine_version` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '浏览器引擎版本',
-  `os_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '系统名称',
-  `platform_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '平台名称',
-  `mobile` tinyint(1) DEFAULT NULL COMMENT '是否是手机,0:否,1:是',
-  `device_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '移动端设备名称',
-  `device_model` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '移动端设备型号',
-  `remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
-  `corp_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '租户代码',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=732104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='系统登录日志';
-
-/*Data for the table `sys_login_log` */
 
 /*Table structure for table `sys_menu` */
 
@@ -1946,52 +1915,6 @@ insert  into `sys_office`(`office_code`,`parent_code`,`parent_codes`,`tree_sort`
 ('4eafb79da7164bc18b5b5392b2ddc6b6','00000000','00000000',1,'1','1',2,'首级节点','4eafb79da7164bc18b5b5392b2ddc6b6','商店7','商店7','1',NULL,NULL,NULL,NULL,NULL,0,0,'1','88888888','2021-08-09 17:01:04','88888888','2021-08-09 17:01:04',NULL,'4eafb79da7164bc18b5b5392b2ddc6b6','商店7',NULL),
 ('7df965bc0c2043899dfaa9c687e23877','00000000','00000000',1,'1','1',2,'首级节点','7df965bc0c2043899dfaa9c687e23877','商店6','商店6','1',NULL,NULL,NULL,NULL,NULL,0,0,'1','88888888','2021-08-09 15:24:36','88888888','2021-08-09 15:24:36',NULL,'7df965bc0c2043899dfaa9c687e23877','商店6',NULL),
 ('ab144b04b56b47a4a520f43b54193a2b','00000000','00000000',1,'1','1',2,'首级节点','ab144b04b56b47a4a520f43b54193a2b','商店5','商店5','1',NULL,NULL,NULL,NULL,NULL,0,0,'1','88888888','2021-08-09 15:23:42','88888888','2021-08-09 15:23:42',NULL,'ab144b04b56b47a4a520f43b54193a2b','商店5',NULL);
-
-/*Table structure for table `sys_operation_log` */
-
-DROP TABLE IF EXISTS `sys_operation_log`;
-
-CREATE TABLE `sys_operation_log` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `request_id` varchar(32) DEFAULT NULL COMMENT '请求ID',
-  `user_id` bigint DEFAULT NULL COMMENT '用户ID',
-  `user_name` varchar(32) DEFAULT NULL COMMENT '用户名称',
-  `name` varchar(200) DEFAULT NULL COMMENT '日志名称',
-  `ip` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'IP',
-  `area` varchar(45) DEFAULT NULL COMMENT '区域',
-  `operator` varchar(6) DEFAULT NULL COMMENT '运营商',
-  `path` varchar(500) DEFAULT NULL COMMENT '全路径',
-  `module` varchar(100) DEFAULT NULL COMMENT '模块名称',
-  `class_name` varchar(100) DEFAULT NULL COMMENT '类名',
-  `method_name` varchar(100) DEFAULT NULL COMMENT '方法名称',
-  `request_method` varchar(10) DEFAULT NULL COMMENT '请求方式，GET/POST',
-  `content_type` varchar(100) DEFAULT NULL COMMENT '内容类型',
-  `request_body` tinyint(1) DEFAULT NULL COMMENT '是否是JSON请求映射参数',
-  `param` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '请求参数',
-  `token` varchar(32) DEFAULT NULL COMMENT 'tokenMd5值',
-  `type` int DEFAULT NULL COMMENT '0:其它,1:新增,2:修改,3:删除,4:详情查询,5:所有列表,6:分页列表,7:其它查询,8:上传文件',
-  `success` tinyint(1) DEFAULT NULL COMMENT '0:失败,1:成功',
-  `code` int DEFAULT NULL COMMENT '响应结果状态码',
-  `message` varchar(100) DEFAULT NULL COMMENT '响应结果消息',
-  `exception_name` varchar(200) DEFAULT NULL COMMENT '异常类名称',
-  `exception_message` varchar(300) DEFAULT NULL COMMENT '异常信息',
-  `browser_name` varchar(100) DEFAULT NULL COMMENT '浏览器名称',
-  `browser_version` varchar(100) DEFAULT NULL COMMENT '浏览器版本',
-  `engine_name` varchar(100) DEFAULT NULL COMMENT '浏览器引擎名称',
-  `engine_version` varchar(100) DEFAULT NULL COMMENT '浏览器引擎版本',
-  `os_name` varchar(100) DEFAULT NULL COMMENT '系统名称',
-  `platform_name` varchar(100) DEFAULT NULL COMMENT '平台名称',
-  `mobile` tinyint(1) DEFAULT NULL COMMENT '是否是手机,0:否,1:是',
-  `device_name` varchar(100) DEFAULT NULL COMMENT '移动端设备名称',
-  `device_model` varchar(100) DEFAULT NULL COMMENT '移动端设备型号',
-  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
-  `corp_code` varchar(64) DEFAULT NULL COMMENT '租户代码',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6118305 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统操作日志';
-
-/*Data for the table `sys_operation_log` */
 
 /*Table structure for table `sys_role` */
 
@@ -7040,6 +6963,8 @@ CREATE TABLE `wx_user` (
   `menber_type` bigint DEFAULT NULL COMMENT '会员类型',
   `integral` int DEFAULT '0' COMMENT '积分',
   `balance` double DEFAULT '0' COMMENT '余额',
+  `recommend_qr` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '自己的推荐二维码',
+  `recommend_id` bigint DEFAULT NULL COMMENT '推荐人的ID',
   `remarks` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注信息',
   `status` int NOT NULL DEFAULT '1' COMMENT '状态，0：禁用，1：启用，2：锁定',
   `deleted` int NOT NULL DEFAULT '0' COMMENT '逻辑删除，0：未删除，1：已删除',
@@ -7055,9 +6980,9 @@ CREATE TABLE `wx_user` (
 
 /*Data for the table `wx_user` */
 
-insert  into `wx_user`(`id`,`nickname`,`password`,`salt`,`email`,`phone_number`,`gender`,`avatar_url`,`signtext`,`openid`,`unionid`,`menber_type`,`integral`,`balance`,`remarks`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
-(1,'testUser','1',NULL,NULL,'13950019129',1,NULL,NULL,NULL,NULL,1,420,465,NULL,1,0,0,'1','2021-08-06 22:47:47',NULL,NULL,NULL,NULL),
-(1425650854943322113,'陈艺超',NULL,NULL,NULL,'13950019129',1,'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqso2yHdJuwe2b0CQZt8icCLallfEtkm6Mkxb8rgRGvAWAeEmO4q6WMJIsK7ibib0YNajnegqXTGWaQw/132',NULL,'oS2ws5OZJFdBNtuhdqM9v4OJjkOY',NULL,NULL,200,185.2,NULL,1,0,0,NULL,'2021-08-12 10:50:25',NULL,NULL,NULL,NULL);
+insert  into `wx_user`(`id`,`nickname`,`password`,`salt`,`email`,`phone_number`,`gender`,`avatar_url`,`signtext`,`openid`,`unionid`,`menber_type`,`integral`,`balance`,`recommend_qr`,`recommend_id`,`remarks`,`status`,`deleted`,`version`,`create_by`,`create_time`,`update_by`,`update_time`,`corp_code`,`corp_name`) values 
+(1,'testUser','1',NULL,NULL,'13950019129',1,NULL,NULL,NULL,NULL,1,420,465,NULL,NULL,NULL,1,0,0,'1','2021-08-06 22:47:47',NULL,NULL,NULL,NULL),
+(1425650854943322113,'陈艺超',NULL,NULL,NULL,'13950019129',1,'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqso2yHdJuwe2b0CQZt8icCLallfEtkm6Mkxb8rgRGvAWAeEmO4q6WMJIsK7ibib0YNajnegqXTGWaQw/132',NULL,'oS2ws5OZJFdBNtuhdqM9v4OJjkOY',NULL,NULL,200,185.2,'http://localhost:1111/config/resource/be8459a6ab5e43efa8fabd1d2fdebbb6202110291119d3hxci0xNDI1NjUwODU0OTQzMzIyMTEzLnBuZw==.png',NULL,NULL,1,0,0,NULL,'2021-08-12 10:50:25',NULL,NULL,NULL,NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

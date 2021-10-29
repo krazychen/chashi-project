@@ -1,5 +1,6 @@
 package com.io.yy.wxops.controller;
 
+import com.io.yy.util.lang.StringUtils;
 import com.io.yy.wxops.entity.WxUser;
 import com.io.yy.wxops.param.WxLoginQueryParam;
 import com.io.yy.wxops.service.WxUserService;
@@ -149,6 +150,20 @@ public class WxUserController extends BaseController {
     public ApiResult<WxUserQueryVo> getWxUserForWx(@PathVariable("openid") String openid) throws Exception {
         WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(openid);
         return ApiResult.ok(wxUserQueryVo);
+    }
+
+    /**
+     * 获取wx邀请qr code
+     */
+    @GetMapping("/getWxQRCode/{userId}")
+    @ApiOperation(value = "获取wx邀请qr code", notes = "获取wx邀请qr code", response = WxUserQueryVo.class)
+    public ApiResult<String> getWxQRCode(@PathVariable("userId") Long userId) throws Exception {
+        WxUser wxUser = wxUserService.getById(userId);
+        String qrFile = wxUser.getRecommendQr();
+        if(StringUtils.isBlank(qrFile)){
+            qrFile = wxUserService.getwxacodeunlimit(userId);
+        }
+        return ApiResult.ok(qrFile);
     }
 }
 

@@ -126,4 +126,40 @@ public final class UploadUtil {
         }
     }
 
+    /**
+     * 上传文件
+     *
+     * @param uploadPath           上传目录
+     * @param inputStream        上传文件流
+     * @param fileName        上传文件名
+     * @param uploadFileNameHandle 回调
+     * @return
+     * @throws Exception
+     */
+    public static String uploadForWxCode(String uploadPath, InputStream inputStream, String fileName, UploadFileNameHandle uploadFileNameHandle) throws Exception {
+
+        // 文件保存目录
+        File saveDir = new File(uploadPath);
+        // 判断目录是否存在，不存在，则创建，如创建失败，则抛出异常
+        if (!saveDir.exists()) {
+            boolean flag = saveDir.mkdirs();
+            if (!flag) {
+                throw new RuntimeException("创建" + saveDir + "目录失败！");
+            }
+        }
+
+        String saveFileName;
+        if (uploadFileNameHandle == null) {
+            saveFileName = new DefaultUploadFileNameHandleImpl().handle(fileName);
+        } else {
+            saveFileName = uploadFileNameHandle.handle(fileName);
+        }
+        log.info("saveFileName = " + saveFileName);
+
+        File saveFile = new File(saveDir, saveFileName);
+        // 保存文件到服务器指定路径
+        FileUtils.copyToFile(inputStream, saveFile);
+        return saveFileName;
+    }
+
 }

@@ -46,4 +46,7 @@ public class WxLoginQueryParam implements Serializable {
     @ApiModelProperty(value = "昵称")
     private String nickName;
 
+    @ApiModelProperty(value = "推荐人的ID")
+    private Long recommendId;
+
 }

@@ -1,13 +1,18 @@
 package com.io.yy.wxops.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.io.yy.core.properties.WhyySystemProperties;
 import com.io.yy.marketing.entity.CsCouponReleased;
 import com.io.yy.marketing.service.CsCouponReleasedService;
 import com.io.yy.marketing.service.CsCouponService;
 import com.io.yy.marketing.vo.CsCouponQueryVo;
 import com.io.yy.system.vo.SysConfigDataRedisVo;
 import com.io.yy.util.ConfigDataUtil;
+import com.io.yy.util.UploadUtil;
 import com.io.yy.util.lang.ObjectUtils;
 import com.io.yy.util.lang.StringUtils;
 import com.io.yy.util.reflect.ReflectUtils;
@@ -24,6 +29,7 @@ import com.io.yy.wxops.vo.WxUserQueryVo;
 import com.io.yy.common.service.impl.BaseServiceImpl;
 import com.io.yy.common.vo.Paging;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -37,11 +43,13 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -68,6 +76,9 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private WhyySystemProperties whyySystemProperties;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -162,6 +173,8 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
                             e.printStackTrace();
                         }
                     });
+                    //获取并保存wxqrcode
+                    this.getwxacodeunlimit(wxUser.getId());
                 }
             }else{
                 BeanUtils.copyProperties(wxUser,userExist, ObjectUtils.getNullPropertyNames(wxUser));
@@ -260,6 +273,69 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
     @Override
     public Integer reduceBalance(WxUserQueryParam wxUserQueryParam) {
         return wxUserMapper.reduceBalance(wxUserQueryParam);
+    }
+
+    @Override
+    public String getwxacodeunlimit(Long userId) throws Exception {
+
+        // 获取微信配置
+        List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
+        List<SysConfigDataRedisVo> appids = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("appid")).collect(Collectors.toList());
+        List<SysConfigDataRedisVo> appSecrets = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("appSecret")).collect(Collectors.toList());
+        List<SysConfigDataRedisVo> accessTokenApiUrl = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("accessTokenApiUrl")).collect(Collectors.toList());
+        List<SysConfigDataRedisVo> getwxacodeunlimitUrl = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("getwxacodeunlimitUrl")).collect(Collectors.toList());
+
+        //判断是否重新获取accesstoken
+        String accessToken = (String)redisTemplate.opsForValue().get("WX_ACCESS_TOKEN");
+        if(StringUtils.isBlank(accessToken)) {
+            String accessUrl = accessTokenApiUrl.get(0).getConfigValue()+"&appid="+appids.get(0).getConfigValue()+"&secret="+appSecrets.get(0).getConfigValue();
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            Request request = new Request.Builder()
+                    .url(accessUrl)
+                    .method("GET", null)
+                    .build();
+            Response response = client.newCall(request).execute();
+
+            String responseBody = response.body().string();
+            log.info(responseBody);
+            JSONObject jsonObject = JSON.parseObject(responseBody);
+            String errorCode = jsonObject.getString("errcode");
+            // 如果有错误代码，返回错误信息
+            if(StringUtils.isNotBlank(errorCode)){
+                return (String) jsonObject.get("errmsg");
+            }
+            accessToken = jsonObject.getString("access_token");
+            Long expires_in = jsonObject.getLong("expires_in");
+            redisTemplate.opsForValue().set("WX_ACCESS_TOKEN",accessToken,expires_in, TimeUnit.SECONDS);
+        }
+
+        //获取二维码图片
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("application/json");
+        String jsonStr="{\r\n    \"scene\": \""+userId+"\"\r\n}";
+        String requestStr = getwxacodeunlimitUrl.get(0).getConfigValue()+accessToken;
+        RequestBody body = RequestBody.create(mediaType, jsonStr);
+        Request request = new Request.Builder()
+                .url(requestStr)
+                .method("POST", body)
+                .addHeader("Content-Type", "application/json")
+                .build();
+        Response response = client.newCall(request).execute();
+
+        //保存图片
+        InputStream inputStream = response.body().byteStream();
+        //上传目录
+        String uploadPath = whyySystemProperties.getConfigUploadPath();
+        String fileName = UploadUtil.uploadForWxCode(uploadPath, inputStream,"wxqr-"+userId+".png",null);
+
+        WxUser wxUser = new WxUser();
+//        wxUser.setId(userId);
+        wxUser.setRecommendQr(whyySystemProperties.getConfigAccessUrl()+fileName);
+        int update = wxUserMapper.update(wxUser, new UpdateWrapper<WxUser>().eq("ID", userId));
+        //返回文件路径和文件名
+        return whyySystemProperties.getConfigAccessUrl()+fileName;
     }
 
 }
