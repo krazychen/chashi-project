@@ -74,7 +74,10 @@
         select
         <include refid="Base_Column_List"/>
         from cs_merchant
-        where deleted = 0 and status = 1
+        where deleted = 0
+        <if test="param.status != null and param.status.trim() != ''">
+            and status = #{param.status}
+        </if>
         <if test="param.merchantName != null and param.merchantName.trim() != ''">
             and merchant_name like concat('%', #{param.merchantName}, '%')
         </if>

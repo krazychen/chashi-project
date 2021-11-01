@@ -134,6 +134,7 @@ public class CsMerchantController extends BaseController {
     @RequiresPermissions("cs:merchant:page")
     @ApiOperation(value = "获取CsMerchant分页列表", notes = "商家管理分页列表", response = CsMerchantQueryVo.class)
     public ApiResult<Paging<CsMerchantQueryVo>> getCsMerchantPageList(@Valid @RequestBody CsMerchantQueryParam csMerchantQueryParam) throws Exception {
+        csMerchantQueryParam.setStatus(null);
         Paging<CsMerchantQueryVo> paging = csMerchantService.getCsMerchantPageList(csMerchantQueryParam);
         return ApiResult.ok(paging);
     }
