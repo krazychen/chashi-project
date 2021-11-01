@@ -93,7 +93,7 @@
     <select id="getCsMerchantPageListOrderByPriceASC" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
         SELECT cm.* FROM cs_merchant cm
         LEFT JOIN cs_tearoom ct ON cm.id=ct.merchant_id
-        where 1=1
+        where 1=1 and status = 1
         <if test="param.cityCode != null and param.cityCode.trim() != ''">
             and cm.city_code = #{param.cityCode}
         </if>
@@ -107,7 +107,7 @@
     <select id="getCsMerchantPageListOrderByPriceDESC" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
         SELECT cm.* FROM cs_merchant cm
         LEFT JOIN cs_tearoom ct ON cm.id=ct.merchant_id
-        where 1 =1
+        where 1 =1 and status = 1
         <if test="param.cityCode != null and param.cityCode.trim() != ''">
             and cm.city_code = #{param.cityCode}
         </if>
@@ -120,7 +120,7 @@
 
     <select id="getCsMerchantPageListOrderByNear" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
         SELECT cm.* FROM cs_merchant cm
-        WHERE 1 = 1
+        WHERE 1 = 1 and status = 1
         <if test="param.cityCode != null and param.cityCode.trim() != ''">
             and cm.city_code = #{param.cityCode}
         </if>
@@ -138,7 +138,7 @@
     <select id="getCsMerchantPageListOrderByDefault" resultType="com.io.yy.merchant.vo.CsMerchantQueryVo">
         SELECT cm.* FROM cs_merchant cm
         LEFT JOIN cs_tearoom ct ON cm.id=ct.merchant_id
-        where 1=1
+        where 1=1 and status = 1
         <if test="param.cityCode != null and param.cityCode.trim() != ''">
             and cm.city_code = #{param.cityCode}
         </if>
