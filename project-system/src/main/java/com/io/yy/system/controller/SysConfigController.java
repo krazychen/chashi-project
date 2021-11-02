@@ -18,6 +18,7 @@ import com.io.yy.util.lang.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ import javax.validation.Valid;
 import javax.xml.stream.events.EndDocument;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +93,77 @@ public class SysConfigController extends BaseController {
         boolean flag = sysConfigService.saveSysConfig(sysConfig);
         return ApiResult.result(flag);
     }
+
+    /**
+     * 添加参数配置表
+     */
+    @PostMapping("/updateConfigPic")
+    @RequiresPermissions("sys:config:update")
+    @ApiOperation(value = "更新picSysConfig对象", notes = "添加参数配置表", response = ApiResult.class)
+    public ApiResult<Boolean> updateSysPicConfig(HttpServletRequest request,@ModelAttribute SysConfig sysConfig) throws Exception {
+//        System.out.println(sysConfig.getConfigName());
+        //图片对象，需要进行转换
+        if(sysConfig.getConfigType().equals("1")){
+
+            //上传目录
+            String uploadPath = whyySystemProperties.getConfigUploadPath();
+
+            //banner
+            MultipartFile[] uploadfiles=sysConfig.getUploadFileAdd();
+            String fileNames=sysConfig.getConfigPicValue();
+            String fileOriNames=sysConfig.getConfigPicName();
+            List<String> fileNameList = Arrays.asList(fileNames.split(","));
+            List<String> fileOriNameList = Arrays.asList(fileOriNames.split(","));
+
+            String[] uploadFileDel = sysConfig.getUploadFileDel();
+            if(ArrayUtils.isNotEmpty(uploadFileDel)) {
+                for (int i = 0; i < uploadFileDel.length; i++) {
+                    UploadUtil.deleteQuietly(uploadPath, uploadFileDel[i]);
+                    String temp =uploadFileDel[i];
+                    fileNameList.removeIf(str->str.contains(temp));
+                    fileOriNameList.removeIf(str->str.equals(temp));
+                }
+            }
+
+            if(ArrayUtils.isNotEmpty(uploadfiles)) {
+                for (int i = 0; i < uploadfiles.length; i++) {
+                    MultipartFile uploadF = uploadfiles[i];
+                    String fileName = UploadUtil.upload(uploadPath, uploadF);
+                    if (StringUtils.isNotBlank(fileOriNames)) {
+//                    bannerFileOriNames += "," + uploadF.getOriginalFilename() ;
+                        fileOriNames += "," + fileName;
+                        fileNames += "," + whyySystemProperties.getConfigAccessUrl() + fileName;
+                    } else {
+//                    bannerFileOriNames += uploadF.getOriginalFilename();
+                        fileOriNames += fileName;
+                        fileNames += whyySystemProperties.getConfigAccessUrl() + fileName;
+                    }
+                }
+            }
+
+//            MultipartFile[] uploadfiles=sysConfig.getUploadFile();
+//            String fileNames="";
+//            String fileOriNames="";
+//            for(int i=0;i<uploadfiles.length;i++){
+//                MultipartFile uploadF=uploadfiles[i];
+//                String fileName=UploadUtil.upload(uploadPath,uploadF);
+//                if(i!=uploadfiles.length-1){
+//                    fileOriNames+=uploadF.getOriginalFilename()+",";
+//                    fileNames+=whyySystemProperties.getConfigAccessUrl()+ fileName+",";
+//                }else{
+//                    fileOriNames+=uploadF.getOriginalFilename();
+//                    fileNames+=whyySystemProperties.getConfigAccessUrl() + fileName;
+//                }
+//            }
+//            System.out.println(fileNames);
+//            System.out.println(fileOriNames);
+            sysConfig.setConfigPicValue(fileNames);
+            sysConfig.setConfigPicName(fileOriNames);
+        }
+        boolean flag = sysConfigService.updateSysConfig(sysConfig);
+        return ApiResult.result(flag);
+    }
+
 
     /**
      * 添加参数配置表

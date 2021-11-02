@@ -105,4 +105,13 @@ public class SysConfig extends BaseEntity {
     @ApiModelProperty(value = "租户名称")
     private String corpName;
 
+    @ApiModelProperty(value = "更新时上传的新增图片文件对象")
+    @JsonIgnore
+    @TableField(exist = false)
+    private MultipartFile[] uploadFileAdd;
+
+    @ApiModelProperty(value = "更新时上传的删除图片文件名称")
+    @TableField(exist = false)
+    private String[] uploadFileDel;
+
 }
