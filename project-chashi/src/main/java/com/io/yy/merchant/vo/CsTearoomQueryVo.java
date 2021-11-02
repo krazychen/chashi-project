@@ -41,6 +41,9 @@ public class CsTearoomQueryVo implements Serializable {
     @ApiModelProperty(value = "起订时间，值为1到10,1是1个小时，2个2个小时，以此类推")
     private String startTime;
 
+    @ApiModelProperty(value = "预订时间间隔")
+    private String timeRange;
+
     @ApiModelProperty(value = "建议使用人数")
     private String recomNumUsers;
 

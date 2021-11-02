@@ -35,32 +35,36 @@ public class CsTearoomExportQueryVo implements Serializable {
     @ExcelField(title="小时金额", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=3)
     private Integer hoursAmount;
 
+    @ApiModelProperty(value = "预订时间间隔")
+    @ExcelField(title="预订时间间隔", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=4)
+    private String timeRange;
+
     @ApiModelProperty(value = "起订时间")
-    @ExcelField(title="起订时间", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=4)
+    @ExcelField(title="起订时间", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=5)
     private String startTime;
 
     @ApiModelProperty(value = "建议使用人数")
-    @ExcelField(title="建议使用人数", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=5)
+    @ExcelField(title="建议使用人数", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=6)
     private String recomNumUsers;
 
     @ApiModelProperty(value = "茶室封面url")
-    @ExcelField(title="茶室封面", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=6)
+    @ExcelField(title="茶室封面", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=7)
     private String roomLogoUrl;
 
     @ApiModelProperty(value = "茶室banner url")
-    @ExcelField(title="茶室banner", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=7)
+    @ExcelField(title="茶室banner", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=8)
     private String roomBannerUrl;
 
     @ApiModelProperty(value = "订单开门方式")
-    @ExcelField(title="订单开门方式", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=8)
+    @ExcelField(title="订单开门方式", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=9)
     private Integer doorOpenMethod;
 
     @ApiModelProperty(value = "排序")
-    @ExcelField(title="排序", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=9)
+    @ExcelField(title="排序", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=10)
     private Integer sort;
 
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
-    @ExcelField(title="状态", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=10)
+    @ExcelField(title="状态", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=11)
     private String status;
 
 }

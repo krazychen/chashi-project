@@ -47,11 +47,14 @@ public class CsTearoom extends BaseEntity {
     @ApiModelProperty(value = "设施名（多个，隔开）")
     private String facilitiesName;
 
-    @ApiModelProperty(value = "小时金额")
+    @ApiModelProperty(value = "预定小时金额")
     private Double hoursAmount;
 
     @ApiModelProperty(value = "起订时间")
     private String startTime;
+
+    @ApiModelProperty(value = "预订时间间隔")
+    private String timeRange;
 
     @ApiModelProperty(value = "建议使用人数")
     private String recomNumUsers;

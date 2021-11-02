@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, room_name, facilities_id, facilities_name, hours_amount, start_time, recom_num_users, room_logo_url, room_logo_name, room_banner_url, room_banner_name, door_open_method, sort, merchant_id, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, room_name, facilities_id, facilities_name, hours_amount, start_time, time_range, recom_num_users, room_logo_url, room_logo_name, room_banner_url, room_banner_name, door_open_method, sort, merchant_id, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <resultMap id="csTearoom" type="com.io.yy.merchant.vo.CsTearoomQueryVo">
@@ -14,6 +14,7 @@
         <result column="facilities_name" property="facilitiesName" javaType="java.lang.String"/>
         <result column="hours_amount" property="hoursAmount" javaType="java.lang.Double"/>
         <result column="start_time" property="startTime" javaType="java.lang.String"/>
+        <result column="time_range" property="timeRange" javaType="java.lang.String"/>
         <result column="recom_num_users" property="recomNumUsers" javaType="java.lang.String"/>
         <result column="room_logo_url" property="roomLogoUrl" javaType="java.lang.String"/>
         <result column="room_logo_name" property="roomLogoName" javaType="java.lang.String"/>
@@ -39,7 +40,7 @@
 
     <select id="getCsTearoomObjPageList" resultMap="csTearoom">
         select
-        ct.id, ct.room_name, ct.facilities_id, ct.facilities_name, ct.hours_amount, ct.start_time, ct.recom_num_users, ct.room_logo_url,
+        ct.id, ct.room_name, ct.facilities_id, ct.facilities_name, ct.hours_amount, ct.start_time, ct.time_range, ct.recom_num_users, ct.room_logo_url,
         ct.room_logo_name, ct.room_banner_url, ct.room_banner_name, ct.door_open_method, ct.sort, ct.merchant_id, ct.status, ct.create_time,
         cm.id as m_id, cm.logo_url_value as m_logo_url_value, cm.logo_url_name as m_logo_url_name
         from cs_tearoom ct
