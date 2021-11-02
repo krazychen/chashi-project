@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import com.io.yy.common.vo.Paging;
@@ -170,11 +171,11 @@ public class CsTearoomController extends BaseController {
                 String fileName = UploadUtil.upload(uploadPath, uploadF);
                 if (i != logoUploadfiles.length - 1) {
 //                    logoFileNames += uploadF.getOriginalFilename() + ",";
-                    logoFileNames += fileName + ",";
+                    logoFileNames = fileName + ",";
                     logoFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
                 } else {
 //                    logoFileNames += uploadF.getOriginalFilename();
-                    logoFileNames += fileName;
+                    logoFileNames = fileName;
                     logoFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
@@ -227,13 +228,6 @@ public class CsTearoomController extends BaseController {
             }
         }
 
-        String[] bannerUploadFileDel = csTearoom.getBannerUploadFileDel();
-        if(ArrayUtils.isNotEmpty(bannerUploadFileDel)) {
-            for (int i = 0; i < bannerUploadFileDel.length; i++) {
-                UploadUtil.deleteQuietly(uploadPath, bannerUploadFileDel[i]);
-            }
-        }
-
         //logo 新增文件
         MultipartFile[] logoUploadfiles=csTearoom.getLogoUploadFileAdd();
         String logoFileUrls="";
@@ -260,6 +254,19 @@ public class CsTearoomController extends BaseController {
         MultipartFile[] bannerUploadfiles=csTearoom.getBannerUploadFileAdd();
         String bannerFileUrls=StringUtils.isNotBlank(csTearoom.getRoomBannerUrl())?csTearoom.getRoomBannerUrl():"";
         String bannerFileNames=StringUtils.isNotBlank(csTearoom.getRoomBannerName())?csTearoom.getRoomBannerName():"";
+        List<String> bannerFileNameList = Arrays.asList(bannerFileUrls.split(","));
+        List<String> bannerFileOriNameList = Arrays.asList(bannerFileNames.split(","));
+
+        String[] bannerUploadFileDel = csTearoom.getBannerUploadFileDel();
+        if(ArrayUtils.isNotEmpty(bannerUploadFileDel)) {
+            for (int i = 0; i < bannerUploadFileDel.length; i++) {
+                UploadUtil.deleteQuietly(uploadPath, bannerUploadFileDel[i]);
+                String temp = bannerUploadFileDel[i];
+                bannerFileNameList.removeIf(str->str.contains(temp));
+                bannerFileOriNameList.removeIf(str->str.equals(temp));
+            }
+        }
+
         if(ArrayUtils.isNotEmpty(bannerUploadfiles)) {
             for (int i = 0; i < bannerUploadfiles.length; i++) {
                 MultipartFile uploadF = bannerUploadfiles[i];

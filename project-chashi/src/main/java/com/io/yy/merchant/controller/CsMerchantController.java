@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import com.io.yy.common.vo.Paging;
@@ -162,11 +163,11 @@ public class CsMerchantController extends BaseController {
                 String fileName = UploadUtil.upload(uploadPath, uploadF);
                 if (i != logoUploadfiles.length - 1) {
 //                    logoFileOriNames += uploadF.getOriginalFilename() + ",";
-                    logoFileOriNames += fileName+ ",";
+                    logoFileOriNames = fileName+ ",";
                     logoFileNames += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
                 } else {
 //                    logoFileOriNames += uploadF.getOriginalFilename();
-                    logoFileOriNames += fileName;
+                    logoFileOriNames = fileName;
                     logoFileNames += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
@@ -219,13 +220,6 @@ public class CsMerchantController extends BaseController {
             }
         }
 
-        String[] bannerUploadFileDel = csMerchant.getBannerUploadFileDel();
-        if(ArrayUtils.isNotEmpty(bannerUploadFileDel)) {
-            for (int i = 0; i < bannerUploadFileDel.length; i++) {
-                UploadUtil.deleteQuietly(uploadPath, bannerUploadFileDel[i]);
-            }
-        }
-
         //logo 新增文件
         MultipartFile[] logoUploadfiles=csMerchant.getLogoUploadFileAdd();
         String logoFileNames=csMerchant.getLogoUrlName();
@@ -236,11 +230,11 @@ public class CsMerchantController extends BaseController {
                 String fileName = UploadUtil.upload(uploadPath, uploadF);
                 if (i != logoUploadfiles.length - 1) {
 //                    logoFileOriNames += uploadF.getOriginalFilename() + ",";
-                    logoFileOriNames += fileName + ",";
+                    logoFileOriNames = fileName + ",";
                     logoFileNames += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
                 } else {
 //                    logoFileOriNames += uploadF.getOriginalFilename();
-                    logoFileOriNames += fileName;
+                    logoFileOriNames = fileName;
                     logoFileNames += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
@@ -252,6 +246,19 @@ public class CsMerchantController extends BaseController {
         MultipartFile[] bannerUploadfiles=csMerchant.getBannerUploadFileAdd();
         String bannerFileNames=csMerchant.getCarouselUrlValue();
         String bannerFileOriNames=csMerchant.getCarouselUrlName();
+        List<String> bannerFileNameList = Arrays.asList(bannerFileNames.split(","));
+        List<String> bannerFileOriNameList = Arrays.asList(bannerFileOriNames.split(","));
+
+        String[] bannerUploadFileDel = csMerchant.getBannerUploadFileDel();
+        if(ArrayUtils.isNotEmpty(bannerUploadFileDel)) {
+            for (int i = 0; i < bannerUploadFileDel.length; i++) {
+                UploadUtil.deleteQuietly(uploadPath, bannerUploadFileDel[i]);
+                String temp = bannerUploadFileDel[i];
+                bannerFileNameList.removeIf(str->str.contains(temp));
+                bannerFileOriNameList.removeIf(str->str.equals(temp));
+            }
+        }
+
         if(ArrayUtils.isNotEmpty(bannerUploadfiles)) {
             for (int i = 0; i < bannerUploadfiles.length; i++) {
                 MultipartFile uploadF = bannerUploadfiles[i];

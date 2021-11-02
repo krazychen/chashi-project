@@ -110,11 +110,11 @@ public class CsAdvertiseController extends BaseController {
                 String fileName = UploadUtil.upload(uploadPath, uploadF);
                 if (i != uploadfiles.length - 1) {
 //                    fileNames += uploadF.getOriginalFilename() + ",";
-                    fileNames += fileNames + ",";
+                    fileNames = fileNames + ",";
                     fileUrls += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
                 } else {
 //                    fileNames += uploadF.getOriginalFilename();
-                    fileNames += fileName;
+                    fileNames = fileName;
                     fileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
