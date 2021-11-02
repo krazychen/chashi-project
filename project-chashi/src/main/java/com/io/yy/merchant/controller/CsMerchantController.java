@@ -231,11 +231,11 @@ public class CsMerchantController extends BaseController {
                 if (i != logoUploadfiles.length - 1) {
 //                    logoFileOriNames += uploadF.getOriginalFilename() + ",";
                     logoFileOriNames = fileName + ",";
-                    logoFileNames += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
+                    logoFileNames = whyySystemProperties.getConfigAccessUrl() + fileName + ",";
                 } else {
 //                    logoFileOriNames += uploadF.getOriginalFilename();
                     logoFileOriNames = fileName;
-                    logoFileNames += whyySystemProperties.getConfigAccessUrl() + fileName;
+                    logoFileNames = whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
         }
