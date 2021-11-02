@@ -140,6 +140,9 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
 
             // 获取office信息
             SysOffice sysOffice = sysOfficeService.getById(csMerchant.getOfficeCode());
+            if(sysOffice==null){
+                return  false;
+            }
             sysOffice.setOfficeName(csMerchant.getMerchantName());
             sysOffice.setFullName(csMerchant.getMerchantName());
             sysOffice.setCorpName(csMerchant.getMerchantName());

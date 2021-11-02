@@ -169,10 +169,12 @@ public class CsTearoomController extends BaseController {
                 MultipartFile uploadF = logoUploadfiles[i];
                 String fileName = UploadUtil.upload(uploadPath, uploadF);
                 if (i != logoUploadfiles.length - 1) {
-                    logoFileNames += uploadF.getOriginalFilename() + ",";
+//                    logoFileNames += uploadF.getOriginalFilename() + ",";
+                    logoFileNames += fileName + ",";
                     logoFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
                 } else {
-                    logoFileNames += uploadF.getOriginalFilename();
+//                    logoFileNames += uploadF.getOriginalFilename();
+                    logoFileNames += fileName;
                     logoFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
@@ -189,10 +191,12 @@ public class CsTearoomController extends BaseController {
                 MultipartFile uploadF = bannerUploadfiles[i];
                 String fileName = UploadUtil.upload(uploadPath, uploadF);
                 if (i != bannerUploadfiles.length - 1) {
-                    bannerFileUrls += uploadF.getOriginalFilename() + ",";
+//                    bannerFileUrls += uploadF.getOriginalFilename() + ",";
+                    bannerFileUrls += fileName + ",";
                     bannerFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
                 } else {
-                    bannerFileUrls += uploadF.getOriginalFilename();
+//                    bannerFileUrls += uploadF.getOriginalFilename();
+                    bannerFileUrls += fileName;
                     bannerFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
@@ -239,10 +243,12 @@ public class CsTearoomController extends BaseController {
                 MultipartFile uploadF = logoUploadfiles[i];
                 String fileName = UploadUtil.upload(uploadPath, uploadF);
                 if (i != logoUploadfiles.length - 1) {
-                    logoFileNames += uploadF.getOriginalFilename() + ",";
+//                    logoFileNames += uploadF.getOriginalFilename() + ",";
+                    logoFileNames += fileName + ",";
                     logoFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
                 } else {
-                    logoFileNames += uploadF.getOriginalFilename();
+//                    logoFileNames += uploadF.getOriginalFilename();
+                    logoFileNames += fileName;
                     logoFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
@@ -259,10 +265,12 @@ public class CsTearoomController extends BaseController {
                 MultipartFile uploadF = bannerUploadfiles[i];
                 String fileName = UploadUtil.upload(uploadPath, uploadF);
                 if (StringUtils.isNotBlank(bannerFileNames)) {
-                    bannerFileNames += "," + uploadF.getOriginalFilename() ;
+//                    bannerFileNames += "," + uploadF.getOriginalFilename() ;
+                    bannerFileNames += "," + fileName ;
                     bannerFileUrls += "," + whyySystemProperties.getConfigAccessUrl() + fileName;
                 } else {
-                    bannerFileNames += uploadF.getOriginalFilename();
+//                    bannerFileNames += uploadF.getOriginalFilename();
+                    bannerFileNames += fileName;
                     bannerFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }

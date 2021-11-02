@@ -63,10 +63,12 @@ public class CsAdvertiseController extends BaseController {
                 MultipartFile uploadF = uploadfiles[i];
                 String fileName = UploadUtil.upload(uploadPath, uploadF);
                 if (i != uploadfiles.length - 1) {
-                    fileNames += uploadF.getOriginalFilename() + ",";
+//                    fileNames += uploadF.getOriginalFilename() + ",";
+                    fileNames += fileNames + ",";
                     fileUrls += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
                 } else {
-                    fileNames += uploadF.getOriginalFilename();
+//                    fileNames += uploadF.getOriginalFilename();
+                    fileNames += fileName;
                     fileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
@@ -107,10 +109,12 @@ public class CsAdvertiseController extends BaseController {
                 MultipartFile uploadF = uploadfiles[i];
                 String fileName = UploadUtil.upload(uploadPath, uploadF);
                 if (i != uploadfiles.length - 1) {
-                    fileNames += uploadF.getOriginalFilename() + ",";
+//                    fileNames += uploadF.getOriginalFilename() + ",";
+                    fileNames += fileNames + ",";
                     fileUrls += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
                 } else {
-                    fileNames += uploadF.getOriginalFilename();
+//                    fileNames += uploadF.getOriginalFilename();
+                    fileNames += fileName;
                     fileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
