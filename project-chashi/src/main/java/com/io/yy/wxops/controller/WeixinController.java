@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -488,6 +489,7 @@ public class WeixinController extends WeixinSupport {
             //获取本机的ip地址
             String spbill_create_ip = IpUtil.getRequestIp(request);
 
+            csMerchantOrder.setOrderPrice(new BigDecimal(csMerchantOrder.getOrderPrice()).doubleValue());
             Double moneyFen = DoubleUtils.multiply(csMerchantOrder.getOrderPrice(),Double.valueOf("100"));
 
             String money = String.valueOf(moneyFen.intValue());
