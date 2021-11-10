@@ -30,7 +30,7 @@ public class WhyySystemGenerator {
         // 数据库配置
         codeGenerator
                 .setUserName("root")
-                .setPassword("123456")
+                .setPassword("Chashi666!")
                 .setDriverName("com.mysql.jdbc.Driver")
                 .setDriverUrl("jdbc:mysql://localhost:3306/chashi-system?useUnicode=true&characterEncoding=UTF-8&useSSL=false");
 
@@ -77,7 +77,7 @@ public class WhyySystemGenerator {
         // 需要生成的表数组
         // xxx,yyy,zzz为需要生成代码的表名称
         String[] tables = {
-                "cs_membercard_consum"
+                "cs_merchant_notify"
         };
 
         // 循环生成

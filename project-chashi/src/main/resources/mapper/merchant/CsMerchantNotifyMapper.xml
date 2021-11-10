@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.io.yy.merchant.mapper.CsMerchantNotifyMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, merchant_id, start_time, end_time, notify_type, notify_time, notify_front_time, notify_rear_time, wxuser_id, openid, status, remark, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+    </sql>
+
+    <select id="getCsMerchantNotifyById" resultType="com.io.yy.merchant.vo.CsMerchantNotifyQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_merchant_notify where id = #{id}
+    </select>
+
+    <select id="getCsMerchantNotifyPageList" resultType="com.io.yy.merchant.vo.CsMerchantNotifyQueryVo">
+        select
+        <include refid="Base_Column_List"/>
+        from cs_merchant_notify
+        where 1=1
+        <if test="param.queryStartTime != null">
+            and #{param.queryStartTime} <![CDATA[ >= ]]> start_time
+        </if>
+        <if test="param.queryStartTime != null">
+            and #{param.queryEndTime} <![CDATA[ <= ]]> end_time
+        </if>
+        <if test="param.notifyType != null">
+            and notify_type = #{param.notifyType}
+        </if>
+    </select>
+
+    <update id="updateStatus">
+        update cs_merchant_notify set status = #{param.status}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
+</mapper>
