@@ -48,4 +48,7 @@ public class CsMembercardOrderQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "剩余优惠价格")
     private Double restDiscountPrice;
+
+    @ApiModelProperty(value = "订单退款单号")
+    private String outRefundNo;
 }

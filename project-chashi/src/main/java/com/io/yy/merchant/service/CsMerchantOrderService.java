@@ -106,4 +106,12 @@ public interface CsMerchantOrderService extends BaseService<CsMerchantOrder> {
      * @return
      */
     String getLockKey(CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception;
+
+    /**
+     * 一键开锁
+     *
+     * @param csMerchantOrderQueryParam
+     * @return
+     */
+    String openLock(CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception;
 }

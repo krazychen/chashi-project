@@ -74,6 +74,9 @@ public class CsTearoom extends BaseEntity {
     @ApiModelProperty(value = "订单开门方式")
     private Integer doorOpenMethod;
 
+    @ApiModelProperty(value = "茶室门锁id")
+    private String rttlLockId;
+
     @ApiModelProperty(value = "排序")
     private Integer sort;
 

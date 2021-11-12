@@ -7,7 +7,8 @@
         id, merchant_id, tearoom_id, room_name, wxuser_id, wxuser_phone, openid, order_name, order_date, order_timerage,
         order_origin_timenum, membercard_order_id, order_mb_timenum, order_timenum, order_unit_origin_price, order_unit_price,
         order_origin_price, coupon_released_id, order_cp_amount, order_mb_amount, order_price, out_trade_no, payment_status,
-        payment_msg, payment_type,used_status, source_type, status, keyboard_pwd_id, keyboard_pwd, deleted, version, create_by,
+        payment_msg, payment_type,used_status, source_type, status, ttl_lock_id, keyboard_pwd_id, keyboard_pwd,
+        rttl_lock_id, rkeyboard_pwd_id, rkeyboard_pwd, deleted, version, create_by,
         create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
@@ -97,7 +98,9 @@
     </update>
 
     <update id="updateLockKey">
-        update cs_merchant_order set keyboard_pwd_id = #{param.keyboardPwdId}, keyboard_pwd = #{param.keyboardPwd}
+        update cs_merchant_order
+        set keyboard_pwd_id = #{param.keyboardPwdId}, keyboard_pwd = #{param.keyboardPwd},
+            rkeyboard_pwd_id = #{param.rkeyboardPwdId}, rkeyboard_pwd = #{param.rkeyboardPwdId}
         where deleted = 0
         and id = #{param.id}
     </update>

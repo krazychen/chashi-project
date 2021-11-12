@@ -117,11 +117,23 @@ public class CsMerchantOrder extends BaseEntity {
     @ApiModelProperty(value = "支付类型：余额支付、微信支付")
     private Integer paymentType;
 
+    @ApiModelProperty(value = "ttlock锁的id")
+    private String ttlLockId;
+
     @ApiModelProperty(value = "键盘密码ID")
     private String keyboardPwdId;
 
     @ApiModelProperty(value = "键盘密码")
     private String keyboardPwd;
+
+    @ApiModelProperty(value = "茶室门锁id")
+    private String rttlLockId;
+
+    @ApiModelProperty(value = "茶室键盘密码ID")
+    private String rkeyboardPwdId;
+
+    @ApiModelProperty(value = "茶室键盘密码")
+    private String rkeyboardPwd;
 
     @ApiModelProperty(value = "使用状态：未使用0，已使用1，已取消2")
     private Integer usedStatus;

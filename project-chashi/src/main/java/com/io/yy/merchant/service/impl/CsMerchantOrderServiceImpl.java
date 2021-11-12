@@ -2,15 +2,18 @@ package com.io.yy.merchant.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.merchant.entity.CsMerchantOrder;
 import com.io.yy.merchant.mapper.CsMerchantMapper;
 import com.io.yy.merchant.mapper.CsMerchantOrderMapper;
+import com.io.yy.merchant.mapper.CsTearoomMapper;
 import com.io.yy.merchant.service.CsMerchantOrderService;
 import com.io.yy.merchant.param.CsMerchantOrderQueryParam;
 import com.io.yy.merchant.vo.CsMerchantOrderQueryVo;
 import com.io.yy.common.service.impl.BaseServiceImpl;
 import com.io.yy.common.vo.Paging;
 import com.io.yy.merchant.vo.CsMerchantQueryVo;
+import com.io.yy.merchant.vo.CsTearoomQueryVo;
 import com.io.yy.util.lang.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -49,6 +52,9 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
 
     @Autowired
     private CsMerchantMapper csMerchantMapper;
+
+    @Autowired
+    private CsTearoomMapper csTearoomMapper;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -127,10 +133,15 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
 
     @Override
     public String getLockKey(CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        String rtnMessage = "大厅开锁密码：";
         // 先去订单里面取，看是否已经存在key，存在则不需要再去请求，不存在则进行判断
         CsMerchantOrderQueryVo csMerchantOrderQueryVo = this.getCsMerchantOrderById(csMerchantOrderQueryParam.getId());
         if(StringUtils.isNotBlank(csMerchantOrderQueryVo.getKeyboardPwdId())&&StringUtils.isNotBlank((csMerchantOrderQueryVo.getKeyboardPwd()))){
-            return csMerchantOrderQueryVo.getKeyboardPwd();
+            rtnMessage += csMerchantOrderQueryVo.getKeyboardPwd();
+            if(StringUtils.isNotBlank(csMerchantOrderQueryVo.getRkeyboardPwdId())&&StringUtils.isNotBlank((csMerchantOrderQueryVo.getRkeyboardPwd()))){
+                rtnMessage += "\n\r茶室开锁密码：" + csMerchantOrderQueryVo.getRkeyboardPwd();
+            }
+            return rtnMessage;
         }
 
         // 取merchant的clientId，lockId
@@ -171,7 +182,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
             redisTemplate.opsForValue().set("TTLOCK_TOKEN",token,expires_in, TimeUnit.SECONDS);
         }
 
-        // 获取ttlock token的redis key，如果存在则开始新增key；
+        // 获取大厅ttlock token的redis key，如果存在则开始新增key；
         // 随机6位开锁密码
         long random = Math.abs(new Random().nextLong());
         String lockKey = String.valueOf(random).substring(0, 6);
@@ -223,12 +234,153 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
 
         csMerchantOrderQueryParam.setKeyboardPwdId(keyboardPwdId);
         csMerchantOrderQueryParam.setKeyboardPwd(lockKey);
+        rtnMessage += csMerchantOrderQueryVo.getKeyboardPwd();
+
+        //获取茶室的锁和密码
+        CsTearoomQueryVo csTearoomQueryVo = csTearoomMapper.getCsTearoomById(csMerchantOrderQueryParam.getTearoomId());
+        // 判断是否有维护茶室的锁id
+        if(StringUtils.isNotBlank(csTearoomQueryVo.getRttlLockId())){
+            long rrandom = Math.abs(new Random().nextLong());
+            String rlockKey = String.valueOf(rrandom).substring(0, 6);
+            client = new OkHttpClient().newBuilder()
+                    .build();
+            requestParam = "clientId=" +clientId +
+                    "&accessToken=" + token+
+                    "&lockId=" + lockId +
+                    "&keyboardPwd=" +lockKey +
+                    "&startDate=" + startDate.getTime() +
+                    "&endDate=" + endDate.getTime() +
+                    "&date="+ nowDate.getTime() +
+                    "&addType=2";
+            mediaType = MediaType.parse("application/x-www-form-urlencoded");
+            body = RequestBody.create(mediaType, requestParam);
+            request = new Request.Builder()
+                    .url("https://api.ttlock.com/v3/keyboardPwd/add")
+                    .method("POST", body)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .build();
+            response = client.newCall(request).execute();
+            responseBody = response.body().string();
+            log.info(responseBody);
+            jsonObject = JSON.parseObject(responseBody);
+            errorCode = jsonObject.getString("errcode");
+            // 如果有错误代码，返回错误信息
+            if(StringUtils.isNotBlank(errorCode)){
+                return (String) jsonObject.get("description");
+            }
+            String rkeyboardPwdId = jsonObject.getString("keyboardPwdId");
+            csMerchantOrderQueryParam.setRkeyboardPwdId(rkeyboardPwdId);
+            csMerchantOrderQueryParam.setRkeyboardPwd(rlockKey);
+            rtnMessage += "\n\r茶室开锁密码：" + csMerchantOrderQueryVo.getRkeyboardPwd();
+        }
+
         //响应正常，则将lockkey和lock的id存到订单内；
         int flag = csMerchantOrderMapper.updateLockKey(csMerchantOrderQueryParam);
         if(flag>0){
-            return lockKey;
+            return rtnMessage;
         }
         return "获取开锁密码失败，请联系管理员！";
+    }
+
+    @Override
+    public String openLock(CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+
+        String rtnMessage = "一键开锁成功!";
+
+        // 通过商店id获取商店
+        CsMerchantQueryVo csMerchantQueryVo = csMerchantMapper.getCsMerchantById(csMerchantOrderQueryParam.getMerchantId());
+
+        // 商店开锁
+        String clientId = csMerchantQueryVo.getTtlClientId();
+        String clientSecret = csMerchantQueryVo.getTtlClientSecret();
+        String ttlUserName = csMerchantQueryVo.getTtlUsername();
+        String ttlPassword = csMerchantQueryVo.getTtlPassword();
+        String lockId = csMerchantQueryVo.getTtlLockId();
+
+        // 获取ttlock token的redis key，若不存在则需要去取key；
+        String token = (String)redisTemplate.opsForValue().get("TTLOCK_TOKEN");
+        if(StringUtils.isBlank(token)){
+            String requestParam = "client_id="+clientId +
+                    "&client_secret="+clientSecret +
+                    "&username="+ttlUserName +
+                    "&password="+ DigestUtils.md5Hex(ttlPassword);
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+            RequestBody body = RequestBody.create(mediaType, requestParam);
+            Request request = new Request.Builder()
+                    .url("https://api.ttlock.com/oauth2/token")
+                    .method("POST", body)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .build();
+            Response response = client.newCall(request).execute();
+            String responseBody = response.body().string();
+            log.info(responseBody);
+            JSONObject jsonObject = JSON.parseObject(responseBody);
+            String errorCode = jsonObject.getString("errcode");
+            // 如果有错误代码，返回错误信息
+            if(StringUtils.isNotBlank(errorCode)){
+                return (String) jsonObject.get("description");
+            }
+            token = jsonObject.getString("access_token");
+            Long expires_in = jsonObject.getLong("expires_in");
+            redisTemplate.opsForValue().set("TTLOCK_TOKEN",token,expires_in, TimeUnit.SECONDS);
+        }
+
+        Date nowDate = new Date();
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        String requestParam = "clientId=" +clientId +
+                "&accessToken=" + token+
+                "&lockId=" + lockId +
+                "&date="+ nowDate.getTime() ;
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody body = RequestBody.create(mediaType, "");
+        Request request = new Request.Builder()
+                .url("https://api.ttlock.com/v3/lock/unlock?"+requestParam)
+                .method("POST", body)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        Response response = client.newCall(request).execute();
+        String responseBody = response.body().string();
+        log.info(responseBody);
+        JSONObject jsonObject = JSON.parseObject(responseBody);
+        String errorCode = jsonObject.getString("errcode");
+        // 如果有错误代码，返回错误信息
+        if(StringUtils.isNotBlank(errorCode)){
+            return (String) jsonObject.get("description");
+        }else {
+            // 通过茶室id获取茶室
+            CsTearoomQueryVo csTearoomQueryVo = csTearoomMapper.getCsTearoomById(csMerchantOrderQueryParam.getTearoomId());
+            if(StringUtils.isNotBlank(csTearoomQueryVo.getRttlLockId())){
+                nowDate = new Date();
+                client = new OkHttpClient().newBuilder()
+                        .build();
+                requestParam = "clientId=" +clientId +
+                        "&accessToken=" + token+
+                        "&lockId=" + csTearoomQueryVo.getRttlLockId() +
+                        "&date="+ nowDate.getTime() ;
+                mediaType = MediaType.parse("text/plain");
+                body = RequestBody.create(mediaType, "");
+                request = new Request.Builder()
+                        .url("https://api.ttlock.com/v3/lock/unlock?"+requestParam)
+                        .method("POST", body)
+                        .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                        .build();
+                response = client.newCall(request).execute();
+                responseBody = response.body().string();
+                log.info(responseBody);
+                jsonObject = JSON.parseObject(responseBody);
+                errorCode = jsonObject.getString("errcode");
+                // 如果有错误代码，返回错误信息
+                if(StringUtils.isNotBlank(errorCode)) {
+                    return (String) jsonObject.get("description");
+                }else{
+                    return rtnMessage;
+                }
+            }
+        }
+        return rtnMessage;
     }
 
 }

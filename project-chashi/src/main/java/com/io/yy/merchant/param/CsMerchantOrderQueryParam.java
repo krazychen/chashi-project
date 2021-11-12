@@ -61,9 +61,21 @@ public class CsMerchantOrderQueryParam extends OrderQueryParam {
     @ApiModelProperty(value = "退款时间")
     private Date refundDate;
 
+    @ApiModelProperty(value = "ttlock锁的id")
+    private String ttlLockId;
+
     @ApiModelProperty(value = "键盘密码ID")
     private String keyboardPwdId;
 
     @ApiModelProperty(value = "键盘密码")
     private String keyboardPwd;
+
+    @ApiModelProperty(value = "茶室门锁id")
+    private String rttlLockId;
+
+    @ApiModelProperty(value = "茶室键盘密码ID")
+    private String rkeyboardPwdId;
+
+    @ApiModelProperty(value = "茶室键盘密码")
+    private String rkeyboardPwd;
 }
