@@ -10,6 +10,8 @@ import lombok.experimental.Accessors;
 
 import com.io.yy.common.param.OrderQueryParam;
 
+import java.util.Date;
+
 /**
  * <pre>
  * 会员卡购买记录 查询参数对象
@@ -51,4 +53,7 @@ public class CsMembercardOrderQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "订单退款单号")
     private String outRefundNo;
+
+    @ApiModelProperty(value = "退款时间")
+    private Date refundDate;
 }
