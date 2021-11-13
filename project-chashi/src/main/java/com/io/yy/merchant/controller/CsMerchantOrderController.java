@@ -307,7 +307,7 @@ public class CsMerchantOrderController extends BaseController {
     /**
      * 一键开锁，需要传入茶室订单id对应的商店id和茶室id
      */
-    @GetMapping("/lockKeyForWx/{id}")
+    @GetMapping("/openLock/{id}")
     @ApiOperation(value = "一键开锁", notes = "一键开锁", response = CsMerchantOrderQueryVo.class)
     public ApiResult<String> openLock(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
         return ApiResult.ok(csMerchantOrderService.openLock(csMerchantOrderQueryParam));
