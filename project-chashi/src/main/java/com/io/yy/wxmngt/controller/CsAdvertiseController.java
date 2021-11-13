@@ -52,7 +52,7 @@ public class CsAdvertiseController extends BaseController {
     public ApiResult<Boolean> addCsAdvertise(HttpServletRequest request, @ModelAttribute CsAdvertise csAdvertise) throws Exception {
 
         //上传目录
-        String uploadPath = whyySystemProperties.getConfigUploadPath();
+        String uploadPath = whyySystemProperties.getConfigUploadPath()+"adv";
 
         //logo
         MultipartFile[] uploadfiles=csAdvertise.getUploadFile();
@@ -65,11 +65,11 @@ public class CsAdvertiseController extends BaseController {
                 if (i != uploadfiles.length - 1) {
 //                    fileNames += uploadF.getOriginalFilename() + ",";
                     fileNames += fileNames + ",";
-                    fileUrls += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
+                    fileUrls += whyySystemProperties.getConfigAccessUrl()+"adv/" + fileName + ",";
                 } else {
 //                    fileNames += uploadF.getOriginalFilename();
                     fileNames += fileName;
-                    fileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
+                    fileUrls += whyySystemProperties.getConfigAccessUrl() +"adv/"+ fileName;
                 }
             }
         }
@@ -90,7 +90,7 @@ public class CsAdvertiseController extends BaseController {
     public ApiResult<Boolean> updateCsAdvertise(HttpServletRequest request, @ModelAttribute CsAdvertise csAdvertise) throws Exception {
 
         //上传目录 --
-        String uploadPath = whyySystemProperties.getConfigUploadPath();
+        String uploadPath = whyySystemProperties.getConfigUploadPath()+"adv";
 
         // 先删除之前的图片
         String[] uploadFileDel = csAdvertise.getUploadFileDel();
@@ -111,11 +111,11 @@ public class CsAdvertiseController extends BaseController {
                 if (i != uploadfiles.length - 1) {
 //                    fileNames += uploadF.getOriginalFilename() + ",";
                     fileNames = fileNames + ",";
-                    fileUrls += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
+                    fileUrls += whyySystemProperties.getConfigAccessUrl() +"adv/"+ fileName + ",";
                 } else {
 //                    fileNames += uploadF.getOriginalFilename();
                     fileNames = fileName;
-                    fileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
+                    fileUrls += whyySystemProperties.getConfigAccessUrl() +"adv/"+ fileName;
                 }
             }
         }

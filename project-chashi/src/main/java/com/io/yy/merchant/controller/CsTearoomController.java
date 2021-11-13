@@ -159,7 +159,7 @@ public class CsTearoomController extends BaseController {
         //图片对象，需要进行转换
 
         //上传目录
-        String uploadPath = whyySystemProperties.getConfigUploadPath();
+        String uploadPath = whyySystemProperties.getConfigUploadPath()+"room";
 
         //logo
         MultipartFile[] logoUploadfiles=csTearoom.getLogoUploadFile();
@@ -172,11 +172,11 @@ public class CsTearoomController extends BaseController {
                 if (i != logoUploadfiles.length - 1) {
 //                    logoFileNames += uploadF.getOriginalFilename() + ",";
                     logoFileNames = fileName + ",";
-                    logoFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
+                    logoFileUrls += whyySystemProperties.getConfigAccessUrl() +"room/"+ fileName + ",";
                 } else {
 //                    logoFileNames += uploadF.getOriginalFilename();
                     logoFileNames = fileName;
-                    logoFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
+                    logoFileUrls += whyySystemProperties.getConfigAccessUrl() +"room/"+ fileName;
                 }
             }
         }
@@ -194,11 +194,11 @@ public class CsTearoomController extends BaseController {
                 if (i != bannerUploadfiles.length - 1) {
 //                    bannerFileUrls += uploadF.getOriginalFilename() + ",";
                     bannerFileUrls += fileName + ",";
-                    bannerFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
+                    bannerFileUrls += whyySystemProperties.getConfigAccessUrl() +"room/"+ fileName + ",";
                 } else {
 //                    bannerFileUrls += uploadF.getOriginalFilename();
                     bannerFileUrls += fileName;
-                    bannerFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
+                    bannerFileUrls += whyySystemProperties.getConfigAccessUrl() +"room/"+ fileName;
                 }
             }
         }
@@ -218,7 +218,7 @@ public class CsTearoomController extends BaseController {
     public ApiResult<Boolean> updateCsTearoom(HttpServletRequest request, @ModelAttribute CsTearoom csTearoom) throws Exception {
 
         //上传目录 --
-        String uploadPath = whyySystemProperties.getConfigUploadPath();
+        String uploadPath = whyySystemProperties.getConfigUploadPath()+"room";
 
         // 先删除之前的图片
         String[] logoUploadFileDel = csTearoom.getLogoUploadFileDel();
@@ -239,11 +239,11 @@ public class CsTearoomController extends BaseController {
                 if (i != logoUploadfiles.length - 1) {
 //                    logoFileNames += uploadF.getOriginalFilename() + ",";
                     logoFileNames += fileName + ",";
-                    logoFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
+                    logoFileUrls += whyySystemProperties.getConfigAccessUrl() +"room/"+ fileName + ",";
                 } else {
 //                    logoFileNames += uploadF.getOriginalFilename();
                     logoFileNames += fileName;
-                    logoFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
+                    logoFileUrls += whyySystemProperties.getConfigAccessUrl() +"room/"+ fileName;
                 }
             }
         }
@@ -274,11 +274,11 @@ public class CsTearoomController extends BaseController {
                 if (StringUtils.isNotBlank(bannerFileNames)) {
 //                    bannerFileNames += "," + uploadF.getOriginalFilename() ;
                     bannerFileNames += "," + fileName ;
-                    bannerFileUrls += "," + whyySystemProperties.getConfigAccessUrl() + fileName;
+                    bannerFileUrls += "," + whyySystemProperties.getConfigAccessUrl() +"room/"+ fileName;
                 } else {
 //                    bannerFileNames += uploadF.getOriginalFilename();
                     bannerFileNames += fileName;
-                    bannerFileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
+                    bannerFileUrls += whyySystemProperties.getConfigAccessUrl() +"room/"+ fileName;
                 }
             }
         }

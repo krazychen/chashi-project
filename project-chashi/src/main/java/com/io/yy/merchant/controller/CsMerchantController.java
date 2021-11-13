@@ -151,7 +151,7 @@ public class CsMerchantController extends BaseController {
         //图片对象，需要进行转换
 
         //上传目录
-        String uploadPath = whyySystemProperties.getConfigUploadPath();
+        String uploadPath = whyySystemProperties.getConfigUploadPath()+"mer";
 
         //logo
         MultipartFile[] logoUploadfiles=csMerchant.getLogoUploadFile();
@@ -164,11 +164,11 @@ public class CsMerchantController extends BaseController {
                 if (i != logoUploadfiles.length - 1) {
 //                    logoFileOriNames += uploadF.getOriginalFilename() + ",";
                     logoFileOriNames = fileName+ ",";
-                    logoFileNames += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
+                    logoFileNames += whyySystemProperties.getConfigAccessUrl() +"mer/"+ fileName + ",";
                 } else {
 //                    logoFileOriNames += uploadF.getOriginalFilename();
                     logoFileOriNames = fileName;
-                    logoFileNames += whyySystemProperties.getConfigAccessUrl() + fileName;
+                    logoFileNames += whyySystemProperties.getConfigAccessUrl() +"mer/"+ fileName;
                 }
             }
         }
@@ -186,11 +186,11 @@ public class CsMerchantController extends BaseController {
                 if (i != bannerUploadfiles.length - 1) {
 //                    bannerFileOriNames += uploadF.getOriginalFilename() + ",";
                     bannerFileOriNames += fileName+ ",";
-                    bannerFileNames += whyySystemProperties.getConfigAccessUrl() + fileName + ",";
+                    bannerFileNames += whyySystemProperties.getConfigAccessUrl() +"mer/"+ fileName + ",";
                 } else {
 //                    bannerFileOriNames += uploadF.getOriginalFilename();
                     bannerFileOriNames += fileName;
-                    bannerFileNames += whyySystemProperties.getConfigAccessUrl() + fileName;
+                    bannerFileNames += whyySystemProperties.getConfigAccessUrl() +"mer/"+ fileName;
                 }
             }
         }
@@ -210,7 +210,7 @@ public class CsMerchantController extends BaseController {
     public ApiResult<Boolean> updateCsMerchant(HttpServletRequest request, @ModelAttribute CsMerchant csMerchant) throws Exception {
 
         //上传目录 --
-        String uploadPath = whyySystemProperties.getConfigUploadPath();
+        String uploadPath = whyySystemProperties.getConfigUploadPath()+"mer";
 
         // 先删除之前的图片
         String[] logoUploadFileDel = csMerchant.getLogoUploadFileDel();
@@ -231,11 +231,11 @@ public class CsMerchantController extends BaseController {
                 if (i != logoUploadfiles.length - 1) {
 //                    logoFileOriNames += uploadF.getOriginalFilename() + ",";
                     logoFileOriNames = fileName + ",";
-                    logoFileNames = whyySystemProperties.getConfigAccessUrl() + fileName + ",";
+                    logoFileNames = whyySystemProperties.getConfigAccessUrl() +"mer/"+ fileName + ",";
                 } else {
 //                    logoFileOriNames += uploadF.getOriginalFilename();
                     logoFileOriNames = fileName;
-                    logoFileNames = whyySystemProperties.getConfigAccessUrl() + fileName;
+                    logoFileNames = whyySystemProperties.getConfigAccessUrl() +"mer/"+ fileName;
                 }
             }
         }
@@ -266,11 +266,11 @@ public class CsMerchantController extends BaseController {
                 if (StringUtils.isNotBlank(bannerFileOriNames)) {
 //                    bannerFileOriNames += "," + uploadF.getOriginalFilename() ;
                     bannerFileOriNames += "," + fileName;
-                    bannerFileNames += "," + whyySystemProperties.getConfigAccessUrl() + fileName;
+                    bannerFileNames += "," + whyySystemProperties.getConfigAccessUrl() +"mer/"+ fileName;
                 } else {
 //                    bannerFileOriNames += uploadF.getOriginalFilename();
                     bannerFileOriNames += fileName;
-                    bannerFileNames += whyySystemProperties.getConfigAccessUrl() + fileName;
+                    bannerFileNames += whyySystemProperties.getConfigAccessUrl() +"mer/"+ fileName;
                 }
             }
         }

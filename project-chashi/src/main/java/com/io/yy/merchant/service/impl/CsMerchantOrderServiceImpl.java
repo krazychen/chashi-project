@@ -151,6 +151,10 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         String ttlUserName = csMerchantQueryVo.getTtlUsername();
         String ttlPassword = csMerchantQueryVo.getTtlPassword();
         String lockId = csMerchantQueryVo.getTtlLockId();
+        if(StringUtils.isBlank(clientId)||StringUtils.isBlank(clientSecret)|| StringUtils.isBlank(ttlUserName)||
+        StringUtils.isBlank(ttlPassword)||StringUtils.isBlank(lockId)){
+            return "请联系管理员检查智能锁的配置是否正确！";
+        }
 
         // 获取ttlock token的redis key，若不存在则需要去取key；
         String token = (String)redisTemplate.opsForValue().get("TTLOCK_TOKEN");
@@ -279,7 +283,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         if(flag>0){
             return rtnMessage;
         }
-        return "获取开锁密码失败，请联系管理员！";
+        return "请联系管理员检查智能锁的配置是否正确！";
     }
 
     @Override
@@ -296,6 +300,10 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         String ttlUserName = csMerchantQueryVo.getTtlUsername();
         String ttlPassword = csMerchantQueryVo.getTtlPassword();
         String lockId = csMerchantQueryVo.getTtlLockId();
+        if(StringUtils.isBlank(clientId)||StringUtils.isBlank(clientSecret)|| StringUtils.isBlank(ttlUserName)||
+                StringUtils.isBlank(ttlPassword)||StringUtils.isBlank(lockId)){
+            return "请联系管理员检查智能锁的配置是否正确！";
+        }
 
         // 获取ttlock token的redis key，若不存在则需要去取key；
         String token = (String)redisTemplate.opsForValue().get("TTLOCK_TOKEN");

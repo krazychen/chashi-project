@@ -120,7 +120,7 @@ public final class UploadUtil {
             // 这里可自定义文件名称，比如按照业务类型/文件格式/日期
             // 此处按照文件日期存储
 //            String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssS"))+ EncodeUtils.encodeBase64(originalFilename);
-            String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm")) + EncodeUtils.encodeBase64(originalFilename);
+            String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssS")) + EncodeUtils.encodeBase64(originalFilename);
             String fileName = UUID.randomUUID().toString().replaceAll("-", "") + dateString + "." + fileExtension;
             return fileName;
         }
