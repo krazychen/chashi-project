@@ -48,6 +48,14 @@ public interface CsTearoomMapper extends BaseMapper<CsTearoom> {
     Integer updateStatus(@Param("param") CsTearoomQueryParam csTearoomQueryParam);
 
     /**
+     * 更新营业状态
+     *
+     * @param csTearoomQueryParam
+     * @return
+     */
+    Integer updateReleaseStatus(@Param("param") CsTearoomQueryParam csTearoomQueryParam);
+
+    /**
      * 获取分页对象
      *
      * @param page
@@ -55,4 +63,14 @@ public interface CsTearoomMapper extends BaseMapper<CsTearoom> {
      * @return
      */
     IPage<CsTearoomQueryVo> getCsTearoomObjPageList(@Param("page") Page page, @Param("param") CsTearoomQueryParam csTearoomQueryParam);
+
+    /**
+     * 获取分页对象，包含已购数量
+     *
+     * @param page
+     * @param csTearoomQueryParam
+     * @return
+     */
+    IPage<CsTearoomQueryVo> getCsTearoomPageListForWx(@Param("page") Page page, @Param("param") CsTearoomQueryParam csTearoomQueryParam);
+
 }

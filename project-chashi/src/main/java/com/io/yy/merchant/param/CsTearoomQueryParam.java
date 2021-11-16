@@ -34,6 +34,9 @@ public class CsTearoomQueryParam extends OrderQueryParam {
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
 
+    @ApiModelProperty(value = "营业状态，0：歇业，1：营业")
+    private String releaseStatus;
+
     @ApiModelProperty(value = "商店id")
     private Long merchantId;
 

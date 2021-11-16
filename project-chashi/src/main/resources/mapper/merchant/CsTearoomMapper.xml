@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, room_name, facilities_id, facilities_name, hours_amount, start_time, time_range, recom_num_users, room_logo_url, room_logo_name, room_banner_url, room_banner_name, door_open_method, sort, merchant_id, status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, room_name, facilities_id, facilities_name, hours_amount, start_time, time_range, recom_num_users, room_logo_url, room_logo_name, room_banner_url, room_banner_name, door_open_method, sort, merchant_id, status, release_status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <resultMap id="csTearoom" type="com.io.yy.merchant.vo.CsTearoomQueryVo">
@@ -24,6 +24,7 @@
         <result column="sort" property="sort" javaType="java.lang.Integer"/>
         <result column="merchant_id" property="merchantId" javaType="java.lang.Long"/>
         <result column="status" property="status" javaType="java.lang.String"/>
+        <result column="release_status" property="releaseStatus" javaType="java.lang.String"/>
         <result column="create_time" property="createTime" javaType="java.util.Date"/>
         <association property="merchant" javaType="com.io.yy.merchant.vo.CsMerchantQueryVo">
             <result column="m_id" property="id" javaType="java.lang.Long"/>
@@ -33,15 +34,16 @@
     </resultMap>
 
     <select id="getCsTearoomById" resultType="com.io.yy.merchant.vo.CsTearoomQueryVo">
-        select
-        <include refid="Base_Column_List"/>
-        from cs_tearoom where id = #{id}
+        select ct.* , (SELECT COUNT(id) FROM cs_merchant_order cmo
+        WHERE cmo.`tearoom_id`= ct.id) AS buy_record
+        from cs_tearoom ct
+        where ct.id = #{id}
     </select>
 
     <select id="getCsTearoomObjPageList" resultMap="csTearoom">
         select
         ct.id, ct.room_name, ct.facilities_id, ct.facilities_name, ct.hours_amount, ct.start_time, ct.time_range, ct.recom_num_users, ct.room_logo_url,
-        ct.room_logo_name, ct.room_banner_url, ct.room_banner_name, ct.door_open_method, ct.sort, ct.merchant_id, ct.status, ct.create_time,
+        ct.room_logo_name, ct.room_banner_url, ct.room_banner_name, ct.door_open_method, ct.sort, ct.merchant_id, ct.status, ct.release_status, ct.create_time,
         cm.id as m_id, cm.logo_url_value as m_logo_url_value, cm.logo_url_name as m_logo_url_name
         from cs_tearoom ct
         left join cs_merchant cm on ct.merchant_id = cm.id
@@ -56,13 +58,37 @@
         <include refid="Base_Column_List"/>
         from cs_tearoom
         where 1=1
+        <if test="param.status != null and param.status.trim() != ''">
+            and status = #{param.status}
+        </if>
         <if test="param.merchantId != null">
             and merchant_id = #{param.merchantId}
         </if>
     </select>
 
+    <select id="getCsTearoomPageListForWx" resultType="com.io.yy.merchant.vo.CsTearoomQueryVo">
+        select ct.* , (SELECT COUNT(id) FROM cs_merchant_order cmo
+        WHERE cmo.`tearoom_id`= ct.id) AS buy_record
+        from cs_tearoom ct
+        where 1=1
+        <if test="param.status != null and param.status.trim() != ''">
+            and ct.status = #{param.status}
+        </if>
+        <if test="param.merchantId != null">
+            and ct.merchant_id = #{param.merchantId}
+        </if>
+    </select>
+
     <update id="updateStatus">
         update cs_tearoom set status = #{param.status}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+    </update>
+
+    <update id="updateReleaseStatus">
+        update cs_tearoom set release_status = #{param.releaseStatus}
         where deleted = 0
         <if test="param.id != null">
             and id = #{param.id}

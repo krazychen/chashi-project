@@ -67,4 +67,8 @@ public class CsTearoomExportQueryVo implements Serializable {
     @ExcelField(title="状态", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=11)
     private String status;
 
+    @ApiModelProperty(value = "营业状态，0：歇业，1：营业")
+    @ExcelField(title="营业状态状态", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=12)
+    private String releaseStatus;
+
 }

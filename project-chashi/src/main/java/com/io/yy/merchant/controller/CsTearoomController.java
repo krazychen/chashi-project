@@ -149,6 +149,17 @@ public class CsTearoomController extends BaseController {
         return ApiResult.ok(csTearoomService.updateStatus(csTearoomQueryParam));
     }
 
+
+    /**
+     * 茶室管理修改营业状态
+     */
+    @PostMapping("/updateReleaseStatus")
+    @RequiresPermissions("cs:tearoom:update")
+    @ApiOperation(value = "修改CsTearoom营业状态", notes = "茶室管理修改营业状态", response = ApiResult.class)
+    public ApiResult<Boolean> updateReleaseStatus(@Valid @RequestBody CsTearoomQueryParam csTearoomQueryParam) throws Exception {
+        return ApiResult.ok(csTearoomService.updateReleaseStatus(csTearoomQueryParam));
+    }
+
     /**
      * 添加茶室表
      */

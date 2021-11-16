@@ -101,6 +101,14 @@ public interface CsTearoomService extends BaseService<CsTearoom> {
      boolean updateStatus(CsTearoomQueryParam csTearoomQueryParam);
 
     /**
+     * 更新营业状态
+     *
+     * @param csTearoomQueryParam
+     * @return
+     */
+    boolean updateReleaseStatus(CsTearoomQueryParam csTearoomQueryParam);
+
+    /**
      * 导出
      * @param csTearoomQueryParam
      * @throws Exception
