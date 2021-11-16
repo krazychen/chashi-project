@@ -25,7 +25,7 @@
             and u.phone_number like concat('%', #{param.phoneNumber}, '%')
         </if>
         <if test="param.nameAphone != null and param.nameAphone.trim() != ''">
-            and (nickname like concat('%', #{nameAphone}, '%') or phone like concat('%', #{nameAphone}, '%'))
+            and (nickname like concat('%', #{param.nameAphone}, '%') or phone like concat('%', #{param.nameAphone}, '%'))
         </if>
     </select>
 

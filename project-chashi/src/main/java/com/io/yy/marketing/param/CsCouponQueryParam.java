@@ -29,7 +29,6 @@ public class CsCouponQueryParam extends OrderQueryParam {
     private String couponName;
 
     @ApiModelProperty(value = "获取方式")
-    @NotNull(message = "获取方式不能为空")
     private Integer releasedMethod;
 
     @ApiModelProperty(value = "主键")

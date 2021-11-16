@@ -38,6 +38,7 @@
         <result column="start_time" property="startTime" javaType="java.lang.String"/>
         <result column="end_time" property="endTime" javaType="java.lang.String"/>
         <result column="status" property="status" javaType="java.lang.String"/>
+        <result column="buy_record" property="buyRecord" javaType="java.lang.Integer"/>
         <collection property="tearoomList" ofType="com.io.yy.merchant.vo.CsTearoomQueryVo">
             <id column="t_id" property="id" javaType="java.lang.Long" />
             <result column="room_name" property="roomName" javaType="java.lang.String"/>
@@ -158,7 +159,7 @@
     <select id="getCsMerchantByIdForWx" resultMap="csTearoomObj">
         SELECT cm.*, ct.id AS t_id,ct.room_name,ct.facilities_id,ct.facilities_name,ct.hours_amount,ct.start_time as t_start_time,ct.recom_num_users,
         ct.room_logo_url,ct.room_logo_name,ct.room_banner_url,ct.room_banner_name,ct.door_open_method,ct.sort AS t_sort,ct.merchant_id,
-        ct.status AS t_status,ct.create_time AS t_create_time
+        ct.status AS t_status,ct.create_time AS t_create_time,(SELECT COUNT(id) FROM cs_merchant_order cmo WHERE cmo.merchant_id = cm.id) AS buy_record
         FROM cs_merchant cm
         LEFT JOIN cs_tearoom ct ON cm.id=ct.merchant_id
         where 1=1 and cm.id =  #{param.id}

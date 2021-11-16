@@ -149,5 +149,8 @@ public class CsMerchantQueryVo implements Serializable {
     @ApiModelProperty(value = "租户名称")
     private String corpName;
 
+    @ApiModelProperty(value = "已购买次数, 为空界面显示0，固定显示")
+    private int buyRecord;
+
     private List<CsTearoomQueryVo> tearoomList;
 }
