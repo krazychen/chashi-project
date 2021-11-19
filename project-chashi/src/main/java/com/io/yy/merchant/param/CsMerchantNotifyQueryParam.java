@@ -58,4 +58,7 @@ public class CsMerchantNotifyQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "查询结束时间")
     private Date queryEndTime;
+
+    @ApiModelProperty(value = "订单预定日期")
+    private Date orderDate;
 }

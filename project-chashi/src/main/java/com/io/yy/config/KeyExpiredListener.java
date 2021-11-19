@@ -106,6 +106,18 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                 redisTemplate.delete(key);
                 redisTemplate.delete(newKey);
             }
+        }else if(key.indexOf("ORDER_NOTI_OAFTER_")!=-1){
+            redisTemplate.delete(key);
+            redisTemplate.delete(newKey);
+
+        }else if(key.indexOf("ORDER_NOTI_EFRONT_")!=-1){
+            redisTemplate.delete(key);
+            redisTemplate.delete(newKey);
+
+        }else if(key.indexOf("ORDER_NOTI_EAFTER_")!=-1){
+            redisTemplate.delete(key);
+            redisTemplate.delete(newKey);
+
         }
     }
 

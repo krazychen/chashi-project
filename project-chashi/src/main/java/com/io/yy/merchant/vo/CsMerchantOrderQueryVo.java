@@ -50,16 +50,16 @@ public class CsMerchantOrderQueryVo implements Serializable {
     private String orderTimerage;
 
     @ApiModelProperty(value = "总的预订时间段数")
-    private Integer orderOriginTimenum;
+    private Double orderOriginTimenum;
 
     @ApiModelProperty(value = "会员卡订单ID")
     private Long membercardOrderId;
 
     @ApiModelProperty(value = "会员卡优惠时间段数")
-    private Integer orderMbTimenum;
+    private Double orderMbTimenum;
 
     @ApiModelProperty(value = "会员卡优惠后的总的预订时间段数")
-    private Integer orderTimenum;
+    private Double orderTimenum;
 
     @ApiModelProperty(value = "预订原价")
     private Double orderUnitOriginPrice;

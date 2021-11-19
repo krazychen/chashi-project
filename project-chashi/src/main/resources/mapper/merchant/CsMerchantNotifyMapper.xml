@@ -27,6 +27,12 @@
         <if test="param.notifyType != null">
             and notify_type = #{param.notifyType}
         </if>
+        <if test="param.orderDate != null">
+            and (#{param.orderDate} <![CDATA[ >= ]]> start_time and #{param.orderDate} <![CDATA[ <= ]]> end_time)
+        </if>
+        <if test="param.merchantId != null and param.merchantId.trim() != ''">
+            and merchant_id = #{param.merchantId}
+        </if>
     </select>
 
     <update id="updateStatus">

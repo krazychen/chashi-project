@@ -58,7 +58,7 @@ public class CsMembercardConsum extends BaseEntity {
     private Integer consumType;
 
     @ApiModelProperty(value = "减免时长")
-    private Integer consumTime;
+    private Double consumTime;
 
     @ApiModelProperty(value = "减免金额")
     private Double consumAmount;
