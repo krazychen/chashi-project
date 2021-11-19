@@ -611,7 +611,7 @@ public class WeixinController extends WeixinSupport {
                             timeCsMembercardConsum.setCousumDate(new Date());
                             csMembercardConsumService.save(timeCsMembercardConsum);
                         }else{
-                            csMerchantOrder.setOrderMbTimenum(0);
+                            csMerchantOrder.setOrderMbTimenum(new Double(0));
                         }
 
                         //如果使用优惠金额，扣除优惠金额
