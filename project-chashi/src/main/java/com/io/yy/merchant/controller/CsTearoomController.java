@@ -323,9 +323,13 @@ public class CsTearoomController extends BaseController {
             WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csTearoomQueryParam.getOpenid());
             if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
                 CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
-                double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
                 DecimalFormat df = new DecimalFormat("0.00");
-                paging.getRecords().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(discount*a.getHoursAmount()))));
+                if(csMembercardOrderQueryVo!=null){
+                    double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
+                    paging.getRecords().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(discount*a.getHoursAmount()))));
+                }else{
+                    paging.getRecords().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(a.getHoursAmount()))));
+                }
             }else{
                 isNon=true;
             }

@@ -315,9 +315,14 @@ public class CsMerchantController extends BaseController {
             WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csMerchantQueryParam.getOpenid());
             if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
                 CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
-                double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
                 DecimalFormat df = new DecimalFormat("0.00");
-                csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(discount*a.getHoursAmount()))));
+                if(csMembercardOrderQueryVo!=null){
+                    double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
+                    csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(discount*a.getHoursAmount()))));
+                }
+                else{
+                    csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(a.getHoursAmount()))));
+                }
             }else{
                 isNon=true;
             }
