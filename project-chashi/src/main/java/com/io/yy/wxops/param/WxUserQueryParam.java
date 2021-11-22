@@ -44,4 +44,7 @@ public class WxUserQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "余额")
     private Double balance;
+
+    @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
+    private String status;
 }

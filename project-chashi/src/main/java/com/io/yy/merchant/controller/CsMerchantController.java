@@ -316,7 +316,7 @@ public class CsMerchantController extends BaseController {
             if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
                 CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
                 DecimalFormat df = new DecimalFormat("0.00");
-                if(csMembercardOrderQueryVo!=null){
+                if(csMembercardOrderQueryVo!=null&&csMembercardOrderQueryVo.getDiscountOff()!=null){
                     double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
                     csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(discount*a.getHoursAmount()))));
                 }
