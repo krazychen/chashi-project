@@ -339,11 +339,14 @@ public class CsTearoomController extends BaseController {
         //没有登录，也不是会员，则取会员卡的最低价
         if(isNon){
             CsMemberCardQueryVo csMemberCardQueryVo=csMemberCardService.getCsMemberCardOfMin();
-            if(csMemberCardQueryVo!=null){
+            DecimalFormat df = new DecimalFormat("0.00");
+            if(csMemberCardQueryVo!=null&&csMemberCardQueryVo.getDiscountOff()!=null){
                 double discount=csMemberCardQueryVo.getDiscountOff()/10;
-                DecimalFormat df = new DecimalFormat("0.00");
                 paging.getRecords().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(discount*a.getHoursAmount()))));
+            }else{
+                paging.getRecords().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(a.getHoursAmount()))));
             }
+
         }
 
         return ApiResult.ok(paging);
@@ -362,9 +365,13 @@ public class CsTearoomController extends BaseController {
             WxUserQueryVo wxUserQueryVo = wxUserService.getWxUserByOpenid(csTearoomQueryParam.getOpenid());
             if(wxUserQueryVo!=null && wxUserQueryVo.getCsMembercardOrderQueryVo()!=null){
                 CsMembercardOrderQueryVo csMembercardOrderQueryVo=wxUserQueryVo.getCsMembercardOrderQueryVo();
-                double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
                 DecimalFormat df = new DecimalFormat("0.00");
-                csTearoomQueryVo.setMenberAmount(Double.valueOf(df.format(discount*csTearoomQueryVo.getHoursAmount())));
+                if(csMembercardOrderQueryVo!=null&&csMembercardOrderQueryVo.getDiscountOff()!=null){
+                    double discount=csMembercardOrderQueryVo.getDiscountOff()/10;
+                    csTearoomQueryVo.setMenberAmount(Double.valueOf(df.format(discount*csTearoomQueryVo.getHoursAmount())));
+                }else{
+                    csTearoomQueryVo.setMenberAmount(Double.valueOf(df.format(csTearoomQueryVo.getHoursAmount())));
+                }
             }else{
                 isNon=true;
             }
@@ -374,10 +381,12 @@ public class CsTearoomController extends BaseController {
         //没有登录，也不是会员，则取会员卡的最低价
         if(isNon){
             CsMemberCardQueryVo csMemberCardQueryVo=csMemberCardService.getCsMemberCardOfMin();
-            if(csMemberCardQueryVo!=null){
+            DecimalFormat df = new DecimalFormat("0.00");
+            if(csMemberCardQueryVo!=null&&csMemberCardQueryVo.getDiscountOff()!=null){
                 double discount=csMemberCardQueryVo.getDiscountOff()/10;
-                DecimalFormat df = new DecimalFormat("0.00");
                 csTearoomQueryVo.setMenberAmount(Double.valueOf(df.format(discount*csTearoomQueryVo.getHoursAmount())));
+            }else{
+                csTearoomQueryVo.setMenberAmount(Double.valueOf(df.format(csTearoomQueryVo.getHoursAmount())));
             }
         }
         return ApiResult.ok(csTearoomQueryVo);

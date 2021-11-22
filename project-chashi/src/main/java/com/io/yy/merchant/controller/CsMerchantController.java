@@ -333,11 +333,14 @@ public class CsMerchantController extends BaseController {
         //没有登录，也不是会员，则取会员卡的最低价
         if(isNon){
             CsMemberCardQueryVo csMemberCardQueryVo=csMemberCardService.getCsMemberCardOfMin();
-            if(csMemberCardQueryVo!=null){
+            DecimalFormat df = new DecimalFormat("0.00");
+            if(csMemberCardQueryVo!=null&&csMemberCardQueryVo.getDiscountOff()!=null){
                 double discount=csMemberCardQueryVo.getDiscountOff()/10;
-                DecimalFormat df = new DecimalFormat("0.00");
                 csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(discount*a.getHoursAmount()))));
+            }else{
+                csMerchantQueryVo.getTearoomList().stream().forEach(a->a.setMenberAmount(Double.valueOf(df.format(a.getHoursAmount()))));
             }
+
         }
         return ApiResult.ok(csMerchantQueryVo);
     }
