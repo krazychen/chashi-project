@@ -350,6 +350,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
                     "&client_secret="+clientSecret +
                     "&username="+ttlUserName +
                     "&password="+ DigestUtils.md5Hex(ttlPassword);
+            log.info(requestParam);
             OkHttpClient client = new OkHttpClient().newBuilder()
                     .build();
             MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
