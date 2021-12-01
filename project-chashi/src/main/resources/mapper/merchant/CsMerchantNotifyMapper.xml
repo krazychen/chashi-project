@@ -30,7 +30,7 @@
         <if test="param.orderDate != null">
             and (#{param.orderDate} <![CDATA[ >= ]]> start_time and #{param.orderDate} <![CDATA[ <= ]]> end_time)
         </if>
-        <if test="param.merchantId != null and param.merchantId.trim() != ''">
+        <if test="param.merchantId != null">
             and merchant_id = #{param.merchantId}
         </if>
     </select>
