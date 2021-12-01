@@ -2,19 +2,36 @@ package com.io.yy.merchant.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.io.yy.marketing.entity.CsMembercardConsum;
+import com.io.yy.marketing.entity.CsRechargeConsum;
+import com.io.yy.marketing.param.CsCouponReleasedQueryParam;
+import com.io.yy.marketing.param.CsMembercardOrderQueryParam;
+import com.io.yy.marketing.service.CsCouponReleasedService;
+import com.io.yy.marketing.service.CsMembercardConsumService;
+import com.io.yy.marketing.service.CsMembercardOrderService;
+import com.io.yy.marketing.service.CsRechargeConsumService;
 import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.merchant.entity.CsMerchantOrder;
 import com.io.yy.merchant.mapper.CsMerchantMapper;
 import com.io.yy.merchant.mapper.CsMerchantOrderMapper;
 import com.io.yy.merchant.mapper.CsTearoomMapper;
+import com.io.yy.merchant.param.CsMerchantNotifyQueryParam;
+import com.io.yy.merchant.service.CsMerchantNotifyService;
 import com.io.yy.merchant.service.CsMerchantOrderService;
 import com.io.yy.merchant.param.CsMerchantOrderQueryParam;
+import com.io.yy.merchant.vo.CsMerchantNotifyQueryVo;
 import com.io.yy.merchant.vo.CsMerchantOrderQueryVo;
 import com.io.yy.common.service.impl.BaseServiceImpl;
 import com.io.yy.common.vo.Paging;
 import com.io.yy.merchant.vo.CsMerchantQueryVo;
 import com.io.yy.merchant.vo.CsTearoomQueryVo;
+import com.io.yy.util.UUIDUtil;
+import com.io.yy.util.lang.DateUtils;
+import com.io.yy.util.lang.DoubleUtils;
 import com.io.yy.util.lang.StringUtils;
+import com.io.yy.wxops.param.WxUserQueryParam;
+import com.io.yy.wxops.service.WxUserService;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -28,6 +45,9 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +78,24 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private CsCouponReleasedService csCouponReleasedService;
+
+    @Autowired
+    private CsMembercardConsumService csMembercardConsumService;
+
+    @Autowired
+    private CsMembercardOrderService csMembercardOrderService;
+
+    @Autowired
+    private WxUserService wxUserService;
+
+    @Autowired
+    private CsRechargeConsumService csRechargeConsumService;
+
+    @Autowired
+    private CsMerchantNotifyService csMerchantNotifyService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -401,4 +439,177 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         return rtnMessage;
     }
 
+    @Override
+    public Boolean saveCsMerchantOrderForWX(CsMerchantOrder csMerchantOrder) throws Exception {
+        // 保存茶室订单，订单保存成功后，即扣除优惠卷和会员优惠时长、金额，在支付失败、取消时，会重新删除优惠卷和优惠时长、金额的使用
+        csMerchantOrder.setSourceType(0);
+        csMerchantOrder.setPaymentStatus(2);
+        Date now = new Date();
+        LocalDate localDate=now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Date newDate=java.sql.Date.valueOf(localDate);
+        csMerchantOrder.setOrderDate(newDate);
+        csMerchantOrder.setOrderName(csMerchantOrder.getRoomName()+'-'+
+                DateUtils.getYYYYMMDDHHMMSS(csMerchantOrder.getOrderDate())+'-'+ UUIDUtil.getUUID());
+        csMerchantOrder.setUsedStatus("0");
+        boolean flag = this.saveCsMerchantOrder(csMerchantOrder);
+
+        this.orderPayRedis(null,csMerchantOrder.getId().toString());
+
+        //如果有优惠卷，扣除优惠卷
+        if(csMerchantOrder.getCouponReleasedId()!=null && csMerchantOrder.getCouponReleasedId()!=0){
+            CsCouponReleasedQueryParam csCouponReleasedQueryParam = new CsCouponReleasedQueryParam();
+            csCouponReleasedQueryParam.setId(csMerchantOrder.getCouponReleasedId());
+            csCouponReleasedQueryParam.setIsUsed(1);
+            csCouponReleasedQueryParam.setUsedTime(new Date());
+            csCouponReleasedService.updateUsedStatus(csCouponReleasedQueryParam);
+        }
+
+        //如果是会员
+        if(csMerchantOrder.getMembercardOrderId()!=null && csMerchantOrder.getMembercardOrderId()!=0){
+            // 记录折扣金额
+            CsMembercardConsum discountCsMembercardConsum = new CsMembercardConsum();
+            discountCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
+            discountCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
+            //记录消费原始价格
+            discountCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
+            discountCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
+            discountCsMembercardConsum.setConsumType(2);
+            //优惠单价*原始总时长
+            discountCsMembercardConsum.setConsumDiscountAmount(
+                    DoubleUtils.subtract(csMerchantOrder.getOrderOriginPrice(),DoubleUtils.multiply(csMerchantOrder.getOrderUnitPrice(),csMerchantOrder.getOrderOriginTimenum().doubleValue())));
+            discountCsMembercardConsum.setCousumDate(new Date());
+            csMembercardConsumService.save(discountCsMembercardConsum);
+
+            //如果使用优惠时长，扣除优惠时长
+            if(csMerchantOrder.getOrderMbTimenum()!=null && csMerchantOrder.getOrderMbTimenum()!=0){
+                CsMembercardConsum timeCsMembercardConsum = new CsMembercardConsum();
+                timeCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
+                timeCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
+                //记录消费原始价格
+                timeCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
+                timeCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
+                timeCsMembercardConsum.setConsumType(0);
+                //优惠单价*原始总时长
+                timeCsMembercardConsum.setConsumTime(csMerchantOrder.getOrderMbTimenum());
+                timeCsMembercardConsum.setCousumDate(new Date());
+                csMembercardConsumService.save(timeCsMembercardConsum);
+            }else{
+                csMerchantOrder.setOrderMbTimenum(new Double(0));
+            }
+
+            //如果使用优惠金额，扣除优惠金额
+            if(csMerchantOrder.getOrderMbAmount()!=null && csMerchantOrder.getOrderMbAmount()!=0){
+                // 记录折扣金额
+                CsMembercardConsum amountCsMembercardConsum = new CsMembercardConsum();
+                amountCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
+                amountCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
+                //记录消费原始价格
+                amountCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
+                amountCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
+                amountCsMembercardConsum.setConsumType(1);
+                //优惠单价*原始总时长
+                amountCsMembercardConsum.setConsumAmount(csMerchantOrder.getOrderMbAmount());
+                amountCsMembercardConsum.setCousumDate(new Date());
+                csMembercardConsumService.save(amountCsMembercardConsum);
+            }else{
+                csMerchantOrder.setOrderMbAmount(new Double(0));
+            }
+
+            //更新会员卡的剩余时长和剩余金额
+            if(csMerchantOrder.getOrderMbAmount()!=0 || csMerchantOrder.getOrderMbTimenum()!=0) {
+                CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
+                csMembercardOrderQueryParam.setId(csMerchantOrder.getMembercardOrderId());
+                csMembercardOrderQueryParam.setRestDiscountPrice(csMerchantOrder.getOrderMbAmount());
+                csMembercardOrderQueryParam.setRestDiscountTime(csMerchantOrder.getOrderMbTimenum().doubleValue());
+                csMembercardOrderService.reduceRest(csMembercardOrderQueryParam);
+            }
+        }
+
+        //如果是余额支付，则需要更新账户余额信息
+        if(csMerchantOrder.getPaymentType().equals(1)){
+            WxUserQueryParam wxUserQueryParam = new WxUserQueryParam();
+            wxUserQueryParam.setId(csMerchantOrder.getWxuserId());
+            wxUserQueryParam.setBalance(csMerchantOrder.getOrderPrice());
+            wxUserService.reduceBalance(wxUserQueryParam);
+
+            CsRechargeConsum csRechargeConsum = new CsRechargeConsum();
+            csRechargeConsum.setWxuserId(csMerchantOrder.getWxuserId());
+            csRechargeConsum.setCousumAmount(csMerchantOrder.getOrderPrice());
+            csRechargeConsum.setCousumDate(new Date());
+            csRechargeConsum.setRoomOrderId(csMerchantOrder.getId());
+            csRechargeConsum.setConsumType(0);
+            csRechargeConsumService.saveCsRechargeConsum(csRechargeConsum);
+        }
+
+        return flag;
+    }
+
+    public void orderPayRedis(String out_trade_no, String orderId) throws Exception{
+
+        //设置定时提醒任务。1.查询商家存在的通知，规则，商家ID，预定时间在通知规则有效时间内
+        QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapper=new QueryWrapper<CsMerchantOrder>();
+        if(StringUtils.isNotBlank(out_trade_no)){
+            csMerchantOrderQueryWrapper.eq("out_trade_no",out_trade_no);
+        }else{
+            csMerchantOrderQueryWrapper.eq("id",orderId);
+        }
+        CsMerchantOrder csMerchantOrder = this.getOne(csMerchantOrderQueryWrapper);
+        //计算订单开始时间和结束时间
+        String[] timeRangeArr = csMerchantOrder.getOrderTimerage().split("-");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        // 设置开始时间:
+        Calendar startC = Calendar.getInstance();
+//                        // 清除所有:
+//                        startC.clear();
+//                        startC.setTime(csMerchantOrder.getOrderDate());
+//                        String[] startTimeRangeArr = timeRangeArr[0].split(":");
+//                        startC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startTimeRangeArr[0]));
+//                        startC.set(Calendar.MINUTE, Integer.parseInt(startTimeRangeArr[1]));
+//                        startC.set(Calendar.SECOND, 00);
+//                        logger.debug(sdf.format(startC.getTime()));
+
+        // 设置结束时间:
+        Calendar endC = Calendar.getInstance();
+        // 清除所有:
+        endC.clear();
+        endC.setTime(csMerchantOrder.getOrderDate());
+        String[] endTimeRangeArr = timeRangeArr[timeRangeArr.length-1].split(":");
+        endC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTimeRangeArr[0]));
+        endC.set(Calendar.MINUTE, Integer.parseInt(endTimeRangeArr[1]));
+        endC.set(Calendar.SECOND, 00);
+        log.debug(sdf.format(endC.getTime()));
+
+        CsMerchantNotifyQueryParam csMerchantNotifyQueryParam  = new CsMerchantNotifyQueryParam();
+        csMerchantNotifyQueryParam.setMerchantId(csMerchantOrder.getMerchantId());
+        csMerchantNotifyQueryParam.setOrderDate(csMerchantOrder.getOrderDate());
+        List<CsMerchantNotifyQueryVo> notifyList = null;
+        try {
+            notifyList = csMerchantNotifyService.getCsMerchantNotifyPageList(csMerchantNotifyQueryParam).getRecords();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 根据通知类型，设置不同的rediskey
+        notifyList.stream().forEach(cc-> {
+            int notifyTime = cc.getNotifyTime();
+            if(notifyTime == 0){
+                // 预订后X分钟，获取后几分钟，通过订单的创建时间+X分钟后这个时间进行提醒,其实就是支付成功后+X分钟后
+                redisTemplate.opsForValue().set("ORDER_NOTIFY]"+csMerchantOrder.getId(),cc.getId(),cc.getNotifyRearTime(), TimeUnit.MINUTES);
+            }else if(notifyTime == 1){
+                // 消费前后X分钟
+                int fenzhong = DateUtils.differentMinute(new Date(),endC.getTime());
+                if(cc.getNotifyFrontTime()!=0){
+                    redisTemplate.opsForValue().set("ORDER_NOTIFY]"+csMerchantOrder.getId(),cc.getId(),fenzhong-cc.getNotifyFrontTime(), TimeUnit.MINUTES);
+                }else if (cc.getNotifyRearTime()!=0){
+                    redisTemplate.opsForValue().set("ORDER_NOTIFY]"+csMerchantOrder.getId(),cc.getId(),fenzhong+cc.getNotifyRearTime(), TimeUnit.MINUTES);
+                }
+            }
+
+        });
+
+        //设置订单结束状态的定时器，用来进行订单使用状态的控制
+        int fenzhong = DateUtils.differentMinute(new Date(),endC.getTime());
+        redisTemplate.opsForValue().set("ORDER_END_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),fenzhong, TimeUnit.MINUTES);
+
+    }
 }

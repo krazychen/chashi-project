@@ -81,7 +81,7 @@ public interface CsMerchantOrderService extends BaseService<CsMerchantOrder> {
      * @param csMerchantOrderQueryParam
      * @return
      */
-     boolean updateStatus(CsMerchantOrderQueryParam csMerchantOrderQueryParam);
+    boolean updateStatus(CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 
     /**
      * 根据tearoomid和预订日期获取当前茶室已经被预定的时间段，返回是时间段的一个包含","的字符串
@@ -114,4 +114,8 @@ public interface CsMerchantOrderService extends BaseService<CsMerchantOrder> {
      * @return
      */
     String openLock(CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception;
+
+    Boolean saveCsMerchantOrderForWX(CsMerchantOrder csMerchantOrder) throws Exception;
+
+    void orderPayRedis(String out_trade_no, String orderId) throws Exception;
 }

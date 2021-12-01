@@ -92,9 +92,6 @@ public class WeixinController extends WeixinSupport {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    @Autowired
-    private CsMerchantNotifyService csMerchantNotifyService;
-
     /**
      * 发起会员卡微信支付
      *
@@ -1253,62 +1250,7 @@ public class WeixinController extends WeixinSupport {
                         wxUserQueryParam.setIntegral(csRechargeRecordQueryVo.getIntegral());
                         wxUserService.updateBalanceAIntegral(wxUserQueryParam);
 
-                        //设置定时提醒任务。1.查询商家存在的通知，规则，商家ID，预定时间在通知规则有效时间内
-                        QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapper=new QueryWrapper<CsMerchantOrder>();
-                        csMerchantOrderQueryWrapper.eq("out_trade_no",csMerchantOrderQueryParam.getOutTradeNo());
-                        CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
-                        //计算订单开始时间和结束时间
-                        String[] timeRangeArr = csMerchantOrder.getOrderTimerage().split("-");
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        // 设置开始时间:
-                        Calendar startC = Calendar.getInstance();
-//                        // 清除所有:
-//                        startC.clear();
-//                        startC.setTime(csMerchantOrder.getOrderDate());
-//                        String[] startTimeRangeArr = timeRangeArr[0].split(":");
-//                        startC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startTimeRangeArr[0]));
-//                        startC.set(Calendar.MINUTE, Integer.parseInt(startTimeRangeArr[1]));
-//                        startC.set(Calendar.SECOND, 00);
-//                        logger.debug(sdf.format(startC.getTime()));
-
-                        // 设置结束时间:
-                        Calendar endC = Calendar.getInstance();
-                        // 清除所有:
-                        endC.clear();
-                        endC.setTime(csMerchantOrder.getOrderDate());
-                        String[] endTimeRangeArr = timeRangeArr[timeRangeArr.length-1].split(":");
-                        endC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTimeRangeArr[0]));
-                        endC.set(Calendar.MINUTE, Integer.parseInt(endTimeRangeArr[1]));
-                        endC.set(Calendar.SECOND, 00);
-                        logger.debug(sdf.format(endC.getTime()));
-
-                        CsMerchantNotifyQueryParam csMerchantNotifyQueryParam  = new CsMerchantNotifyQueryParam();
-                        csMerchantNotifyQueryParam.setMerchantId(csMerchantOrder.getMerchantId());
-                        csMerchantNotifyQueryParam.setOrderDate(csMerchantOrder.getOrderDate());
-                        List<CsMerchantNotifyQueryVo> notifyList = csMerchantNotifyService.getCsMerchantNotifyPageList(csMerchantNotifyQueryParam).getRecords();
-
-                        // 根据通知类型，设置不同的rediskey
-                        notifyList.stream().forEach(cc-> {
-                            int notifyTime = cc.getNotifyTime();
-                            if(notifyTime == 0){
-                                // 预订后X分钟，获取后几分钟，通过订单的创建时间+X分钟后这个时间进行提醒,其实就是支付成功后+X分钟后
-                                redisTemplate.opsForValue().set("ORDER_NOTIFY]"+csMerchantOrder.getId(),cc.getId(),cc.getNotifyRearTime(), TimeUnit.MINUTES);
-                            }else if(notifyTime == 1){
-                                // 消费前后X分钟
-                                int fenzhong = DateUtils.differentMinute(new Date(),endC.getTime());
-                                if(cc.getNotifyFrontTime()!=0){
-                                    redisTemplate.opsForValue().set("ORDER_NOTIFY]"+csMerchantOrder.getId(),cc.getId(),fenzhong-cc.getNotifyFrontTime(), TimeUnit.MINUTES);
-                                }else if (cc.getNotifyRearTime()!=0){
-                                    redisTemplate.opsForValue().set("ORDER_NOTIFY]"+csMerchantOrder.getId(),cc.getId(),fenzhong+cc.getNotifyRearTime(), TimeUnit.MINUTES);
-                                }
-                            }
-
-                        });
-
-                        //设置订单结束状态的定时器，用来进行订单使用状态的控制
-                        int fenzhong = DateUtils.differentMinute(new Date(),endC.getTime());
-                        redisTemplate.opsForValue().set("ORDER_END_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),fenzhong, TimeUnit.MINUTES);
-
+                        csMerchantOrderService.orderPayRedis(outTradeNo,null);
                     }
                 }
 

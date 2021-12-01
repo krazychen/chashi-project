@@ -1,5 +1,6 @@
 package com.io.yy.merchant.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.io.yy.marketing.entity.CsMembercardConsum;
 import com.io.yy.marketing.entity.CsRechargeConsum;
 import com.io.yy.marketing.param.CsCouponReleasedQueryParam;
@@ -9,8 +10,11 @@ import com.io.yy.marketing.service.CsMembercardConsumService;
 import com.io.yy.marketing.service.CsMembercardOrderService;
 import com.io.yy.marketing.service.CsRechargeConsumService;
 import com.io.yy.merchant.entity.CsMerchantOrder;
+import com.io.yy.merchant.param.CsMerchantNotifyQueryParam;
+import com.io.yy.merchant.service.CsMerchantNotifyService;
 import com.io.yy.merchant.service.CsMerchantOrderService;
 import com.io.yy.merchant.param.CsMerchantOrderQueryParam;
+import com.io.yy.merchant.vo.CsMerchantNotifyQueryVo;
 import com.io.yy.merchant.vo.CsMerchantOrderQueryVo;
 import com.io.yy.common.api.ApiResult;
 import com.io.yy.common.controller.BaseController;
@@ -24,15 +28,19 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.io.yy.common.vo.Paging;
 
@@ -53,20 +61,6 @@ public class CsMerchantOrderController extends BaseController {
     @Autowired
     private CsMerchantOrderService csMerchantOrderService;
 
-    @Autowired
-    private CsCouponReleasedService csCouponReleasedService;
-
-    @Autowired
-    private CsMembercardConsumService csMembercardConsumService;
-
-    @Autowired
-    private CsMembercardOrderService csMembercardOrderService;
-
-    @Autowired
-    private WxUserService wxUserService;
-
-    @Autowired
-    private CsRechargeConsumService csRechargeConsumService;
     /**
      * 添加商店茶室订单记录
      */
@@ -75,7 +69,7 @@ public class CsMerchantOrderController extends BaseController {
     @Transactional(rollbackFor = Exception.class)
     @ApiOperation(value = "添加CsMerchantOrder对象", notes = "添加商店茶室订单记录", response = ApiResult.class)
     public ApiResult<Boolean> addCsMerchantOrder(@Valid @RequestBody CsMerchantOrder csMerchantOrder) throws Exception {
-        return ApiResult.result(saveCsMerchantOrder(csMerchantOrder));
+        return ApiResult.result(csMerchantOrderService.saveCsMerchantOrderForWX(csMerchantOrder));
     }
 
     /**
@@ -167,7 +161,7 @@ public class CsMerchantOrderController extends BaseController {
     @PostMapping("/addCsMerchantOrderForWx")
     @ApiOperation(value = "添加CsMerchantOrder对象", notes = "添加商店茶室订单记录", response = ApiResult.class)
     public ApiResult<Boolean> addCsMerchantOrderForWx(@Valid @RequestBody CsMerchantOrder csMerchantOrder) throws Exception {
-        return ApiResult.result(saveCsMerchantOrder(csMerchantOrder));
+        return ApiResult.result(csMerchantOrderService.saveCsMerchantOrderForWX(csMerchantOrder));
     }
 
     /**
@@ -178,109 +172,6 @@ public class CsMerchantOrderController extends BaseController {
     public ApiResult<Paging<CsMerchantOrderQueryVo>> getCsMerchantOrderListForWx(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
         Paging<CsMerchantOrderQueryVo> paging = csMerchantOrderService.getCsMerchantOrderPageList(csMerchantOrderQueryParam);
         return ApiResult.ok(paging);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public Boolean saveCsMerchantOrder(CsMerchantOrder csMerchantOrder) throws Exception {
-        // 保存茶室订单，订单保存成功后，即扣除优惠卷和会员优惠时长、金额，在支付失败、取消时，会重新删除优惠卷和优惠时长、金额的使用
-        csMerchantOrder.setSourceType(0);
-        csMerchantOrder.setPaymentStatus(2);
-        Date now = new Date();
-        LocalDate localDate=now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        Date newDate=java.sql.Date.valueOf(localDate);
-        csMerchantOrder.setOrderDate(newDate);
-        csMerchantOrder.setOrderName(csMerchantOrder.getRoomName()+'-'+
-                DateUtils.getYYYYMMDDHHMMSS(csMerchantOrder.getOrderDate())+'-'+ UUIDUtil.getUUID());
-        csMerchantOrder.setUsedStatus("0");
-        boolean flag = csMerchantOrderService.saveCsMerchantOrder(csMerchantOrder);
-
-        //如果有优惠卷，扣除优惠卷
-        if(csMerchantOrder.getCouponReleasedId()!=null && csMerchantOrder.getCouponReleasedId()!=0){
-            CsCouponReleasedQueryParam csCouponReleasedQueryParam = new CsCouponReleasedQueryParam();
-            csCouponReleasedQueryParam.setId(csMerchantOrder.getCouponReleasedId());
-            csCouponReleasedQueryParam.setIsUsed(1);
-            csCouponReleasedQueryParam.setUsedTime(new Date());
-            csCouponReleasedService.updateUsedStatus(csCouponReleasedQueryParam);
-        }
-
-        //如果是会员
-        if(csMerchantOrder.getMembercardOrderId()!=null && csMerchantOrder.getMembercardOrderId()!=0){
-            // 记录折扣金额
-            CsMembercardConsum discountCsMembercardConsum = new CsMembercardConsum();
-            discountCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
-            discountCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
-            //记录消费原始价格
-            discountCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
-            discountCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
-            discountCsMembercardConsum.setConsumType(2);
-            //优惠单价*原始总时长
-            discountCsMembercardConsum.setConsumDiscountAmount(
-                    DoubleUtils.subtract(csMerchantOrder.getOrderOriginPrice(),DoubleUtils.multiply(csMerchantOrder.getOrderUnitPrice(),csMerchantOrder.getOrderOriginTimenum().doubleValue())));
-            discountCsMembercardConsum.setCousumDate(new Date());
-            csMembercardConsumService.save(discountCsMembercardConsum);
-
-            //如果使用优惠时长，扣除优惠时长
-            if(csMerchantOrder.getOrderMbTimenum()!=null && csMerchantOrder.getOrderMbTimenum()!=0){
-                CsMembercardConsum timeCsMembercardConsum = new CsMembercardConsum();
-                timeCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
-                timeCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
-                //记录消费原始价格
-                timeCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
-                timeCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
-                timeCsMembercardConsum.setConsumType(0);
-                //优惠单价*原始总时长
-                timeCsMembercardConsum.setConsumTime(csMerchantOrder.getOrderMbTimenum());
-                timeCsMembercardConsum.setCousumDate(new Date());
-                csMembercardConsumService.save(timeCsMembercardConsum);
-            }else{
-                csMerchantOrder.setOrderMbTimenum(new Double(0));
-            }
-
-            //如果使用优惠金额，扣除优惠金额
-            if(csMerchantOrder.getOrderMbAmount()!=null && csMerchantOrder.getOrderMbAmount()!=0){
-                // 记录折扣金额
-                CsMembercardConsum amountCsMembercardConsum = new CsMembercardConsum();
-                amountCsMembercardConsum.setCardOrderId(csMerchantOrder.getMembercardOrderId());
-                amountCsMembercardConsum.setWxuserId(csMerchantOrder.getWxuserId());
-                //记录消费原始价格
-                amountCsMembercardConsum.setAmount(csMerchantOrder.getOrderOriginPrice());
-                amountCsMembercardConsum.setRoomOrderId(csMerchantOrder.getId());
-                amountCsMembercardConsum.setConsumType(1);
-                //优惠单价*原始总时长
-                amountCsMembercardConsum.setConsumAmount(csMerchantOrder.getOrderMbAmount());
-                amountCsMembercardConsum.setCousumDate(new Date());
-                csMembercardConsumService.save(amountCsMembercardConsum);
-            }else{
-                csMerchantOrder.setOrderMbAmount(new Double(0));
-            }
-
-            //更新会员卡的剩余时长和剩余金额
-            if(csMerchantOrder.getOrderMbAmount()!=0 || csMerchantOrder.getOrderMbTimenum()!=0) {
-                CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
-                csMembercardOrderQueryParam.setId(csMerchantOrder.getMembercardOrderId());
-                csMembercardOrderQueryParam.setRestDiscountPrice(csMerchantOrder.getOrderMbAmount());
-                csMembercardOrderQueryParam.setRestDiscountTime(csMerchantOrder.getOrderMbTimenum().doubleValue());
-                csMembercardOrderService.reduceRest(csMembercardOrderQueryParam);
-            }
-        }
-
-        //如果是余额支付，则需要更新账户余额信息
-        if(csMerchantOrder.getPaymentType().equals(1)){
-            WxUserQueryParam wxUserQueryParam = new WxUserQueryParam();
-            wxUserQueryParam.setId(csMerchantOrder.getWxuserId());
-            wxUserQueryParam.setBalance(csMerchantOrder.getOrderPrice());
-            wxUserService.reduceBalance(wxUserQueryParam);
-
-            CsRechargeConsum csRechargeConsum = new CsRechargeConsum();
-            csRechargeConsum.setWxuserId(csMerchantOrder.getWxuserId());
-            csRechargeConsum.setCousumAmount(csMerchantOrder.getOrderPrice());
-            csRechargeConsum.setCousumDate(new Date());
-            csRechargeConsum.setRoomOrderId(csMerchantOrder.getId());
-            csRechargeConsum.setConsumType(0);
-            csRechargeConsumService.saveCsRechargeConsum(csRechargeConsum);
-        }
-
-        return flag;
     }
 
     /**
@@ -312,5 +203,7 @@ public class CsMerchantOrderController extends BaseController {
     public ApiResult<String> openLock(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
         return ApiResult.ok(csMerchantOrderService.openLock(csMerchantOrderQueryParam));
     }
+
+
 }
 
