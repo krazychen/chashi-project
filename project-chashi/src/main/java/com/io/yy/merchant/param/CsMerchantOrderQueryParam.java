@@ -40,7 +40,7 @@ public class CsMerchantOrderQueryParam extends OrderQueryParam {
     @ApiModelProperty(value = "预定日期")
     private Date orderDate;
 
-    @ApiModelProperty(value = "查询类型:1全部，2待付款，3待使用，4已使用，5已完成，6已取消，7已退款")
+    @ApiModelProperty(value = "查询类型:1全部，2待付款，3待使用，4已使用，5已完成，6已取消，7已退款, 8已失效")
     private int queryType;
 
     @ApiModelProperty(value = "昵称和手机号")

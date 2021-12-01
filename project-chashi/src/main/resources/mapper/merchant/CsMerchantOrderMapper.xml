@@ -63,6 +63,10 @@
         <if test="param.queryType == 7">
             AND cmo.payment_status=5
         </if>
+        <if test="param.queryType == 8">
+            AND cmo.payment_status=2
+            AND cmo.used_status =2
+        </if>
     </select>
 
     <update id="updateStatus">
