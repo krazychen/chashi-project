@@ -97,7 +97,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
         //过期的key
         String key = new String(message.getBody(), StandardCharsets.UTF_8);
         String keyValue = (String) redisTemplate.opsForValue().get(key);
-        log.debug("redis key 过期：pattern={},channel={},key={}, value= {}",new String(pattern),channel,key,keyValue);
+        log.info("redis key 过期：pattern={},channel={},key={}, value= {}",new String(pattern),channel,key,keyValue);
 
         //解决集群并发问题，由于getAndSet不是原子操作，高并发，大于1000以上需要更换方法
         String newKey = key + ".end.lock";
@@ -146,7 +146,9 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
 
             String ccId = keyValue;
             CsMerchantNotify csMerchantNotify = csMerchantNotifyService.getById(ccId);
-
+            if(csMerchantNotify ==null){
+                log.error(ccId+" 通知不存在！");
+            }
             String notifyBaojieID = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("notifyBaojieID")).collect(Collectors.toList()).get(0).getConfigValue();
             String notifyZhibaoID = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("notifyZhibaoID")).collect(Collectors.toList()).get(0).getConfigValue();
             String appid = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("appid")).collect(Collectors.toList()).get(0).getConfigValue();
