@@ -384,10 +384,20 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
                 if(StringUtils.isNotBlank(errorCode)) {
                     return (String) jsonObject.get("description");
                 }else{
+                    //开锁成功，设置订单使用状态为已使用
+                    CsMerchantOrderQueryParam temp = new CsMerchantOrderQueryParam();
+                    temp.setId(csMerchantOrderQueryParam.getId());
+                    temp.setUsedStatus("1");
+                    csMerchantOrderMapper.updateUserdStatus(temp);
                     return rtnMessage;
                 }
             }
         }
+        //开锁成功，设置订单使用状态为已使用
+        CsMerchantOrderQueryParam temp = new CsMerchantOrderQueryParam();
+        temp.setId(csMerchantOrderQueryParam.getId());
+        temp.setUsedStatus("1");
+        csMerchantOrderMapper.updateUserdStatus(temp);
         return rtnMessage;
     }
 

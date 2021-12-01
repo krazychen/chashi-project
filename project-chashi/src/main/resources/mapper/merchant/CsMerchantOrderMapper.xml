@@ -73,6 +73,17 @@
         </if>
     </update>
 
+    <update id="updateUsedStatus">
+        update cs_merchant_order set used_status = #{param.usedStatus}
+        where deleted = 0
+        <if test="param.id != null">
+            and id = #{param.id}
+        </if>
+        <if test="param.usedStatus != null and param.usedStatus == '1'">
+            and user_status = 0
+        </if>
+    </update>
+
     <select id="getTimeRangeForWx" resultType="java.lang.String">
         select cmo.order_timerage
         from cs_merchant_order cmo

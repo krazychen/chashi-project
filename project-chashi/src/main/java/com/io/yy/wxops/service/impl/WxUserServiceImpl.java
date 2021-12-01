@@ -146,7 +146,10 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
             openid = wxLoginQueryVo.getOpenid();
             unionid = wxLoginQueryVo.getUnionid();
         }
-        JSONObject userInfo = EncryptedUtil.getUserInfo(wxLoginQueryParam.getEncryptedData(),sessionKey,wxLoginQueryParam.getIv());
+        JSONObject userInfo = null;
+        if(wxLoginQueryParam.getEncryptedData() !=null && wxLoginQueryParam.getIv()!=null){
+            userInfo = EncryptedUtil.getUserInfo(wxLoginQueryParam.getEncryptedData(),sessionKey,wxLoginQueryParam.getIv());
+        }
         System.out.println(userInfo);
         if(userInfo!=null){
             WxUser wxUser =  JSONObject.toJavaObject(userInfo, WxUser.class);

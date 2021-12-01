@@ -78,4 +78,10 @@ public class CsMerchantOrderQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "茶室键盘密码")
     private String rkeyboardPwd;
+
+    @ApiModelProperty(value = "使用状态：未使用0，已使用1，已取消2")
+    private String usedStatus;
+
+    @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
+    private String status;
 }

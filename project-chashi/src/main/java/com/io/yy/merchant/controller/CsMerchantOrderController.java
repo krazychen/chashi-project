@@ -191,7 +191,7 @@ public class CsMerchantOrderController extends BaseController {
         csMerchantOrder.setOrderDate(newDate);
         csMerchantOrder.setOrderName(csMerchantOrder.getRoomName()+'-'+
                 DateUtils.getYYYYMMDDHHMMSS(csMerchantOrder.getOrderDate())+'-'+ UUIDUtil.getUUID());
-        csMerchantOrder.setUsedStatus(0);
+        csMerchantOrder.setUsedStatus("0");
         boolean flag = csMerchantOrderService.saveCsMerchantOrder(csMerchantOrder);
 
         //如果有优惠卷，扣除优惠卷

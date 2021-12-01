@@ -119,7 +119,7 @@ public class CsMerchantOrderQueryVo implements Serializable {
     private String rkeyboardPwd;
 
     @ApiModelProperty(value = "使用状态：未使用0，已使用1，已取消2, 已完成3")
-    private Integer usedStatus;
+    private String usedStatus;
 
     @ApiModelProperty(value = "订单来源：系统新增0、用户购买1")
     private Integer sourceType;
