@@ -291,7 +291,7 @@ public class WxUserServiceImpl extends BaseServiceImpl<WxUserMapper, WxUser> imp
 
         //判断是否重新获取accesstoken
         String accessToken = (String)redisTemplate.opsForValue().get("WX_ACCESS_TOKEN");
-        if(StringUtils.isBlank(accessToken)) {
+        if(StringUtils.isEmpty(accessToken)) {
             String accessUrl = accessTokenApiUrl.get(0).getConfigValue()+"&appid="+appids.get(0).getConfigValue()+"&secret="+appSecrets.get(0).getConfigValue();
             OkHttpClient client = new OkHttpClient().newBuilder()
                     .build();

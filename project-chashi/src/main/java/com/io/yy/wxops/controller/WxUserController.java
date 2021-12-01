@@ -160,7 +160,7 @@ public class WxUserController extends BaseController {
     public ApiResult<String> getWxQRCode(@PathVariable("userId") Long userId) throws Exception {
         WxUser wxUser = wxUserService.getById(userId);
         String qrFile = wxUser.getRecommendQr();
-        if(StringUtils.isBlank(qrFile)){
+        if(StringUtils.isEmpty(qrFile)){
             qrFile = wxUserService.getwxacodeunlimit(userId);
         }
         return ApiResult.ok(qrFile);

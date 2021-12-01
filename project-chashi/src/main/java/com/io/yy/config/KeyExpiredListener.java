@@ -276,7 +276,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
 
         String token = (String)redisTemplate.opsForValue().get("wx_message_token");
 
-        if(StringUtils.isBlank(token)){
+        if(StringUtils.isEmpty(token)){
             // 获取微信配置
             List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
             String notifyWXAppid = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("notifyWXAppid")).collect(Collectors.toList()).get(0).getConfigValue();
