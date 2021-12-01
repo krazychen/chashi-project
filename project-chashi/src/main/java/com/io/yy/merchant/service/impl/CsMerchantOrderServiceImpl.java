@@ -577,7 +577,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         endC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTimeRangeArr[0]));
         endC.set(Calendar.MINUTE, Integer.parseInt(endTimeRangeArr[1]));
         endC.set(Calendar.SECOND, 00);
-        log.debug(sdf.format(endC.getTime()));
+        log.info("订单结束时间:============="+sdf.format(endC.getTime()));
 
         CsMerchantNotifyQueryParam csMerchantNotifyQueryParam  = new CsMerchantNotifyQueryParam();
         csMerchantNotifyQueryParam.setMerchantId(csMerchantOrder.getMerchantId());

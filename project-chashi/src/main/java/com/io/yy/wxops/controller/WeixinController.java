@@ -1245,10 +1245,12 @@ public class WeixinController extends WeixinSupport {
                     if(flag){
                         //更新用户积分，需要先获取用户ID
                         CsRechargeRecordQueryVo csRechargeRecordQueryVo = csRechargeRecordService.getCsRechargeRecordByOutTradeNo(outTradeNo);
-                        WxUserQueryParam wxUserQueryParam = new WxUserQueryParam();
-                        wxUserQueryParam.setId(csRechargeRecordQueryVo.getWxuserId());
-                        wxUserQueryParam.setIntegral(csRechargeRecordQueryVo.getIntegral());
-                        wxUserService.updateBalanceAIntegral(wxUserQueryParam);
+                        if(csRechargeRecordQueryVo!=null){
+                            WxUserQueryParam wxUserQueryParam = new WxUserQueryParam();
+                            wxUserQueryParam.setId(csRechargeRecordQueryVo.getWxuserId());
+                            wxUserQueryParam.setIntegral(csRechargeRecordQueryVo.getIntegral());
+                            wxUserService.updateBalanceAIntegral(wxUserQueryParam);
+                        }
 
                         csMerchantOrderService.orderPayRedis(outTradeNo,null);
                     }
