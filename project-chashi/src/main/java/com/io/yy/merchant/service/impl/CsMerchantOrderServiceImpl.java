@@ -427,7 +427,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
                     CsMerchantOrderQueryParam temp = new CsMerchantOrderQueryParam();
                     temp.setId(csMerchantOrderQueryParam.getId());
                     temp.setUsedStatus("1");
-                    csMerchantOrderMapper.updateUserdStatus(temp);
+                    csMerchantOrderMapper.updateUsedStatus(temp);
                     return rtnMessage;
                 }
             }
@@ -436,7 +436,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         CsMerchantOrderQueryParam temp = new CsMerchantOrderQueryParam();
         temp.setId(csMerchantOrderQueryParam.getId());
         temp.setUsedStatus("1");
-        csMerchantOrderMapper.updateUserdStatus(temp);
+        csMerchantOrderMapper.updateUsedStatus(temp);
         return rtnMessage;
     }
 

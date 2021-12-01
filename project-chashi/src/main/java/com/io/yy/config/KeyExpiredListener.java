@@ -219,12 +219,12 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                 CsMerchantOrderQueryParam temp = new CsMerchantOrderQueryParam();
                 temp.setId(Long.parseLong(id));
                 temp.setUsedStatus("3");
-                csMerchantOrderMapper.updateUserdStatus(temp);
+                csMerchantOrderMapper.updateUsedStatus(temp);
             }else{
                 CsMerchantOrderQueryParam temp = new CsMerchantOrderQueryParam();
                 temp.setId(Long.parseLong(id));
                 temp.setUsedStatus("2");
-                csMerchantOrderMapper.updateUserdStatus(temp);
+                csMerchantOrderMapper.updateUsedStatus(temp);
             }
 
 

@@ -62,7 +62,7 @@ public interface CsMerchantOrderMapper extends BaseMapper<CsMerchantOrder> {
      * @param csMerchantOrderQueryParam
      * @return
      */
-    Integer updateUserdStatus(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
+    Integer updateUsedStatus(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 
     /**
      * 根据tearoomid和预订日期获取当前茶室已经被预定的时间段，返回是时间段list 的一个包含","的字符串
