@@ -96,8 +96,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
         String channel = new String(message.getChannel(), StandardCharsets.UTF_8);
         //过期的key
         String key = new String(message.getBody(), StandardCharsets.UTF_8);
-        String keyValue = (String) redisTemplate.opsForValue().get(key);
-        log.info("redis key 过期：pattern={},channel={},key={}, value= {}",new String(pattern),channel,key,keyValue);
+        log.info("redis key 过期：pattern={},channel={},key={}",new String(pattern),channel,key);
 
         //解决集群并发问题，由于getAndSet不是原子操作，高并发，大于1000以上需要更换方法
         String newKey = key + ".end.lock";
@@ -141,10 +140,10 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             }
         }else if(key.indexOf("ORDER_NOTIFY]")!=-1){
             // 获取通知信息
-            String merchantId = key.substring(key.lastIndexOf("]")+1);
+            String merchantId = key.substring(key.lastIndexOf("]")+1,key.lastIndexOf("["));
             CsMerchantOrder csMerchantOrder =  csMerchantOrderService.getById(merchantId);
 
-            String ccId = keyValue;
+            String ccId = key.substring(key.lastIndexOf("[")+1);
             CsMerchantNotify csMerchantNotify = csMerchantNotifyService.getById(ccId);
             if(csMerchantNotify ==null){
                 log.error(ccId+" 通知不存在！");

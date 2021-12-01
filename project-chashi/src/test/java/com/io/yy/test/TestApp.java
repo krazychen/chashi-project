@@ -73,53 +73,60 @@ public class TestApp {
                 "            &quot;color&quot;:&quot;#173177&quot;\n" +
                 "        }\n" +
                 "    }";
-        String newJson = StringEscapeUtils.unescapeHtml4(jsonStr);
-        System.out.println(newJson);
-        JSONObject jb= JSON.parseObject(newJson);
-        System.out.println(jb.get("first"));
-        System.out.println(jb.toJSONString());
+//        String newJson = StringEscapeUtils.unescapeHtml4(jsonStr);
+//        System.out.println(newJson);
+//        JSONObject jb= JSON.parseObject(newJson);
+//        System.out.println(jb.get("first"));
+//        System.out.println(jb.toJSONString());
+//
+//        Map<String,Object> map = new HashMap<String,Object>();
+//        map.put("touser","oY2SAjnmDPBf3QkzndAVMtTOw9pE");
+//        map.put("template_id","wCGTnTmnEQKP_jJ4pXchAYQF2HoXkvmRkUUKQredmH8");
+//        map.put("url","http://weixin.qq.com/download");
+////        map.put("data",jb.toJSONString());
+//
+//        Map<String,String> minMap = new HashMap();
+//        minMap.put("appid","wxd7f07fdf11d9e7f4");
+//        minMap.put("pagepath","/");
+//        map.put("miniprogram",minMap);
+//
+//        Map<String,Object> dataMap = new HashMap<String,Object>();
+//        Map<String,String> firstMap = new HashMap<String,String>();
+//        firstMap.put("value","您好，有一间保洁服务需求时间即将到，请及时处理！");
+//        Map<String,String> key1Map = new HashMap<String,String>();
+//        key1Map.put("value","您好，有一间保洁服务需求时间即将到，请及时处理！");
+//        Map<String,String> key2Map = new HashMap<String,String>();
+//        key2Map.put("value","您好，有一间保洁服务需求时间即将到，请及时处理！");
+//        Map<String,String> key3Map = new HashMap<String,String>();
+//        key3Map.put("value","您好，有一间保洁服务需求时间即将到，请及时处理！");
+//        Map<String,String> remarkMap = new HashMap<String,String>();
+//        remarkMap.put("value","您好，有一间保洁服务需求时间即将到，请及时处理！");
+//        dataMap.put("first",firstMap);
+//        dataMap.put("keyword1",key1Map);
+//        dataMap.put("keyword2",key2Map);
+//        dataMap.put("keyword3",key3Map);
+//        dataMap.put("remark",remarkMap);
+//
+//        map.put("data",dataMap);
+//
+//        System.out.println(JSON.toJSONString(map));
+//
+//        OkHttpClient client = new OkHttpClient().newBuilder()
+//                .build();
+//        MediaType mediaType = MediaType.parse("application/json");
+//        RequestBody body = RequestBody.create(mediaType,JSON.toJSONString(map));
+//        Request request = new Request.Builder()
+//                .url("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=51_bfN2U6WyqzTyIvzPB2tgHvCvuFow0dqVgLsgdCK3lPFkAV5ZnBaT_vCBCixDMbBnM3cIZ0H_vsTyqY3YGvhS1ccsTdfSGlVu8ZlbhxZMdqL2a6dMIaw3J5KSrE6hkMSlLT4rYDtyk_2JmUNsCMGaAIAQAU")
+//                .method("POST", body)
+//                .addHeader("Content-Type", "application/json")
+//                .build();
+//        Response response = client.newCall(request).execute();
 
-        Map<String,Object> map = new HashMap<String,Object>();
-        map.put("touser","oY2SAjnmDPBf3QkzndAVMtTOw9pE");
-        map.put("template_id","wCGTnTmnEQKP_jJ4pXchAYQF2HoXkvmRkUUKQredmH8");
-        map.put("url","http://weixin.qq.com/download");
-//        map.put("data",jb.toJSONString());
+        String testS="ORDER_NOTIFY]3333[4444";
+        String t1=testS.substring(testS.lastIndexOf("]")+1,testS.lastIndexOf("["));
+        String t2=testS.substring(testS.lastIndexOf("[")+1);
 
-        Map<String,String> minMap = new HashMap();
-        minMap.put("appid","wxd7f07fdf11d9e7f4");
-        minMap.put("pagepath","/");
-        map.put("miniprogram",minMap);
+        System.out.println(t1+":"+t2);
 
-        Map<String,Object> dataMap = new HashMap<String,Object>();
-        Map<String,String> firstMap = new HashMap<String,String>();
-        firstMap.put("value","您好，有一间保洁服务需求时间即将到，请及时处理！");
-        Map<String,String> key1Map = new HashMap<String,String>();
-        key1Map.put("value","您好，有一间保洁服务需求时间即将到，请及时处理！");
-        Map<String,String> key2Map = new HashMap<String,String>();
-        key2Map.put("value","您好，有一间保洁服务需求时间即将到，请及时处理！");
-        Map<String,String> key3Map = new HashMap<String,String>();
-        key3Map.put("value","您好，有一间保洁服务需求时间即将到，请及时处理！");
-        Map<String,String> remarkMap = new HashMap<String,String>();
-        remarkMap.put("value","您好，有一间保洁服务需求时间即将到，请及时处理！");
-        dataMap.put("first",firstMap);
-        dataMap.put("keyword1",key1Map);
-        dataMap.put("keyword2",key2Map);
-        dataMap.put("keyword3",key3Map);
-        dataMap.put("remark",remarkMap);
-
-        map.put("data",dataMap);
-
-        System.out.println(JSON.toJSONString(map));
-
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .build();
-        MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create(mediaType,JSON.toJSONString(map));
-        Request request = new Request.Builder()
-                .url("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=51_bfN2U6WyqzTyIvzPB2tgHvCvuFow0dqVgLsgdCK3lPFkAV5ZnBaT_vCBCixDMbBnM3cIZ0H_vsTyqY3YGvhS1ccsTdfSGlVu8ZlbhxZMdqL2a6dMIaw3J5KSrE6hkMSlLT4rYDtyk_2JmUNsCMGaAIAQAU")
-                .method("POST", body)
-                .addHeader("Content-Type", "application/json")
-                .build();
-        Response response = client.newCall(request).execute();
     }
 }
