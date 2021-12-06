@@ -370,7 +370,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         JSONObject jsonObject = JSON.parseObject(responseBody);
         String errorCode = jsonObject.getString("errcode");
         // 如果有错误代码，返回错误信息
-        if(StringUtils.isNotBlank(errorCode)){
+        if(StringUtils.isNotBlank(errorCode)&&!"0".equals(errorCode)){
             return (String) jsonObject.get("description");
         }
         //开锁成功，设置订单使用状态为已使用
@@ -429,7 +429,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
             JSONObject jsonObject = JSON.parseObject(responseBody);
             String errorCode = jsonObject.getString("errcode");
             // 如果有错误代码，返回错误信息
-            if (StringUtils.isNotBlank(errorCode)) {
+            if (StringUtils.isNotBlank(errorCode)&&!"0".equals(errorCode)) {
                 return (String) jsonObject.get("description");
             }
             return rtnMessage;
