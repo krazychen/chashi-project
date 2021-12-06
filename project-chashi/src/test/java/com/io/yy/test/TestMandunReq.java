@@ -20,8 +20,8 @@ public class TestMandunReq {
         String token = tmr.getToken(tmr.getCode());
 //        tmr.GET_BOXES(token);
 //        tmr.GET_BOX_CHANNELS_OC(token);
-//        tmr.PUT_BOX_CONTROL_Switch(token,"open");
-        tmr.GET_BOX_CHANNELS_OC(token);
+        tmr.PUT_BOX_CONTROL_Switch(token,"open");
+//        tmr.GET_BOX_CHANNELS_OC(token);
 //        log.info(tmr.getToken(tmr.getCode()));
 
     }

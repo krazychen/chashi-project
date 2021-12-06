@@ -77,6 +77,12 @@ public class CsTearoom extends BaseEntity {
     @ApiModelProperty(value = "茶室门锁id")
     private String rttlLockId;
 
+    @ApiModelProperty(value = "曼顿空开mac")
+    private String kkMac;
+
+    @ApiModelProperty(value = "曼顿空开线路")
+    private String kkOcSwitch;
+
     @ApiModelProperty(value = "排序")
     private Integer sort;
 

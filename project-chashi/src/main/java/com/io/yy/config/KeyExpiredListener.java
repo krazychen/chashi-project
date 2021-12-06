@@ -19,7 +19,10 @@ import com.io.yy.merchant.mapper.CsMerchantOrderMapper;
 import com.io.yy.merchant.param.CsMerchantOrderQueryParam;
 import com.io.yy.merchant.service.CsMerchantNotifyService;
 import com.io.yy.merchant.service.CsMerchantOrderService;
+import com.io.yy.merchant.service.CsMerchantService;
+import com.io.yy.merchant.service.CsTearoomService;
 import com.io.yy.merchant.vo.CsMerchantQueryVo;
+import com.io.yy.merchant.vo.CsTearoomQueryVo;
 import com.io.yy.system.vo.SysConfigDataRedisVo;
 import com.io.yy.util.ConfigDataUtil;
 import com.io.yy.util.lang.StringUtils;
@@ -35,11 +38,9 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -83,6 +84,12 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
 
     @Autowired
     private WxUserService wxUserService;
+
+    @Autowired
+    private CsMerchantService csMerchantService;
+
+    @Autowired
+    private CsTearoomService csTearoomService;
 
     public KeyExpiredListener(RedisMessageListenerContainer listenerContainer) {
         super(listenerContainer);
@@ -231,6 +238,51 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             redisTemplate.delete(key);
             redisTemplate.delete(newKey);
         }
+        else if (key.indexOf("ORDER_KONGTAI_USED]")!=-1){
+            String id = key.substring(key.lastIndexOf("]")+1);
+            //获取订单
+            QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapper=new QueryWrapper<CsMerchantOrder>();
+            csMerchantOrderQueryWrapper.eq("id",id);
+            CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
+
+            try {
+                CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
+                CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
+                String code = getCode(csMerchantQueryVo);
+                String token = getToken(csMerchantQueryVo,code);
+
+                PUT_BOX_CONTROL_Switch(csMerchantQueryVo,csTearoomQueryVo, token,"open");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            redisTemplate.delete(key);
+            redisTemplate.delete(newKey);
+        }else if (key.indexOf("ORDER_SHENGYING2_USED]")!=-1){
+            String id = key.substring(key.lastIndexOf("]")+1);
+            //获取订单
+            QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapper=new QueryWrapper<CsMerchantOrder>();
+            csMerchantOrderQueryWrapper.eq("id",id);
+            CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
+
+
+
+
+            redisTemplate.delete(key);
+            redisTemplate.delete(newKey);
+        }else if (key.indexOf("ORDER_SHENGYING3_USED]")!=-1){
+            String id = key.substring(key.lastIndexOf("]")+1);
+            //获取订单
+            QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapper=new QueryWrapper<CsMerchantOrder>();
+            csMerchantOrderQueryWrapper.eq("id",id);
+            CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
+
+
+
+            redisTemplate.delete(key);
+            redisTemplate.delete(newKey);
+        }
+
     }
 
     public boolean orderFailCommonOP(CsMerchantOrderQueryParam csMerchantOrderQueryParam, CsMerchantOrder csMerchantOrder){
@@ -387,6 +439,173 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
         dataMap.put("remark",remarkMap);
 
         return dataMap;
+    }
+
+
+    private String getCode(CsMerchantQueryVo csMerchantQueryVo) throws Exception{
+
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        RequestBody body = RequestBody.create(mediaType, "response_type=code" +
+                "&client_id=" + csMerchantQueryVo.getKkClientId()+
+                "&redirect_uri=" + csMerchantQueryVo.getKkRedirectUri()+
+                "&uname=" + csMerchantQueryVo.getKkUname() +
+                "&passwd=" + csMerchantQueryVo.getKkPassword());
+        Request request = new Request.Builder()
+                .url("https://open.snd02.com:443/oauth/authverify2.as")
+                .method("POST", body)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        Response response = client.newCall(request).execute();
+        String responseBody = response.body().string();
+        log.info(responseBody);
+        JSONObject jsonObject = JSON.parseObject(responseBody);
+        String success = jsonObject.getString("success");
+        String code = null;
+        if("true".equals(success)){
+            code= jsonObject.getString("code");
+        }
+        return code;
+    }
+
+    private String getToken(CsMerchantQueryVo csMerchantQueryVo, String code) throws Exception{
+
+        // 获取曼顿空开的redis key，若不存在则需要去取key；
+        String token = (String)redisTemplate.opsForValue().get("KK_TOKEN");
+        if(StringUtils.isEmpty(token)) {
+
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+
+            String client_secret = MD5(csMerchantQueryVo.getKkClientId() + "authorization_code"
+                    + csMerchantQueryVo.getKkRedirectUri()
+                    + code + csMerchantQueryVo.getKkAppSecret());
+            log.info(client_secret);
+            RequestBody body = RequestBody.create(mediaType, "client_id=" + csMerchantQueryVo.getKkClientId() +
+                    "&client_secret=" + client_secret +
+                    "&grant_type=authorization_code" +
+                    "&redirect_uri=" + csMerchantQueryVo.getKkRedirectUri() +
+                    "&code=" + code +
+                    "&response_type=code");
+            Request request = new Request.Builder()
+                    .url("https://open.snd02.com:443/oauth/token.as")
+                    .method("POST", body)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .build();
+            Response response = client.newCall(request).execute();
+            String responseBody = response.body().string();
+            log.info(responseBody);
+            JSONObject jsonObject = JSON.parseObject(responseBody);
+            String success = jsonObject.getString("success");
+            JSONObject dataObject = JSON.parseObject(jsonObject.getString("data"));
+            if ("true".equals(success)) {
+                token = dataObject.getString("accessToken");
+                Long expires_in = dataObject.getLong("expiresIn");
+                redisTemplate.opsForValue().set("KK_TOKEN",token,expires_in, TimeUnit.SECONDS);
+            } else {
+                log.error(dataObject.getString("description") + ":" + dataObject.getString("error"));
+            }
+        }
+        return token;
+    }
+
+    private void PUT_BOX_CONTROL_Switch(CsMerchantQueryVo csMerchantQueryVo, CsTearoomQueryVo csTearoomQueryVo, String token, String operation) throws Exception{
+
+        Date nowDate = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        Map<String, String> packageParams = new HashMap<String, String>();
+        packageParams.put("client_id", csMerchantQueryVo.getKkClientId());
+        packageParams.put("method", "PUT_BOX_CONTROL");
+        packageParams.put("access_token", token);
+        packageParams.put("timestamp", sdf.format(nowDate));
+        packageParams.put("projectCode", csMerchantQueryVo.getKkProjectCode());
+        packageParams.put("mac", csTearoomQueryVo.getKkMac());
+        packageParams.put("cmd", "OCSWITCH");
+        packageParams.put("value1", operation);
+        packageParams.put("value2", csTearoomQueryVo.getKkOcSwitch());
+
+        String reqMessage = concatSignString(packageParams);
+        String sigeMessage = concatMessageString(packageParams);
+        log.info(sigeMessage);
+        sigeMessage+=csMerchantQueryVo.getKkAppSecret();
+        String sign = MD5(sigeMessage);
+        reqMessage=reqMessage+"&sign="+sign;
+        log.info(reqMessage);
+
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        RequestBody body = RequestBody.create(mediaType, reqMessage);
+        Request request = new Request.Builder()
+                .url("https://open.snd02.com:443/invoke/router.as")
+                .method("POST", body)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        Response response = client.newCall(request).execute();
+        String responseBody = response.body().string();
+        log.info(responseBody);
+        JSONObject jsonObject = JSON.parseObject(responseBody);
+        String success = jsonObject.getString("success");
+        JSONObject dataObject = JSON.parseObject(jsonObject.getString("data"));
+        if ("true".equals(success)) {
+            log.info(dataObject.getString("message") );
+        } else {
+            log.error(dataObject.getString("message") );
+        }
+
+    }
+
+    static char[] hc = "0123456789abcdef".toCharArray();
+
+    public static String MD5(String param) throws Exception{
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.reset();
+        md.update(param.getBytes("utf-8"));
+        byte[] d = md.digest();
+        StringBuilder r = new StringBuilder(d.length*2);
+        for (byte b : d) {
+            r.append(hc[(b >> 4) & 0xF]);
+            r.append(hc[(b & 0xF)]);
+        }
+        return r.toString();
+    }
+
+    public static String concatMessageString(Map<String, String> map) {
+        Map<String, String> paramterMap = new HashMap<>();
+        map.forEach((key, value) -> paramterMap.put(key, value));
+        // 按照key升续排序，然后拼接参数
+        Set<String> keySet = paramterMap.keySet();
+        String[] keyArray = keySet.toArray(new String[keySet.size()]);
+        Arrays.sort(keyArray);
+        StringBuilder sb = new StringBuilder();
+
+        for (String k : keyArray) {
+            sb.append(map.get(k));
+        }
+        return sb.toString();
+    }
+
+    public static String concatSignString(Map<String, String> map) {
+        Map<String, String> paramterMap = new HashMap<>();
+        map.forEach((key, value) -> paramterMap.put(key, value));
+        // 按照key升续排序，然后拼接参数
+        Set<String> keySet = paramterMap.keySet();
+        String[] keyArray = keySet.toArray(new String[keySet.size()]);
+        Arrays.sort(keyArray);
+        StringBuilder sb = new StringBuilder();
+
+        for (String k : keyArray) {
+            if (StringUtils.isEmpty(sb.toString())) {
+                sb.append("");
+            } else {
+                sb.append("&");
+            }
+            sb.append(k).append("=").append(map.get(k));
+        }
+        return sb.toString();
     }
 }
 

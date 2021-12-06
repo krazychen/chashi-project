@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, room_name, facilities_id, facilities_name, hours_amount, start_time, time_range, recom_num_users, room_logo_url, room_logo_name, room_banner_url, room_banner_name, door_open_method, rttl_lock_id, sort, merchant_id, status, release_status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
+        id, room_name, facilities_id, facilities_name, hours_amount, start_time, time_range, recom_num_users, room_logo_url, room_logo_name, room_banner_url, room_banner_name, door_open_method, rttl_lock_id,kk_mac, kk_oc_switch, sort, merchant_id, status, release_status, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <resultMap id="csTearoom" type="com.io.yy.merchant.vo.CsTearoomQueryVo">
@@ -22,6 +22,8 @@
         <result column="room_banner_name" property="roomBannerName" javaType="java.lang.String"/>
         <result column="door_open_method" property="doorOpenMethod" javaType="java.lang.Integer"/>
         <result column="rttl_lock_id" property="rttlLockId" javaType="java.lang.String"/>
+        <result column="kk_mac" property="kkMac" javaType="java.lang.String"/>
+        <result column="kk_oc_switch" property="kkOcSwitch" javaType="java.lang.String"/>
         <result column="sort" property="sort" javaType="java.lang.Integer"/>
         <result column="merchant_id" property="merchantId" javaType="java.lang.Long"/>
         <result column="status" property="status" javaType="java.lang.String"/>
@@ -44,7 +46,7 @@
     <select id="getCsTearoomObjPageList" resultMap="csTearoom">
         select
         ct.id, ct.room_name, ct.facilities_id, ct.facilities_name, ct.hours_amount, ct.start_time, ct.time_range, ct.recom_num_users, ct.room_logo_url,
-        ct.room_logo_name, ct.room_banner_url, ct.room_banner_name, ct.door_open_method, ct.rttl_lock_id, ct.sort, ct.merchant_id, ct.status, ct.release_status, ct.create_time,
+        ct.room_logo_name, ct.room_banner_url, ct.room_banner_name, ct.door_open_method, ct.rttl_lock_id,ct.kk_mac, ct.kk_oc_switch, ct.sort, ct.merchant_id, ct.status, ct.release_status, ct.create_time,
         cm.id as m_id, cm.logo_url_value as m_logo_url_value, cm.logo_url_name as m_logo_url_name
         from cs_tearoom ct
         left join cs_merchant cm on ct.merchant_id = cm.id

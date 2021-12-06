@@ -65,6 +65,12 @@ public class CsTearoomQueryVo implements Serializable {
     @ApiModelProperty(value = "茶室门锁id")
     private String rttlLockId;
 
+    @ApiModelProperty(value = "曼顿空开mac")
+    private String kkMac;
+
+    @ApiModelProperty(value = "曼顿空开线路")
+    private String kkOcSwitch;
+
     @ApiModelProperty(value = "茶室星级，默认值5,1~5星，固定显示")
     private int rate = 5;
 

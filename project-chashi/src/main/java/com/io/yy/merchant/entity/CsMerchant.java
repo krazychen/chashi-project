@@ -134,6 +134,24 @@ public class CsMerchant extends BaseEntity {
     @ApiModelProperty(value = "科技侠或通通锁APP的登录账号密码")
     private String ttlPassword;
 
+    @ApiModelProperty(value = "曼顿空开client id")
+    private String kkClientId;
+
+    @ApiModelProperty(value = "曼顿空开kk_app_secret")
+    private String kkAppSecret;
+
+    @ApiModelProperty(value = "曼顿空开projectCode")
+    private String kkProjectCode;
+
+    @ApiModelProperty(value = "曼顿空开redirect_uri")
+    private String kkRedirectUri;
+
+    @ApiModelProperty(value = "曼顿空开uname")
+    private String kkUname;
+
+    @ApiModelProperty(value = "曼顿空开password")
+    private String kkPassword;
+
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
 

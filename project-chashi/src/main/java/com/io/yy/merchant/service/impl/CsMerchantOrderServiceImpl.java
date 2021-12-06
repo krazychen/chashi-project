@@ -26,6 +26,8 @@ import com.io.yy.common.service.impl.BaseServiceImpl;
 import com.io.yy.common.vo.Paging;
 import com.io.yy.merchant.vo.CsMerchantQueryVo;
 import com.io.yy.merchant.vo.CsTearoomQueryVo;
+import com.io.yy.system.vo.SysConfigDataRedisVo;
+import com.io.yy.util.ConfigDataUtil;
 import com.io.yy.util.UUIDUtil;
 import com.io.yy.util.lang.DateUtils;
 import com.io.yy.util.lang.DoubleUtils;
@@ -46,14 +48,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 
 /**
@@ -557,14 +558,14 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // 设置开始时间:
         Calendar startC = Calendar.getInstance();
-//                        // 清除所有:
-//                        startC.clear();
-//                        startC.setTime(csMerchantOrder.getOrderDate());
-//                        String[] startTimeRangeArr = timeRangeArr[0].split(":");
-//                        startC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startTimeRangeArr[0]));
-//                        startC.set(Calendar.MINUTE, Integer.parseInt(startTimeRangeArr[1]));
-//                        startC.set(Calendar.SECOND, 00);
-//                        logger.debug(sdf.format(startC.getTime()));
+        // 清除所有:
+        startC.clear();
+        startC.setTime(csMerchantOrder.getOrderDate());
+        String[] startTimeRangeArr = timeRangeArr[0].split(":");
+        startC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startTimeRangeArr[0]));
+        startC.set(Calendar.MINUTE, Integer.parseInt(startTimeRangeArr[1]));
+        startC.set(Calendar.SECOND, 00);
+        log.debug(sdf.format(startC.getTime()));
 
         // 设置结束时间:
         Calendar endC = Calendar.getInstance();
@@ -611,6 +612,20 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         int fenzhong = DateUtils.differentMinute(new Date(),endC.getTime());
         redisTemplate.opsForValue().set("ORDER_END_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),fenzhong, TimeUnit.MINUTES);
 
+        List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
+
+        // 设置电控的定时器
+        String kongkaitime = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("kongkaitime")).collect(Collectors.toList()).get(0).getConfigValue();
+        int kongkaifengzhong = DateUtils.differentMinute(new Date(),startC.getTime());
+        redisTemplate.opsForValue().set("ORDER_KONGTAI_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),kongkaifengzhong-Integer.parseInt(kongkaitime), TimeUnit.MINUTES);
+
+        // 设置声音的定时器
+        String shengyintime2 = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("shengyintime2")).collect(Collectors.toList()).get(0).getConfigValue();
+        String shengyintime3 = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("shengyintime3")).collect(Collectors.toList()).get(0).getConfigValue();
+
+        redisTemplate.opsForValue().set("ORDER_SHENGYING2_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),fenzhong-Integer.parseInt(shengyintime2), TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("ORDER_SHENGYING3_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),fenzhong-Integer.parseInt(shengyintime3), TimeUnit.MINUTES);
+
     }
 
     public String getLockToken(CsMerchantQueryVo csMerchantQueryVo) throws Exception {
@@ -656,4 +671,5 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         }
         return token;
     }
+
 }
