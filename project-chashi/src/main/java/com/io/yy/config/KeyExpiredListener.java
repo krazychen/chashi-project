@@ -248,6 +248,17 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             try {
                 CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
                 CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
+                if(StringUtils.isEmpty(csMerchantQueryVo.getKkClientId())||StringUtils.isEmpty(csMerchantQueryVo.getKkRedirectUri())
+                ||StringUtils.isEmpty(csMerchantQueryVo.getKkPassword())||StringUtils.isEmpty(csMerchantQueryVo.getKkAppSecret())
+                ||StringUtils.isEmpty(csMerchantQueryVo.getKkProjectCode())||StringUtils.isEmpty(csMerchantQueryVo.getKkUname()))
+                {
+                    log.error(id+":商店空开配置错误！！！");
+                }
+                if(StringUtils.isEmpty(csTearoomQueryVo.getKkMac())||StringUtils.isEmpty(csTearoomQueryVo.getKkOcSwitch())){
+                    log.error(id+":茶室空开配置错误！！！");
+
+                }
+
                 String code = getCode(csMerchantQueryVo);
                 String token = getToken(csMerchantQueryVo,code);
 
