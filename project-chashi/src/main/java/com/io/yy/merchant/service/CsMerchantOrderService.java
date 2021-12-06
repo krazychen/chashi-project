@@ -115,6 +115,14 @@ public interface CsMerchantOrderService extends BaseService<CsMerchantOrder> {
      */
     String openLock(CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception;
 
+    /**
+     * 一键开房门
+     *
+     * @param csMerchantOrderQueryParam
+     * @return
+     */
+    String openRoomLock(CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception;
+
     Boolean saveCsMerchantOrderForWX(CsMerchantOrder csMerchantOrder) throws Exception;
 
     void orderPayRedis(String out_trade_no, String orderId) throws Exception;

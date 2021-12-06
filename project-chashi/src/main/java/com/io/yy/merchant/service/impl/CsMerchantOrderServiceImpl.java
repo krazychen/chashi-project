@@ -44,6 +44,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -344,34 +345,9 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         }
 
         // 获取ttlock token的redis key，若不存在则需要去取key；
-        String token = (String)redisTemplate.opsForValue().get("TTLOCK_TOKEN");
+        String token = (String)this.getLockToken(csMerchantQueryVo);
         if(StringUtils.isEmpty(token)){
-            String requestParam = "client_id="+clientId +
-                    "&client_secret="+clientSecret +
-                    "&username="+ttlUserName +
-                    "&password="+ DigestUtils.md5Hex(ttlPassword);
-            log.info(requestParam);
-            OkHttpClient client = new OkHttpClient().newBuilder()
-                    .build();
-            MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-            RequestBody body = RequestBody.create(mediaType, requestParam);
-            Request request = new Request.Builder()
-                    .url("https://api.ttlock.com/oauth2/token")
-                    .method("POST", body)
-                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                    .build();
-            Response response = client.newCall(request).execute();
-            String responseBody = response.body().string();
-            log.info(responseBody);
-            JSONObject jsonObject = JSON.parseObject(responseBody);
-            String errorCode = jsonObject.getString("errcode");
-            // 如果有错误代码，返回错误信息
-            if(StringUtils.isNotBlank(errorCode)){
-                return (String) jsonObject.get("description");
-            }
-            token = jsonObject.getString("access_token");
-            Long expires_in = jsonObject.getLong("expires_in");
-            redisTemplate.opsForValue().set("TTLOCK_TOKEN",token,expires_in, TimeUnit.SECONDS);
+            return "请联系管理员检查智能锁的配置是否正确！";
         }
 
         Date nowDate = new Date();
@@ -396,41 +372,6 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         // 如果有错误代码，返回错误信息
         if(StringUtils.isNotBlank(errorCode)){
             return (String) jsonObject.get("description");
-        }else {
-            // 通过茶室id获取茶室
-            CsTearoomQueryVo csTearoomQueryVo = csTearoomMapper.getCsTearoomById(csMerchantOrderQueryParam.getTearoomId());
-            if(StringUtils.isNotBlank(csTearoomQueryVo.getRttlLockId())){
-                nowDate = new Date();
-                client = new OkHttpClient().newBuilder()
-                        .build();
-                requestParam = "clientId=" +clientId +
-                        "&accessToken=" + token+
-                        "&lockId=" + csTearoomQueryVo.getRttlLockId() +
-                        "&date="+ nowDate.getTime() ;
-                mediaType = MediaType.parse("text/plain");
-                body = RequestBody.create(mediaType, "");
-                request = new Request.Builder()
-                        .url("https://api.ttlock.com/v3/lock/unlock?"+requestParam)
-                        .method("POST", body)
-                        .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                        .build();
-                response = client.newCall(request).execute();
-                responseBody = response.body().string();
-                log.info(responseBody);
-                jsonObject = JSON.parseObject(responseBody);
-                errorCode = jsonObject.getString("errcode");
-                // 如果有错误代码，返回错误信息
-                if(StringUtils.isNotBlank(errorCode)) {
-                    return (String) jsonObject.get("description");
-                }else{
-                    //开锁成功，设置订单使用状态为已使用
-                    CsMerchantOrderQueryParam temp = new CsMerchantOrderQueryParam();
-                    temp.setId(csMerchantOrderQueryParam.getId());
-                    temp.setUsedStatus("1");
-                    csMerchantOrderMapper.updateUsedStatus(temp);
-                    return rtnMessage;
-                }
-            }
         }
         //开锁成功，设置订单使用状态为已使用
         CsMerchantOrderQueryParam temp = new CsMerchantOrderQueryParam();
@@ -438,6 +379,62 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         temp.setUsedStatus("1");
         csMerchantOrderMapper.updateUsedStatus(temp);
         return rtnMessage;
+    }
+
+    @Override
+    public String openRoomLock(CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        String rtnMessage = "一键开锁成功!";
+
+        // 通过商店id获取商店
+        CsMerchantQueryVo csMerchantQueryVo = csMerchantMapper.getCsMerchantById(csMerchantOrderQueryParam.getMerchantId());
+
+        // 商店开锁
+        String clientId = csMerchantQueryVo.getTtlClientId();
+        String clientSecret = csMerchantQueryVo.getTtlClientSecret();
+        String ttlUserName = csMerchantQueryVo.getTtlUsername();
+        String ttlPassword = csMerchantQueryVo.getTtlPassword();
+        if(StringUtils.isEmpty(clientId)||StringUtils.isEmpty(clientSecret)|| StringUtils.isEmpty(ttlUserName)||
+                StringUtils.isEmpty(ttlPassword)){
+            return "请联系管理员检查智能锁的配置是否正确！";
+        }
+
+        // 获取ttlock token的redis key，若不存在则需要去取key；
+        String token = (String)this.getLockToken(csMerchantQueryVo);
+        if(StringUtils.isEmpty(token)){
+            return "请联系管理员检查智能锁的配置是否正确！";
+        }
+
+        Date nowDate = new Date();
+
+        // 通过茶室id获取茶室
+        CsTearoomQueryVo csTearoomQueryVo = csTearoomMapper.getCsTearoomById(csMerchantOrderQueryParam.getTearoomId());
+        if(StringUtils.isNotBlank(csTearoomQueryVo.getRttlLockId())) {
+            nowDate = new Date();
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            String requestParam = "clientId=" + clientId +
+                    "&accessToken=" + token +
+                    "&lockId=" + csTearoomQueryVo.getRttlLockId() +
+                    "&date=" + nowDate.getTime();
+            MediaType mediaType = MediaType.parse("text/plain");
+            RequestBody body = RequestBody.create(mediaType, "");
+            Request request = new Request.Builder()
+                    .url("https://api.ttlock.com/v3/lock/unlock?" + requestParam)
+                    .method("POST", body)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .build();
+            Response response = client.newCall(request).execute();
+            String responseBody = response.body().string();
+            log.info(responseBody);
+            JSONObject jsonObject = JSON.parseObject(responseBody);
+            String errorCode = jsonObject.getString("errcode");
+            // 如果有错误代码，返回错误信息
+            if (StringUtils.isNotBlank(errorCode)) {
+                return (String) jsonObject.get("description");
+            }
+            return rtnMessage;
+        }
+        return "请联系管理员检查智能锁的配置是否正确！";
     }
 
     @Override
@@ -614,5 +611,49 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         int fenzhong = DateUtils.differentMinute(new Date(),endC.getTime());
         redisTemplate.opsForValue().set("ORDER_END_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),fenzhong, TimeUnit.MINUTES);
 
+    }
+
+    public String getLockToken(CsMerchantQueryVo csMerchantQueryVo) throws Exception {
+        // 商店开锁
+        String clientId = csMerchantQueryVo.getTtlClientId();
+        String clientSecret = csMerchantQueryVo.getTtlClientSecret();
+        String ttlUserName = csMerchantQueryVo.getTtlUsername();
+        String ttlPassword = csMerchantQueryVo.getTtlPassword();
+        if(StringUtils.isEmpty(clientId)||StringUtils.isEmpty(clientSecret)|| StringUtils.isEmpty(ttlUserName)||
+                StringUtils.isEmpty(ttlPassword)){
+            return "请联系管理员检查智能锁的配置是否正确！";
+        }
+
+        // 获取ttlock token的redis key，若不存在则需要去取key；
+        String token = (String)redisTemplate.opsForValue().get("TTLOCK_TOKEN");
+        if(StringUtils.isEmpty(token)){
+            String requestParam = "client_id="+clientId +
+                    "&client_secret="+clientSecret +
+                    "&username="+ttlUserName +
+                    "&password="+ DigestUtils.md5Hex(ttlPassword);
+            log.info(requestParam);
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+            RequestBody body = RequestBody.create(mediaType, requestParam);
+            Request request = new Request.Builder()
+                    .url("https://api.ttlock.com/oauth2/token")
+                    .method("POST", body)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .build();
+            Response response = client.newCall(request).execute();
+            String responseBody = response.body().string();
+            log.info(responseBody);
+            JSONObject jsonObject = JSON.parseObject(responseBody);
+            String errorCode = jsonObject.getString("errcode");
+            // 如果有错误代码，返回错误信息
+            if(StringUtils.isNotBlank(errorCode)){
+                return (String) jsonObject.get("description");
+            }
+            token = jsonObject.getString("access_token");
+            Long expires_in = jsonObject.getLong("expires_in");
+            redisTemplate.opsForValue().set("TTLOCK_TOKEN",token,expires_in, TimeUnit.SECONDS);
+        }
+        return token;
     }
 }
