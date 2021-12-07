@@ -152,6 +152,15 @@ public class CsMerchant extends BaseEntity {
     @ApiModelProperty(value = "曼顿空开password")
     private String kkPassword;
 
+    @ApiModelProperty(value = "第二个门锁开启后的提醒声音")
+    private String txApi1;
+
+    @ApiModelProperty(value = "结束前10分钟的提醒声音")
+    private String txApi2;
+
+    @ApiModelProperty(value = "结束前2分钟的提醒声音")
+    private String txApi3;
+
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
 

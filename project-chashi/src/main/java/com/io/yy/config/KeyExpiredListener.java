@@ -248,21 +248,22 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             try {
                 CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
                 CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
-                if(StringUtils.isEmpty(csMerchantQueryVo.getKkClientId())||StringUtils.isEmpty(csMerchantQueryVo.getKkRedirectUri())
-                ||StringUtils.isEmpty(csMerchantQueryVo.getKkPassword())||StringUtils.isEmpty(csMerchantQueryVo.getKkAppSecret())
-                ||StringUtils.isEmpty(csMerchantQueryVo.getKkProjectCode())||StringUtils.isEmpty(csMerchantQueryVo.getKkUname()))
+                if(StringUtils.isNotEmpty(csMerchantQueryVo.getKkClientId())&&StringUtils.isNotEmpty(csMerchantQueryVo.getKkRedirectUri())
+                &&StringUtils.isNotEmpty(csMerchantQueryVo.getKkPassword())&&StringUtils.isNotEmpty(csMerchantQueryVo.getKkAppSecret())
+                &&StringUtils.isNotEmpty(csMerchantQueryVo.getKkProjectCode())&&StringUtils.isNotEmpty(csMerchantQueryVo.getKkUname()))
                 {
+                    if(StringUtils.isNotEmpty(csTearoomQueryVo.getKkMac())&&StringUtils.isNotEmpty(csTearoomQueryVo.getKkOcSwitch())){
+                        String code = getCode(csMerchantQueryVo);
+                        String token = getToken(csMerchantQueryVo,code);
+
+                        PUT_BOX_CONTROL_Switch(csMerchantQueryVo,csTearoomQueryVo, token,"open");
+                    }else{
+                        log.error(id+":茶室空开配置错误！！！");
+                    }
+                }else {
                     log.error(id+":商店空开配置错误！！！");
                 }
-                if(StringUtils.isEmpty(csTearoomQueryVo.getKkMac())||StringUtils.isEmpty(csTearoomQueryVo.getKkOcSwitch())){
-                    log.error(id+":茶室空开配置错误！！！");
 
-                }
-
-                String code = getCode(csMerchantQueryVo);
-                String token = getToken(csMerchantQueryVo,code);
-
-                PUT_BOX_CONTROL_Switch(csMerchantQueryVo,csTearoomQueryVo, token,"open");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -276,6 +277,31 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             csMerchantOrderQueryWrapper.eq("id",id);
             CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
 
+            try {
+                CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
+                if(StringUtils.isNotEmpty(csMerchantQueryVo.getTxApi2())){
+                    OkHttpClient client = new OkHttpClient().newBuilder()
+                            .build();
+                    Request request = new Request.Builder()
+                            .url(csMerchantQueryVo.getTxApi2())
+                            .method("GET", null)
+                            .build();
+                    Response response = client.newCall(request).execute();
+                    String responseBody = response.body().string();
+                    log.info(responseBody);
+                    JSONObject jsonObject = JSON.parseObject(responseBody);
+                    String Success = jsonObject.getString("Success");
+                    if("true".equals(Success)){
+                        log.info(id+": 声音提醒正常");
+                    }else{
+                        log.error("声音提醒api存在问题，请检查！");
+                    }
+                }else{
+                    log.error(id+":商店提醒配置错误！！！");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 
 
@@ -288,7 +314,31 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             csMerchantOrderQueryWrapper.eq("id",id);
             CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
 
-
+            try {
+                CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
+                if(StringUtils.isNotEmpty(csMerchantQueryVo.getTxApi3())){
+                    OkHttpClient client = new OkHttpClient().newBuilder()
+                            .build();
+                    Request request = new Request.Builder()
+                            .url(csMerchantQueryVo.getTxApi3())
+                            .method("GET", null)
+                            .build();
+                    Response response = client.newCall(request).execute();
+                    String responseBody = response.body().string();
+                    log.info(responseBody);
+                    JSONObject jsonObject = JSON.parseObject(responseBody);
+                    String Success = jsonObject.getString("Success");
+                    if("true".equals(Success)){
+                        log.info(id+": 声音提醒正常");
+                    }else{
+                        log.error("声音提醒api存在问题，请检查！");
+                    }
+                }else{
+                    log.error(id+":商店提醒配置错误！！！");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             redisTemplate.delete(key);
             redisTemplate.delete(newKey);
