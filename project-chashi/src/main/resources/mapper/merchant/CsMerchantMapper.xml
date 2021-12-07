@@ -8,7 +8,7 @@
         logo_url_name, carousel_url_value, carousel_url_name, office_code, contact_phonse, label_id, label_name, facilities_id,
         facilities_name, services_id, services_name, order_refund_fee, merchant_info, usage_notice, start_time, end_time,
         ttl_client_id, ttl_client_secret, ttl_lock_id, ttl_username, ttl_password,kk_client_id, kk_app_secret, kk_project_code,
-        kk_redirect_uri, kk_uname, kk_password, txApi1, txApi2, txApi3, status, deleted, version,
+        kk_redirect_uri, kk_uname, kk_password, tx_api1, tx_api2, tx_api3, status, deleted, version,
         create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
