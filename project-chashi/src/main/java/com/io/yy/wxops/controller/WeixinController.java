@@ -1059,7 +1059,7 @@ public class WeixinController extends WeixinSupport {
             CsRechargeConsum csRechargeConsum = csRechargeConsumService.getOne(new QueryWrapper<CsRechargeConsum>().eq("room_order_id", csMerchantOrder.getId()));
             csRechargeConsum.setStatus("0");
             try {
-                csRechargeConsumService.saveCsRechargeConsum(csRechargeConsum);
+                csRechargeConsumService.updateCsRechargeConsum(csRechargeConsum);
             } catch (Exception e) {
                 e.printStackTrace();
             }
