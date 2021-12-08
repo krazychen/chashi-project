@@ -203,7 +203,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
 
                 // 获取用户
                 WxUser wxUser = wxUserService.getById(csMerchantOrder.getWxuserId());
-                dataMap = this.getZhibanDataMap(sdf.format(startC.getTime()),wxUser.getNickname(),csMerchantOrder.getWxuserPhone(),csMerchantOrder.getRoomName(),String.valueOf(Double.valueOf(csMerchantOrder.getOrderOriginTimenum())*0.5));
+                dataMap = this.getZhibanDataMap(sdf.format(startC.getTime()),wxUser.getNickname(),csMerchantOrder.getWxuserPhone(),csMerchantOrder.getRoomName(),String.valueOf(Double.valueOf(csMerchantOrder.getOrderOriginTimenum())));
 
             }
             map.put("data",dataMap);
