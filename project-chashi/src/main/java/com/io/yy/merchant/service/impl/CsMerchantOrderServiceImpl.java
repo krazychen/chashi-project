@@ -617,7 +617,13 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         // 设置电控的定时器
         String kongkaitime = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("kongkaitime")).collect(Collectors.toList()).get(0).getConfigValue();
         int kongkaifengzhong = DateUtils.differentMinute(new Date(),startC.getTime());
-        redisTemplate.opsForValue().set("ORDER_KONGTAI_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),kongkaifengzhong-Integer.parseInt(kongkaitime), TimeUnit.MINUTES);
+        // 对于立即使用的，如果分钟小于0，则默认为1
+        int kktime = kongkaifengzhong-Integer.parseInt(kongkaitime);
+        if(kktime <=0){
+            redisTemplate.opsForValue().set("ORDER_KONGTAI_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),10, TimeUnit.SECONDS);
+        }else{
+            redisTemplate.opsForValue().set("ORDER_KONGTAI_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),kktime, TimeUnit.MINUTES);
+        }
 
         // 设置声音的定时器
         String shengyintime2 = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("shengyintime2")).collect(Collectors.toList()).get(0).getConfigValue();
