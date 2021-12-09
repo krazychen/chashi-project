@@ -280,6 +280,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             try {
                 CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
                 if(StringUtils.isNotEmpty(csMerchantQueryVo.getTxApi2())){
+                    log.info("声音："+csMerchantQueryVo.getTxApi2());
                     OkHttpClient client = new OkHttpClient().newBuilder()
                             .build();
                     Request request = new Request.Builder()
@@ -288,7 +289,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                             .build();
                     Response response = client.newCall(request).execute();
                     String responseBody = response.body().string();
-                    log.info(responseBody);
+                    log.info("声音:"+responseBody);
                     JSONObject jsonObject = JSON.parseObject(responseBody);
                     String Success = jsonObject.getString("Success");
                     if("true".equals(Success)){

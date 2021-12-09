@@ -122,11 +122,26 @@ public class TestApp {
 //                .build();
 //        Response response = client.newCall(request).execute();
 
-        String testS="ORDER_NOTIFY]3333[4444";
-        String t1=testS.substring(testS.lastIndexOf("]")+1,testS.lastIndexOf("["));
-        String t2=testS.substring(testS.lastIndexOf("[")+1);
-
-        System.out.println(t1+":"+t2);
+//        String testS="ORDER_NOTIFY]3333[4444";
+//        String t1=testS.substring(testS.lastIndexOf("]")+1,testS.lastIndexOf("["));
+//        String t2=testS.substring(testS.lastIndexOf("[")+1);
+//
+//        System.out.println(t1+":"+t2);
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        Request request = new Request.Builder()
+                .url("http://test.520178.net/radio.php?sid=2&ProKey=a1aQWO3O1fv&sname=861714055496545")
+                .method("GET", null)
+                .build();
+        Response response = client.newCall(request).execute();
+        String responseBody = response.body().string();
+        JSONObject jsonObject = JSON.parseObject(responseBody);
+        String Success = jsonObject.getString("Success");
+        if("true".equals(Success)){
+            System.out.println(": 声音提醒正常");
+        }else{
+            System.out.println("声音提醒api存在问题，请检查！");
+        }
 
     }
 }
