@@ -257,9 +257,10 @@ public class CsTearoomController extends BaseController {
                     logoFileUrls += whyySystemProperties.getConfigAccessUrl() +"room/"+ fileName;
                 }
             }
+            csTearoom.setRoomLogoUrl(logoFileUrls);
+            csTearoom.setRoomLogoName(logoFileNames);
         }
-        csTearoom.setRoomLogoUrl(logoFileUrls);
-        csTearoom.setRoomLogoName(logoFileNames);
+
 
         //banner
         MultipartFile[] bannerUploadfiles=csTearoom.getBannerUploadFileAdd();
@@ -292,9 +293,9 @@ public class CsTearoomController extends BaseController {
                     bannerFileUrls += whyySystemProperties.getConfigAccessUrl() +"room/"+ fileName;
                 }
             }
+            csTearoom.setRoomBannerUrl(bannerFileUrls);
+            csTearoom.setRoomBannerName(bannerFileNames);
         }
-        csTearoom.setRoomBannerUrl(bannerFileUrls);
-        csTearoom.setRoomBannerName(bannerFileNames);
 
         boolean flag = csTearoomService.updateCsTearoom(csTearoom);
         return ApiResult.result(flag);
