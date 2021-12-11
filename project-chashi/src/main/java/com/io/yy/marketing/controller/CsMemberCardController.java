@@ -102,8 +102,10 @@ public class CsMemberCardController extends BaseController {
 
         //logo 新增文件
         MultipartFile[] uploadfiles=csMemberCard.getUploadFileAdd();
-        String fileNames=StringUtils.isNotBlank(csMemberCard.getLogoName())?csMemberCard.getLogoName():"";
-        String fileUrls= StringUtils.isNotBlank(csMemberCard.getLogoUrl())?csMemberCard.getLogoUrl():"";
+//        String fileNames=StringUtils.isNotBlank(csMemberCard.getLogoName())?csMemberCard.getLogoName():"";
+//        String fileUrls= StringUtils.isNotBlank(csMemberCard.getLogoUrl())?csMemberCard.getLogoUrl():"";
+        String fileNames="";
+        String fileUrls= "";
         if(ArrayUtils.isNotEmpty(uploadfiles)) {
             for (int i = 0; i < uploadfiles.length; i++) {
                 MultipartFile uploadF = uploadfiles[i];
@@ -116,9 +118,10 @@ public class CsMemberCardController extends BaseController {
                     fileUrls += whyySystemProperties.getConfigAccessUrl() + fileName;
                 }
             }
+            csMemberCard.setLogoUrl(fileUrls);
+            csMemberCard.setLogoName(fileNames);
         }
-        csMemberCard.setLogoUrl(fileUrls);
-        csMemberCard.setLogoName(fileNames);
+
         csMemberCard.setUsageNotice(EncodeUtils.decodeHtml(csMemberCard.getUsageNotice()));
         csMemberCard.setUseRights(EncodeUtils.decodeHtml(csMemberCard.getUseRights()));
 
