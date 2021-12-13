@@ -2,6 +2,7 @@ package com.io.yy.wxops.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.io.yy.common.api.ApiResult;
+import com.io.yy.core.properties.WhyySystemProperties;
 import com.io.yy.marketing.entity.CsMembercardConsum;
 import com.io.yy.marketing.entity.CsMembercardOrder;
 import com.io.yy.marketing.entity.CsRechargeConsum;
@@ -29,6 +30,7 @@ import com.io.yy.util.lang.DoubleUtils;
 import com.io.yy.util.lang.StringUtils;
 import com.io.yy.wxops.param.WxUserQueryParam;
 import com.io.yy.wxops.service.WxUserService;
+import com.io.yy.wxops.utils.ClientCustomSSL;
 import com.io.yy.wxops.utils.PayUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -67,6 +69,9 @@ public class WeixinController extends WeixinSupport {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String grant_type = "authorization_code";
+
+    @Autowired
+    private WhyySystemProperties whyySystemProperties;
 
     @Autowired
     private CsMembercardOrderService csMembercardOrderService;
@@ -936,6 +941,7 @@ public class WeixinController extends WeixinSupport {
             String key = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("key")).collect(Collectors.toList()).get(0).getConfigValue();
             String sub_mch_id = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("sub_mch_id")).collect(Collectors.toList()).get(0).getConfigValue();
             String refuse_url = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("refund_url")).collect(Collectors.toList()).get(0).getConfigValue();
+            String SSLCERT_PATH = whyySystemProperties.getRefundUrl();
 
             String outRefundNo = "reorder_"+UUIDUtil.getUUIDBits(24);
             csMerchantOrder.setOutRefundNo(outRefundNo);
@@ -981,7 +987,8 @@ public class WeixinController extends WeixinSupport {
             logger.info("调试模式_退款接口 请求XML数据：" + xml);
 
             //调用统一下单接口，并接受返回的结果
-            String result = PayUtil.httpRequest(refuse_url, "POST", xml);
+//            String result = PayUtil.httpRequest(refuse_url, "POST", xml);
+            String result = ClientCustomSSL.doRefund(refuse_url,xml,SSLCERT_PATH,key);
 
             logger.info("调试模式_退款接口 返回XML数据：" + result);
 

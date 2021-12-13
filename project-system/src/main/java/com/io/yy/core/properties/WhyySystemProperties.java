@@ -112,6 +112,11 @@ public class WhyySystemProperties {
     private String configAccessUrl;
 
     /**
+     * 证书的路径
+     */
+    private String refundUrl;
+
+    /**
      * 多租户过滤表
      */
     private String tentTables;

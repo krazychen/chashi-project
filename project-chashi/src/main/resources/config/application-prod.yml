@@ -51,6 +51,8 @@ whyy-system:
   config-access-patterns: ${whyy-system.config-access-path}**
   # 资源访问全路径前缀：http://localhost:8888/resource/
   config-access-url: https://www.rongjingtea.com${server.servlet.context-path}${whyy-system.config-access-path}
+  # 证书的路径
+  refund-url: /home/refund/apiclient_cert.p12
 
 server:
   port: 1111
