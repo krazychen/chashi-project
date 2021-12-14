@@ -553,6 +553,10 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
             csMerchantOrderQueryWrapper.eq("id",orderId);
         }
         CsMerchantOrder csMerchantOrder = this.getOne(csMerchantOrderQueryWrapper);
+
+        //删除订单关闭的定时器
+        redisTemplate.delete("MERCHANT_ORDER_"+csMerchantOrder.getId());
+
         //计算订单开始时间和结束时间
         String[] timeRangeArr = csMerchantOrder.getOrderTimerage().split("-");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
