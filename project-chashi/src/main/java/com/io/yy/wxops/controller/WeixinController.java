@@ -959,7 +959,7 @@ public class WeixinController extends WeixinSupport {
 //            packageParams.put("sub_mch_id", sub_mch_id);
             packageParams.put("nonce_str", nonce_str);
             packageParams.put("out_trade_no", csMerchantOrder.getOutTradeNo());//商户订单号
-            packageParams.put("out_refund_no", csMerchantOrder.getOutRefundNo());//商户退款单号
+            packageParams.put("out_refund_no", StringUtils.getRandomStringByLength(32));//商户退款单号
             packageParams.put("total_fee", money);//支付金额，这边需要转成字符串类型，否则后面的签名会失败
             packageParams.put("refund_fee", money);//申请退款金额
             packageParams.put("refund_desc", "申请退款");
