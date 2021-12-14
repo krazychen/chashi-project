@@ -956,7 +956,7 @@ public class WeixinController extends WeixinSupport {
             Map<String, String> packageParams = new HashMap<String, String>();
             packageParams.put("appid",appid);
             packageParams.put("mch_id", mch_id);
-            packageParams.put("sub_mch_id", sub_mch_id);
+//            packageParams.put("sub_mch_id", sub_mch_id);
             packageParams.put("nonce_str", nonce_str);
             packageParams.put("out_trade_no", csMerchantOrder.getOutTradeNo());//商户订单号
             packageParams.put("out_refund_no", csMerchantOrder.getOutRefundNo());//商户退款单号
