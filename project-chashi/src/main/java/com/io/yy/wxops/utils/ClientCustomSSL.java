@@ -39,11 +39,15 @@ public class ClientCustomSSL {
         SSLContext sslcontext = SSLContexts.custom()
                 .loadKeyMaterial(keyStore, SSLCERT_PASSWORD.toCharArray())//这里也是写密码的
                 .build();
+//        // Allow TLSv1 protocol only
+//        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+//                sslcontext,
+//                new String[] { "TLSv1" },
+//                null,
+//                SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
         // Allow TLSv1 protocol only
         SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
                 sslcontext,
-                new String[] { "TLSv1" },
-                null,
                 SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
         CloseableHttpClient httpclient = HttpClients.custom()
                 .setSSLSocketFactory(sslsf)
