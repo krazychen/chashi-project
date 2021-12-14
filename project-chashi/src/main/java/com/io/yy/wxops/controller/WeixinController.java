@@ -975,12 +975,12 @@ public class WeixinController extends WeixinSupport {
             //拼接统一下单接口使用的xml数据，要将上一步生成的签名一起拼接进去
             String xml = "<xml>" + "<appid>" + appid + "</appid>"
                     + "<mch_id>" + mch_id + "</mch_id>"
-                    + "<sub_mch_id>" + sub_mch_id + "</sub_mch_id>"
+//                    + "<sub_mch_id>" + sub_mch_id + "</sub_mch_id>"
                     + "<nonce_str>" + nonce_str + "</nonce_str>"
-                    + "<out_trade_no>" + csMerchantOrder.getOutTradeNo() + "</out_trade_no>"
                     + "<out_refund_no>" + csMerchantOrder.getOutRefundNo() + "</out_refund_no>"
-                    + "<total_fee>" + money + "</total_fee>"
+                    + "<out_trade_no>" + csMerchantOrder.getOutTradeNo() + "</out_trade_no>"
                     + "<refund_fee>" + money + "</refund_fee>"
+                    + "<total_fee>" + money + "</total_fee>"
                     + "<refund_desc>" + "申请退款" + "</refund_fee>"
                     + "<sign>" + mysign + "</sign>"
                     + "</xml>";
