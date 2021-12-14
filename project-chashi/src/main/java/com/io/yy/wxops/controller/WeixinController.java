@@ -1012,6 +1012,12 @@ public class WeixinController extends WeixinSupport {
         boolean flag = orderFailCommonOP(csMerchantOrderQueryParam,csMerchantOrder);
 
         if(flag) {
+            // 退款成功，删除定时器
+            redisTemplate.delete("ORDER_NOTIFY]"+csMerchantOrder.getId());
+            redisTemplate.delete("ORDER_END_USED]"+csMerchantOrder.getId());
+            redisTemplate.delete("ORDER_KONGTAI_USED]"+csMerchantOrder.getId());
+            redisTemplate.delete("ORDER_SHENGYING2_USED]"+csMerchantOrder.getId());
+            redisTemplate.delete("ORDER_SHENGYING3_USED]"+csMerchantOrder.getId());
             return ApiResult.ok("支付退款设置成功！");
         }else{
             return ApiResult.fail("支付退款设置失败！");

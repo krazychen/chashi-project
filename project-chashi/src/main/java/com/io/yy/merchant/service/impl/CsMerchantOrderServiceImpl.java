@@ -555,7 +555,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         CsMerchantOrder csMerchantOrder = this.getOne(csMerchantOrderQueryWrapper);
 
         //删除订单关闭的定时器
-        redisTemplate.delete("MERCHANT_ORDER_"+csMerchantOrder.getId());
+        redisTemplate.delete("MERCHANT_ORDER]"+csMerchantOrder.getId());
 
         //计算订单开始时间和结束时间
         String[] timeRangeArr = csMerchantOrder.getOrderTimerage().split("-");
