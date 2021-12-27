@@ -1033,7 +1033,7 @@ public class WeixinController extends WeixinSupport {
         //判断是否有优惠卷，有的话将优惠卷设置为未使用；
         if(newCsMerchantOrder.getCouponReleasedId()!=null && newCsMerchantOrder.getCouponReleasedId()!=0){
             CsCouponReleasedQueryParam csCouponReleasedQueryParam = new CsCouponReleasedQueryParam();
-            csCouponReleasedQueryParam.setId(csMerchantOrder.getCouponReleasedId());
+            csCouponReleasedQueryParam.setId(newCsMerchantOrder.getCouponReleasedId());
             csCouponReleasedQueryParam.setIsUsed(0);
             csCouponReleasedQueryParam.setUsedTime(null);
             flag = csCouponReleasedService.updateUsedStatus(csCouponReleasedQueryParam);
@@ -1042,7 +1042,7 @@ public class WeixinController extends WeixinSupport {
         //判断是否有会员卡，有的话删除会员卡折扣、优惠数据，并更新会员卡的剩余优惠时长和金额
         if(newCsMerchantOrder.getMembercardOrderId()!=null && newCsMerchantOrder.getMembercardOrderId()!=0){
             QueryWrapper<CsMembercardConsum> csMembercardConsumQueryWrapper=new QueryWrapper<CsMembercardConsum>();
-            csMembercardConsumQueryWrapper.eq("room_order_id",csMerchantOrder.getId());
+            csMembercardConsumQueryWrapper.eq("room_order_id",newCsMerchantOrder.getId());
             List<CsMembercardConsum> csMembercardConsumList=csMembercardConsumService.list(csMembercardConsumQueryWrapper);
             csMembercardConsumList.stream().forEach(cc-> {
                 try {
@@ -1064,10 +1064,10 @@ public class WeixinController extends WeixinSupport {
         }
         //更新余额和积分
         //如果是余额支付，则需要更新账户余额信息
-        if(csMerchantOrder.getPaymentType().equals(1)){
+        if(newCsMerchantOrder.getPaymentType().equals(1)){
             WxUserQueryParam wxUserQueryParam = new WxUserQueryParam();
-            wxUserQueryParam.setId(csMerchantOrder.getWxuserId());
-            wxUserQueryParam.setBalance(csMerchantOrder.getOrderPrice());
+            wxUserQueryParam.setId(newCsMerchantOrder.getWxuserId());
+            wxUserQueryParam.setBalance(newCsMerchantOrder.getOrderPrice());
             wxUserQueryParam.setIntegral(0);
             wxUserService.updateBalanceAIntegral(wxUserQueryParam);
 
