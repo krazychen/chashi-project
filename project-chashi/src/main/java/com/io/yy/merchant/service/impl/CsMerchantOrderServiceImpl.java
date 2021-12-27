@@ -445,8 +445,8 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         csMerchantOrder.setPaymentStatus(2);
         Date now = new Date();
         LocalDate localDate=now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        Date newDate=java.sql.Date.valueOf(localDate);
-        csMerchantOrder.setOrderDate(newDate);
+//        Date newDate=java.sql.Date.valueOf(localDate);
+        csMerchantOrder.setOrderDate(csMerchantOrder.getOrderDate());
         csMerchantOrder.setOrderName(csMerchantOrder.getRoomName()+'-'+
                 DateUtils.getYYYYMMDDHHMMSS(csMerchantOrder.getOrderDate())+'-'+ UUIDUtil.getUUID());
         csMerchantOrder.setUsedStatus("0");
