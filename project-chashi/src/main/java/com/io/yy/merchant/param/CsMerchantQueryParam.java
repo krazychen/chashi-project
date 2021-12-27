@@ -31,6 +31,9 @@ public class CsMerchantQueryParam extends OrderQueryParam {
     @ApiModelProperty(value = "商店名称")
     private String merchantName;
 
+    @ApiModelProperty(value = "商店主键")
+    private Long merchantId;
+
     @ApiModelProperty(value = "账户")
     private String merchantAccount;
 

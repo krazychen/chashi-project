@@ -6,6 +6,7 @@ import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.merchant.mapper.CsMerchantMapper;
 import com.io.yy.merchant.service.CsMerchantService;
 import com.io.yy.merchant.param.CsMerchantQueryParam;
+import com.io.yy.merchant.vo.CsMerchantOrderTotalQueryVo;
 import com.io.yy.merchant.vo.CsMerchantQueryVo;
 import com.io.yy.common.service.impl.BaseServiceImpl;
 import com.io.yy.common.vo.Paging;
@@ -302,6 +303,19 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
     @Override
     public CsMerchantQueryVo getCsMerchantByIdForWx(CsMerchantQueryParam csMerchantQueryPara) throws Exception {
         return csMerchantMapper.getCsMerchantByIdForWx(csMerchantQueryPara.getId());
+    }
+
+    @Override
+    public Paging<CsMerchantOrderTotalQueryVo> getCsMerchantOrderTotal(CsMerchantQueryParam csMerchantQueryParam) throws Exception {
+        csMerchantQueryParam.setSize(7);
+        Page page = setPageParam(csMerchantQueryParam, null);
+        IPage<CsMerchantOrderTotalQueryVo> iPage = csMerchantMapper.getCsMerchantOrderTotal(page, csMerchantQueryParam);
+        return new Paging(iPage);
+    }
+
+    @Override
+    public CsMerchantOrderTotalQueryVo getCsMerchantTotalStatical() throws Exception {
+        return csMerchantMapper.getCsMerchantTotalStatical();
     }
 
     // 计算半径

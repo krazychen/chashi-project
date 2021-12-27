@@ -1218,6 +1218,15 @@ public class WeixinController extends WeixinSupport {
 
         Map map = PayUtil.doXMLParse(notityXml);
 
+        if(map ==null){
+            logger.debug("微信回调返回空，请检查微信支付！！");
+            //商户处理后同步返回给微信信息，参考：https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_7&index=8
+            BufferedOutputStream out = new BufferedOutputStream(
+                    response.getOutputStream());
+            out.write(resXml.getBytes());
+            out.flush();
+            out.close();
+        }
         String returnCode = (String) map.get("return_code");
         String outTradeNo = (String)map.get("out_trade_no");
         if ("SUCCESS".equals(returnCode)) {

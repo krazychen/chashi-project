@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.merchant.param.CsMerchantQueryParam;
+import com.io.yy.merchant.vo.CsMerchantOrderTotalQueryVo;
 import com.io.yy.merchant.vo.CsMerchantQueryVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -92,4 +93,19 @@ public interface CsMerchantMapper extends BaseMapper<CsMerchant> {
      */
     CsMerchantQueryVo getCsMerchantByIdForWx(Serializable id);
 
+    /**
+     * 获取分页对象
+     *
+     * @param page
+     * @param csMerchantQueryParam
+     * @return
+     */
+    IPage<CsMerchantOrderTotalQueryVo> getCsMerchantOrderTotal(@Param("page") Page page, @Param("param") CsMerchantQueryParam csMerchantQueryParam);
+
+    /**
+     * 获取统计数据
+     *
+     * @return
+     */
+    CsMerchantOrderTotalQueryVo getCsMerchantTotalStatical();
 }

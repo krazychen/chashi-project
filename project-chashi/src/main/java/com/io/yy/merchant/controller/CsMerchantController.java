@@ -7,6 +7,7 @@ import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
 import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.merchant.service.CsMerchantService;
 import com.io.yy.merchant.param.CsMerchantQueryParam;
+import com.io.yy.merchant.vo.CsMerchantOrderTotalQueryVo;
 import com.io.yy.merchant.vo.CsMerchantQueryVo;
 import com.io.yy.common.api.ApiResult;
 import com.io.yy.common.controller.BaseController;
@@ -343,6 +344,28 @@ public class CsMerchantController extends BaseController {
 
         }
         return ApiResult.ok(csMerchantQueryVo);
+    }
+
+    /**
+     * 平台和商家统计信息
+     */
+    @PostMapping("/getCsMerchantOrderTotal")
+    @RequiresPermissions("cs:merchant:page")
+    @ApiOperation(value = "获取CsMerchant分页列表", notes = "平台和商家统计信息", response = CsMerchantOrderTotalQueryVo.class)
+    public ApiResult<Paging<CsMerchantOrderTotalQueryVo>> getCsMerchantOrderTotal(@Valid @RequestBody CsMerchantQueryParam csMerchantQueryParam) throws Exception {
+        Paging<CsMerchantOrderTotalQueryVo> paging = csMerchantService.getCsMerchantOrderTotal(csMerchantQueryParam);
+        return ApiResult.ok(paging);
+    }
+
+    /**
+     * 获取统计数据
+     */
+    @GetMapping("/getCsMerchantTotalStatical")
+    @RequiresPermissions("cs:merchant:page")
+    @ApiOperation(value = "获取统计数据", notes = "获取统计数据", response = CsMerchantQueryVo.class)
+    public ApiResult<CsMerchantOrderTotalQueryVo> getCsMerchantTotalStatical() throws Exception {
+        CsMerchantOrderTotalQueryVo csMerchantOrderTotalQueryVo = csMerchantService.getCsMerchantTotalStatical();
+        return ApiResult.ok(csMerchantOrderTotalQueryVo);
     }
 }
 

@@ -1,10 +1,14 @@
 package com.io.yy.merchant.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.common.service.BaseService;
 import com.io.yy.merchant.param.CsMerchantQueryParam;
+import com.io.yy.merchant.vo.CsMerchantOrderTotalQueryVo;
 import com.io.yy.merchant.vo.CsMerchantQueryVo;
 import com.io.yy.common.vo.Paging;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -137,4 +141,20 @@ public interface CsMerchantService extends BaseService<CsMerchant> {
      * @throws Exception
      */
     CsMerchantQueryVo getCsMerchantByIdForWx(CsMerchantQueryParam csMerchantQueryParam) throws Exception;
+
+    /**
+     * 获取分页对象
+     *
+     * @param csMerchantQueryParam
+     * @return
+     */
+    Paging<CsMerchantOrderTotalQueryVo> getCsMerchantOrderTotal(@Param("param") CsMerchantQueryParam csMerchantQueryParam) throws Exception;
+
+    /**
+     * 获取统计数据
+     *
+     * @return
+     * @throws Exception
+     */
+    CsMerchantOrderTotalQueryVo getCsMerchantTotalStatical() throws Exception;
 }

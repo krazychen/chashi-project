@@ -166,4 +166,29 @@
         where 1=1 and cm.id =  #{param.id}
         ORDER BY ct.sort ASC, ct.hours_amount ASC
     </select>
+
+    <select id="getCsMerchantOrderTotal" resultType="com.io.yy.merchant.vo.CsMerchantOrderTotalQueryVo">
+        SELECT order_date,COUNT(id) AS order_nums ,SUM(order_price) AS order_prices
+        FROM cs_merchant_order
+        WHERE 1=1
+        <if test="param.merchantId != null and param.merchantId.trim() != ''">
+            and merchant_id = #{param.merchantId}
+        </if>
+        GROUP BY order_date ORDER BY order_date DESC
+    </select>
+
+    <select id="getCsMerchantTotalStatical" resultType="com.io.yy.merchant.vo.CsMerchantOrderTotalQueryVo">
+        SELECT wx.wxusers, cmo.order_nums, cmo.order_prices,cm.merchant_nums
+        FROM (
+             SELECT COUNT(id) AS wxusers
+             FROM wx_user
+         ) AS wx,
+         (
+             SELECT COUNT(id) AS order_nums,SUM(order_price) AS order_prices
+             FROM cs_merchant_order
+         ) AS cmo,
+         ( SELECT COUNT(id) AS merchant_nums
+           FROM cs_merchant
+         ) cm
+    </select>
 </mapper>
