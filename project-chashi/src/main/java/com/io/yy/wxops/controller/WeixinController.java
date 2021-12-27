@@ -480,8 +480,8 @@ public class WeixinController extends WeixinSupport {
         csMerchantOrder.setPaymentStatus(0);
         Date now = new Date();
         LocalDate localDate=now.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        Date newDate=java.sql.Date.valueOf(localDate);
-        csMerchantOrder.setOrderDate(newDate);
+//        Date newDate=java.sql.Date.valueOf(localDate);
+        csMerchantOrder.setOrderDate(csMerchantOrder.getOrderDate());
         csMerchantOrder.setOrderName(csMerchantOrder.getRoomName()+'-'+
                 DateUtils.getYYYYMMDDHHMMSS(csMerchantOrder.getOrderDate())+'-'+ UUIDUtil.getUUID());
         csMerchantOrder.setUsedStatus("0");
