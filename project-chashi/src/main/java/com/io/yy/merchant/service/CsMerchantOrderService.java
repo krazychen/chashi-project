@@ -3,6 +3,7 @@ package com.io.yy.merchant.service;
 import com.io.yy.merchant.entity.CsMerchantOrder;
 import com.io.yy.common.service.BaseService;
 import com.io.yy.merchant.param.CsMerchantOrderQueryParam;
+import com.io.yy.merchant.param.CsTearoomQueryParam;
 import com.io.yy.merchant.vo.CsMerchantOrderQueryVo;
 import com.io.yy.common.vo.Paging;
 import org.apache.ibatis.annotations.Param;
@@ -126,4 +127,11 @@ public interface CsMerchantOrderService extends BaseService<CsMerchantOrder> {
     Boolean saveCsMerchantOrderForWX(CsMerchantOrder csMerchantOrder) throws Exception;
 
     void orderPayRedis(String out_trade_no, String orderId) throws Exception;
+
+    /**
+     * 导出
+     * @param csMerchantOrderQueryParam
+     * @throws Exception
+     */
+    void exportList(CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception;
 }

@@ -174,6 +174,7 @@
         <if test="param.merchantId != null and param.merchantId.trim() != ''">
             and merchant_id = #{param.merchantId}
         </if>
+        AND payment_status=2
         GROUP BY order_date ORDER BY order_date DESC
     </select>
 
@@ -186,6 +187,7 @@
          (
              SELECT COUNT(id) AS order_nums,SUM(order_price) AS order_prices
              FROM cs_merchant_order
+             where payment_status=2
          ) AS cmo,
          ( SELECT COUNT(id) AS merchant_nums
            FROM cs_merchant

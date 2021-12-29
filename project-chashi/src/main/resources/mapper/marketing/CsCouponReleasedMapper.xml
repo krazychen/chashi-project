@@ -30,7 +30,7 @@
     <select id="getCsCouponReleasedByUserId" resultType="com.io.yy.marketing.vo.CsCouponReleasedQueryVo">
         SELECT ccr.*,cc.start_time ,cc.end_time,cc.coupon_name,cc.released_method,cc.full_amount,cc.reduction_amount
         FROM cs_coupon_released ccr
-        LEFT JOIN cs_coupon cc ON ccr.coupon_id = cc.id
+        JOIN cs_coupon cc ON ccr.coupon_id = cc.id
         WHERE ccr.wxuser_id=#{wxuserId}
         AND ccr.is_used=0
         AND CURDATE() <![CDATA[ >= ]]> DATE(cc.start_time)

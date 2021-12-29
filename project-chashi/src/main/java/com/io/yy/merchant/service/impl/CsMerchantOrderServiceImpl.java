@@ -20,15 +20,15 @@ import com.io.yy.merchant.param.CsMerchantNotifyQueryParam;
 import com.io.yy.merchant.service.CsMerchantNotifyService;
 import com.io.yy.merchant.service.CsMerchantOrderService;
 import com.io.yy.merchant.param.CsMerchantOrderQueryParam;
-import com.io.yy.merchant.vo.CsMerchantNotifyQueryVo;
-import com.io.yy.merchant.vo.CsMerchantOrderQueryVo;
+import com.io.yy.merchant.vo.*;
 import com.io.yy.common.service.impl.BaseServiceImpl;
 import com.io.yy.common.vo.Paging;
-import com.io.yy.merchant.vo.CsMerchantQueryVo;
-import com.io.yy.merchant.vo.CsTearoomQueryVo;
 import com.io.yy.system.vo.SysConfigDataRedisVo;
 import com.io.yy.util.ConfigDataUtil;
+import com.io.yy.util.HttpServletResponseUtil;
 import com.io.yy.util.UUIDUtil;
+import com.io.yy.util.excel.ExcelExport;
+import com.io.yy.util.excel.annotation.ExcelField;
 import com.io.yy.util.lang.DateUtils;
 import com.io.yy.util.lang.DoubleUtils;
 import com.io.yy.util.lang.StringUtils;
@@ -37,6 +37,7 @@ import com.io.yy.wxops.service.WxUserService;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -635,6 +636,78 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
 
         redisTemplate.opsForValue().set("ORDER_SHENGYING2_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),fenzhong-Integer.parseInt(shengyintime2), TimeUnit.MINUTES);
         redisTemplate.opsForValue().set("ORDER_SHENGYING3_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),fenzhong-Integer.parseInt(shengyintime3), TimeUnit.MINUTES);
+
+    }
+
+    @Override
+    public void exportList(CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        Page page = setPageParam(csMerchantOrderQueryParam,OrderItem.desc("create_time"));
+        IPage<CsMerchantOrderQueryVo> iPage=csMerchantOrderMapper.getCsMerchantOrderPageList(page,csMerchantOrderQueryParam);
+
+        List<CsMerchantOrderQueryVo> list = iPage.getRecords();
+        List<CsMerchantOrderExportQueryVo> exportList = new ArrayList<CsMerchantOrderExportQueryVo>();
+        Iterator<CsMerchantOrderQueryVo> iter = list.iterator();
+        while(iter.hasNext()){
+            CsMerchantOrderExportQueryVo exportVo=new CsMerchantOrderExportQueryVo();
+            BeanUtils.copyProperties(iter.next(),exportVo);
+            if(exportVo.getPaymentStatus()!=null){
+                switch (exportVo.getPaymentStatus()){
+                    case 0:
+                        exportVo.setPaymentStatusName("支付中");
+                        break;
+                    case 1:
+                        exportVo.setPaymentStatusName("支付失败");
+                        break;
+                    case 2:
+                        exportVo.setPaymentStatusName("支付成功");
+                        break;
+                    case 3:
+                        exportVo.setPaymentStatusName("支付取消");
+                        break;
+                    case 4:
+                        exportVo.setPaymentStatusName("支付失败");
+                        break;
+                }
+            }
+            if(exportVo.getPaymentType()!=null){
+                switch(exportVo.getPaymentType()){
+                    case 1:
+                        exportVo.setPaymentTypeName("余额支付");
+                        break;
+                    case 2:
+                        exportVo.setPaymentTypeName("微信支付");
+                        break;
+                }
+            }
+            if(exportVo.getUsedStatus()!=null){
+                switch(exportVo.getUsedStatus()){
+                    case "0":
+                        exportVo.setUsedStatusName("未使用");
+                        break;
+                    case "1":
+                        exportVo.setUsedStatusName("已使用");
+                        break;
+                    case "2":
+                        exportVo.setUsedStatusName("已取消");
+                        break;
+                    case "3":
+                        exportVo.setUsedStatusName("已完成");
+                        break;
+                }
+            }
+            exportList.add(exportVo);
+        }
+
+        // 创建一个Sheet表，并导入数据
+        ExcelExport ee = new ExcelExport("订单列表",CsMerchantOrderExportQueryVo.class, ExcelField.Type.ALL);
+        ee.setDataList(exportList);
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        String time = df.format(new Date());
+        ee.write(HttpServletResponseUtil.getResponse(), "订单列表" + time + ".xlsx");
+        // 清理销毁
+        ee.close();
+        log.debug("Export success.");
 
     }
 

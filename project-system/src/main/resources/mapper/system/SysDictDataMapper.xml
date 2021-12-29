@@ -94,11 +94,11 @@
         <result column="dict_code" property="id" javaType="java.lang.String"/>
         <result column="dict_label" property="label" javaType="java.lang.String"/>
         <collection column="dict_code" property="children" ofType="com.io.yy.system.vo.SysMenuTreeQueryVo"
-                    javaType="java.util.ArrayList" select="selectSysDictDataChildren"/>
+                    javaType="java.util.ArrayList" select="selectSysDictDataChildrenSimplify"/>
     </resultMap>
 
 
-    <select id="selectSysDictDataChildren" resultMap="treeSysDictDataSimplify">
+    <select id="selectSysDictDataChildrenSimplify" resultMap="treeSysDictDataSimplify">
         select
         <include refid="Base_Column_List2"/>
         from sys_dict_data

@@ -11,6 +11,7 @@ import com.io.yy.marketing.service.CsMembercardOrderService;
 import com.io.yy.marketing.service.CsRechargeConsumService;
 import com.io.yy.merchant.entity.CsMerchantOrder;
 import com.io.yy.merchant.param.CsMerchantNotifyQueryParam;
+import com.io.yy.merchant.param.CsTearoomQueryParam;
 import com.io.yy.merchant.service.CsMerchantNotifyService;
 import com.io.yy.merchant.service.CsMerchantOrderService;
 import com.io.yy.merchant.param.CsMerchantOrderQueryParam;
@@ -213,5 +214,14 @@ public class CsMerchantOrderController extends BaseController {
         return ApiResult.ok(csMerchantOrderService.openRoomLock(csMerchantOrderQueryParam));
     }
 
+    /**
+     * 导出功能
+     */
+    @PostMapping("/exportList")
+    @RequiresPermissions("cs:merchant:order:page")
+    @ApiOperation(value = "导出", notes = "导出")
+    public void exportStudentList(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        csMerchantOrderService.exportList(csMerchantOrderQueryParam);
+    }
 }
 
