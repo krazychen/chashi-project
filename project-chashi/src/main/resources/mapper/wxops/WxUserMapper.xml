@@ -87,7 +87,7 @@
         ccr.used_time,cc.start_time as c_start_time, cc.end_time as c_end_time
         from wx_user wu
         left join cs_coupon_released ccr on ccr.wxuser_id = wu.id and is_used = 0
-        left join cs_coupon cc on ccr.coupon_id = cc.id and CURDATE() <![CDATA[ >= ]]> Date(cc.start_time) and CURDATE() <![CDATA[ <= ]]> cc.end_time
+        join cs_coupon cc on ccr.coupon_id = cc.id and CURDATE() <![CDATA[ >= ]]> Date(cc.start_time) and CURDATE() <![CDATA[ <= ]]> cc.end_time
         left join cs_membercard_order cmo on cmo.wxuser_id = wu.id and CURTIME() <![CDATA[ >= ]]> cmo.start_time and CURTIME() <![CDATA[ <= ]]> cmo.end_time and cmo.payment_status = 2
         where wu.openid =  #{openId}
     </select>
