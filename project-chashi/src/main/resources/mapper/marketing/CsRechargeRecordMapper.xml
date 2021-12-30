@@ -17,7 +17,7 @@
         select
         <include refid="Base_Column_List"/>
         from cs_recharge_record
-        WHERE wxuser_id IN (SELECT wxuser_id FROM cs_merchant_order WHERE out_trade_no = #{outTradeNo})
+        WHERE out_trade_no = #{outTradeNo})
     </select>
 
     <select id="getCsRechargeRecordPageList" resultType="com.io.yy.marketing.vo.CsRechargeRecordQueryVo">
