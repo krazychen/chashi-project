@@ -20,7 +20,7 @@ public class TestMandunReq {
         String token = tmr.getToken(tmr.getCode());
 //        tmr.GET_BOXES(token);
 //        tmr.GET_BOX_CHANNELS_OC(token);
-        tmr.PUT_BOX_CONTROL_Switch(token,"open");
+        tmr.PUT_BOX_CONTROL_Switch(token,"close");
 //        tmr.GET_BOX_CHANNELS_OC(token);
 //        log.info(tmr.getToken(tmr.getCode()));
 
@@ -127,7 +127,7 @@ public class TestMandunReq {
         packageParams.put("access_token", token);
         packageParams.put("timestamp", sdf.format(nowDate));
         packageParams.put("projectCode", "P00000020772");
-        packageParams.put("mac", "187ED53420E0");
+        packageParams.put("mac", "187ED5340D3C");
 
         String reqMessage = concatSignString(packageParams);
         String sigeMessage = concatMessageString(packageParams);
@@ -163,10 +163,10 @@ public class TestMandunReq {
         packageParams.put("access_token", token);
         packageParams.put("timestamp", sdf.format(nowDate));
         packageParams.put("projectCode", "P00000020772");
-        packageParams.put("mac", "187ED53420E0");
+        packageParams.put("mac", "187ED5340D3C");
         packageParams.put("cmd", "OCSWITCH");
         packageParams.put("value1", operation);
-        packageParams.put("value2", "1");
+        packageParams.put("value2", "1,5,10");
 
         String reqMessage = concatSignString(packageParams);
         String sigeMessage = concatMessageString(packageParams);

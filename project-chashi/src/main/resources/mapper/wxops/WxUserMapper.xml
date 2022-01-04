@@ -86,8 +86,8 @@
         (select cmc.discount_off from cs_member_card cmc where cmo.membercard_id = cmc.id) as discount_off,ccr.id as c_id,ccr.coupon_id,ccr.wxuser_id,ccr.released_time,ccr.is_used,
         ccr.used_time,cc.start_time as c_start_time, cc.end_time as c_end_time
         from wx_user wu
-        left join cs_coupon_released ccr on ccr.wxuser_id = wu.id and is_used = 0
-        join cs_coupon cc on ccr.coupon_id = cc.id and CURDATE() <![CDATA[ >= ]]> Date(cc.start_time) and CURDATE() <![CDATA[ <= ]]> cc.end_time
+        LEFT JOIN cs_coupon_released ccr ON ccr.wxuser_id = wu.id AND is_used = 0 AND ccr.coupon_id IN (
+        SELECT cc.id FROM cs_coupon cc WHERE CURDATE() <![CDATA[ >= ]]> DATE(cc.start_time) AND CURDATE() <![CDATA[ <= ]]> cc.end_time)
         left join cs_membercard_order cmo on cmo.wxuser_id = wu.id and CURTIME() <![CDATA[ >= ]]> cmo.start_time and CURTIME() <![CDATA[ <= ]]> cmo.end_time and cmo.payment_status = 2
         where wu.openid =  #{openId}
     </select>

@@ -234,6 +234,29 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                 csMerchantOrderMapper.updateUsedStatus(temp);
             }
 
+            //关闭空开
+            try {
+                CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
+                CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
+                if(StringUtils.isNotEmpty(csMerchantQueryVo.getKkClientId())&&StringUtils.isNotEmpty(csMerchantQueryVo.getKkRedirectUri())
+                        &&StringUtils.isNotEmpty(csMerchantQueryVo.getKkPassword())&&StringUtils.isNotEmpty(csMerchantQueryVo.getKkAppSecret())
+                        &&StringUtils.isNotEmpty(csMerchantQueryVo.getKkProjectCode())&&StringUtils.isNotEmpty(csMerchantQueryVo.getKkUname()))
+                {
+                    if(StringUtils.isNotEmpty(csTearoomQueryVo.getKkMac())&&StringUtils.isNotEmpty(csTearoomQueryVo.getKkOcSwitch())){
+                        String code = getCode(csMerchantQueryVo);
+                        String token = getToken(csMerchantQueryVo,code);
+
+                        PUT_BOX_CONTROL_Switch(csMerchantQueryVo,csTearoomQueryVo, token,"close");
+                    }else{
+                        log.error(id+":茶室空开配置错误！！！");
+                    }
+                }else {
+                    log.error(id+":商店空开配置错误！！！");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             redisTemplate.delete(key);
             redisTemplate.delete(newKey);
