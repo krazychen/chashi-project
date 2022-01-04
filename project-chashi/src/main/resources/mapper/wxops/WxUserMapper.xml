@@ -84,7 +84,7 @@
         select wu.*,cmo.id as m_id,cmo.membercard_id,cmo.membercard_name,cmo.valid_period,cmo.order_date,cmo.start_time as m_start_time,
         cmo.end_time as m_end_time,cmo.order_price,
         (select cmc.discount_off from cs_member_card cmc where cmo.membercard_id = cmc.id) as discount_off,ccr.id as c_id,ccr.coupon_id,ccr.wxuser_id,ccr.released_time,ccr.is_used,
-        ccr.used_time,cc.start_time as c_start_time, cc.end_time as c_end_time
+        ccr.used_time
         from wx_user wu
         LEFT JOIN cs_coupon_released ccr ON ccr.wxuser_id = wu.id AND is_used = 0 AND ccr.coupon_id IN (
         SELECT cc.id FROM cs_coupon cc WHERE CURDATE() <![CDATA[ >= ]]> DATE(cc.start_time) AND CURDATE() <![CDATA[ <= ]]> cc.end_time)
