@@ -71,6 +71,24 @@ public class CsTearoomQueryVo implements Serializable {
     @ApiModelProperty(value = "曼顿空开线路")
     private String kkOcSwitch;
 
+    @ApiModelProperty(value = "声音的请求URL")
+    private String syUrl;
+
+    @ApiModelProperty(value = "声音的产品key")
+    private String syProKey;
+
+    @ApiModelProperty(value = "声音的sname")
+    private String sySname;
+
+    @ApiModelProperty(value = "声音的sid1")
+    private String sySid1;
+
+    @ApiModelProperty(value = "声音的sid2")
+    private String sySid2;
+
+    @ApiModelProperty(value = "声音的sid3")
+    private String sySid3;
+
     @ApiModelProperty(value = "茶室星级，默认值5,1~5星，固定显示")
     private int rate = 5;
 

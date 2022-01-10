@@ -301,13 +301,19 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
 
             try {
-                CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
-                if(StringUtils.isNotEmpty(csMerchantQueryVo.getTxApi2())){
-                    log.info("声音："+csMerchantQueryVo.getTxApi2());
+                CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
+                if(StringUtils.isNotEmpty(csTearoomQueryVo.getSyUrl())&&
+                        StringUtils.isNotEmpty(csTearoomQueryVo.getSyProKey())&&
+                        StringUtils.isNotEmpty(csTearoomQueryVo.getSySname())&&
+                        StringUtils.isNotEmpty(csTearoomQueryVo.getSySid2())){
+                    String requestStr = csTearoomQueryVo.getSyUrl()+"?sid="+csTearoomQueryVo.getSySid2()+
+                            "&ProKey="+csTearoomQueryVo.getSyProKey()+
+                            "&sname="+csTearoomQueryVo.getSySname();
+                    log.info("声音："+requestStr);
                     OkHttpClient client = new OkHttpClient().newBuilder()
                             .build();
                     Request request = new Request.Builder()
-                            .url(csMerchantQueryVo.getTxApi2())
+                            .url(requestStr)
                             .method("GET", null)
                             .build();
                     Response response = client.newCall(request).execute();
@@ -321,7 +327,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                         log.error("声音提醒api存在问题，请检查！");
                     }
                 }else{
-                    log.error(id+":商店提醒配置错误！！！");
+                    log.error(id+":声音提醒配置错误！！！");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -339,12 +345,18 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
 
             try {
-                CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
-                if(StringUtils.isNotEmpty(csMerchantQueryVo.getTxApi3())){
+                CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
+                if(StringUtils.isNotEmpty(csTearoomQueryVo.getSyUrl())&&
+                        StringUtils.isNotEmpty(csTearoomQueryVo.getSyProKey())&&
+                        StringUtils.isNotEmpty(csTearoomQueryVo.getSySname())&&
+                        StringUtils.isNotEmpty(csTearoomQueryVo.getSySid2())){
+                    String requestStr = csTearoomQueryVo.getSyUrl()+"?sid="+csTearoomQueryVo.getSySid2()+
+                            "&ProKey="+csTearoomQueryVo.getSyProKey()+
+                            "&sname="+csTearoomQueryVo.getSySname();
                     OkHttpClient client = new OkHttpClient().newBuilder()
                             .build();
                     Request request = new Request.Builder()
-                            .url(csMerchantQueryVo.getTxApi3())
+                            .url(requestStr)
                             .method("GET", null)
                             .build();
                     Response response = client.newCall(request).execute();
@@ -358,7 +370,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                         log.error("声音提醒api存在问题，请检查！");
                     }
                 }else{
-                    log.error(id+":商店提醒配置错误！！！");
+                    log.error(id+":声音提醒配置错误！！！");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
