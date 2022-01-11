@@ -100,6 +100,9 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
     @Autowired
     private CsMerchantNotifyService csMerchantNotifyService;
 
+    @Autowired
+    private CsMerchantOrderService csMerchantOrderService;
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean saveCsMerchantOrder(CsMerchantOrder csMerchantOrder) throws Exception {
@@ -434,6 +437,23 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
             if (StringUtils.isNotBlank(errorCode)&&!"0".equals(errorCode)) {
                 return (String) jsonObject.get("description");
             }
+            // 开锁成功
+            //获取订单
+            QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapper=new QueryWrapper<CsMerchantOrder>();
+            csMerchantOrderQueryWrapper.eq("id",csMerchantOrderQueryParam.getId());
+            CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
+
+            String isExist = (String)redisTemplate.opsForValue().get("SY1_isExist]"+csMerchantOrder.getId());
+            if(StringUtils.isEmpty(isExist)){
+                List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
+
+                // 设置声音的定时器
+                String shengyintime1 = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("shengyintime1")).collect(Collectors.toList()).get(0).getConfigValue();
+
+                redisTemplate.opsForValue().set("ORDER_SHENGYING1_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),Integer.parseInt(shengyintime1), TimeUnit.SECONDS);
+
+            }
+
             return rtnMessage;
         }
         return "请联系管理员检查智能锁的配置是否正确！";

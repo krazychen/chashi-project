@@ -258,6 +258,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                 e.printStackTrace();
             }
 
+            redisTemplate.delete("SY1_isExist]"+csMerchantOrder.getId());
             redisTemplate.delete(key);
             redisTemplate.delete(newKey);
         }
@@ -287,6 +288,49 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                     log.error(id+":商店空开配置错误！！！");
                 }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            redisTemplate.delete(key);
+            redisTemplate.delete(newKey);
+        }else if (key.indexOf("ORDER_SHENGYING1_USED]")!=-1){
+            String id = key.substring(key.lastIndexOf("]")+1);
+            //获取订单
+            QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapper=new QueryWrapper<CsMerchantOrder>();
+            csMerchantOrderQueryWrapper.eq("id",id);
+            CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
+
+            try {
+                CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
+                if(StringUtils.isNotEmpty(csTearoomQueryVo.getSyUrl())&&
+                        StringUtils.isNotEmpty(csTearoomQueryVo.getSyProKey())&&
+                        StringUtils.isNotEmpty(csTearoomQueryVo.getSySname())&&
+                        StringUtils.isNotEmpty(csTearoomQueryVo.getSySid1())){
+                    String requestStr = csTearoomQueryVo.getSyUrl()+"?sid="+csTearoomQueryVo.getSySid1()+
+                            "&ProKey="+csTearoomQueryVo.getSyProKey()+
+                            "&sname="+csTearoomQueryVo.getSySname();
+                    log.info("声音："+requestStr);
+                    OkHttpClient client = new OkHttpClient().newBuilder()
+                            .build();
+                    Request request = new Request.Builder()
+                            .url(requestStr)
+                            .method("GET", null)
+                            .build();
+                    Response response = client.newCall(request).execute();
+                    String responseBody = response.body().string();
+                    log.info("声音:"+responseBody);
+                    JSONObject jsonObject = JSON.parseObject(responseBody);
+                    String Success = jsonObject.getString("Success");
+                    if("true".equals(Success)){
+                        log.info(id+": 声音提醒正常");
+                        redisTemplate.opsForValue().set("SY1_isExist]"+csMerchantOrder.getId(),csMerchantOrder.getId());
+                    }else{
+                        log.error("声音提醒api存在问题，请检查！");
+                    }
+                }else{
+                    log.error(id+":声音提醒配置错误！！！");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -332,8 +376,6 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
 
             redisTemplate.delete(key);
             redisTemplate.delete(newKey);
