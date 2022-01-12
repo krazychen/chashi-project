@@ -16,7 +16,7 @@
     <select id="getWxUserPageList" resultType="com.io.yy.wxops.vo.WxUserQueryVo">
         select
         <include refid="Base_Column_List"/>
-        from wx_user
+        from wx_user u
         where 1=1
         <if test="param.nickname != null and param.nickname.trim() != ''">
             and u.nickname like concat('%', #{param.nickname}, '%')
@@ -25,7 +25,7 @@
             and u.phone_number like concat('%', #{param.phoneNumber}, '%')
         </if>
         <if test="param.nameAphone != null and param.nameAphone.trim() != ''">
-            and (nickname like concat('%', #{param.nameAphone}, '%') or phone_number like concat('%', #{param.nameAphone}, '%'))
+            and (u.nickname like concat('%', #{param.nameAphone}, '%') or u.phone_number like concat('%', #{param.nameAphone}, '%'))
         </if>
     </select>
 

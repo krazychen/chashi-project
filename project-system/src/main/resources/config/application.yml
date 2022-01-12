@@ -243,7 +243,7 @@ whyy-system:
   ############################ JWT end ###############################
 
   #################################### 租户过滤表 ###################################
-  tentTables: sys_schedule_job,sys_schedule_joblog,sys_msg,sys_msg_record,sys_dict_type,sys_dict_data,sys_menu,sys_role,sys_role_menu,sys_area,sys_config,sys_log,QRTZ_BLOB_TRIGGERS,QRTZ_CALENDARS,QRTZ_CRON_TRIGGERS,QRTZ_FIRED_TRIGGERS,QRTZ_JOB_DETAILS,QRTZ_LOCKS,QRTZ_PAUSED_TRIGGER_GRPS,QRTZ_SCHEDULER_STATE,QRTZ_SIMPLE_TRIGGERS,QRTZ_SIMPROP_TRIGGERS,QRTZ_TRIGGERS,cctalk_sales_order_corp,hw_stu_homework_audit_teacher,get_monitor_exe_time
+  tentTables: sys_schedule_job,sys_schedule_joblog,sys_msg,sys_msg_record,sys_dict_type,sys_dict_data,sys_menu,sys_role,sys_role_menu,sys_area,sys_config,sys_log,QRTZ_BLOB_TRIGGERS,QRTZ_CALENDARS,QRTZ_CRON_TRIGGERS,QRTZ_FIRED_TRIGGERS,QRTZ_JOB_DETAILS,QRTZ_LOCKS,QRTZ_PAUSED_TRIGGER_GRPS,QRTZ_SCHEDULER_STATE,QRTZ_SIMPLE_TRIGGERS,QRTZ_SIMPROP_TRIGGERS,QRTZ_TRIGGERSr
 
   #################################### 租户过滤表 ###################################
   #################################### 租户过滤sql ###################################
