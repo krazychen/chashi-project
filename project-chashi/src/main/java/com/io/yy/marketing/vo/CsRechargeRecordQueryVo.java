@@ -92,5 +92,5 @@ public class CsRechargeRecordQueryVo implements Serializable {
     private String corpName;
 
     @ApiModelProperty(value = "微信用户名称")
-    private Long wxuserName;
+    private String wxuserName;
 }

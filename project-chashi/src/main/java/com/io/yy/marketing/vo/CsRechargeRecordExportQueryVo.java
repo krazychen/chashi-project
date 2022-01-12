@@ -26,7 +26,7 @@ public class CsRechargeRecordExportQueryVo implements Serializable {
 
     @ApiModelProperty(value = "微信用户名称")
     @ExcelField(title="用户名称", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=1)
-    private Long wxuserName;
+    private String wxuserName;
 
     @ApiModelProperty(value = "微信用户手机")
     @ExcelField(title="用户手机", type= ExcelField.Type.ALL ,align= ExcelField.Align.CENTER, sort=2)
