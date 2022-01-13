@@ -8,6 +8,7 @@ import com.io.yy.common.api.ApiResult;
 import com.io.yy.common.controller.BaseController;
 import com.io.yy.util.UUIDUtil;
 import com.io.yy.util.lang.DateUtils;
+import com.io.yy.util.lang.DoubleUtils;
 import com.io.yy.wxops.param.WxUserQueryParam;
 import com.io.yy.wxops.service.WxUserService;
 import io.swagger.annotations.Api;
@@ -56,7 +57,7 @@ public class CsRechargeRecordController extends BaseController {
         csRechargeRecord.setSourceType(0);
         csRechargeRecord.setOrderDate(new Date());
         csRechargeRecord.setOrderName("Recharge-"+csRechargeRecord.getRechargeAmount()+DateUtils.getYYYYMMDDHHMMSS(csRechargeRecord.getOrderDate())+'-'+ UUIDUtil.getUUID());
-        csRechargeRecord.setRechargeFinal(csRechargeRecord.getRechargeAmount()+csRechargeRecord.getRechargeGived());
+        csRechargeRecord.setRechargeFinal(DoubleUtils.add(csRechargeRecord.getRechargeAmount(),csRechargeRecord.getRechargeGived()));
         csRechargeRecord.setIntegral(csRechargeRecord.getRechargeAmount().intValue());
         boolean flag = csRechargeRecordService.saveCsRechargeRecord(csRechargeRecord);
 
