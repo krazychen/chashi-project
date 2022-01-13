@@ -7,9 +7,9 @@
         id, merchant_name, merchant_account, merchant_password, order_fee, city_code, city, address, longitude, latitude, logo_url_value,
         logo_url_name, carousel_url_value, carousel_url_name, office_code, contact_phonse, label_id, label_name, facilities_id,
         facilities_name, services_id, services_name, order_refund_fee, merchant_info, usage_notice, start_time, end_time,
-        ttl_client_id, ttl_client_secret, ttl_lock_id, ttl_username, ttl_password,kk_client_id, kk_app_secret, kk_project_code,
-        kk_redirect_uri, kk_uname, kk_password, tx_api1, tx_api2, tx_api3, status, deleted, version,
-        create_by, create_time, update_by, update_time, corp_code, corp_name
+        ex_start_time,ex_end_time,op_description,ttl_client_id, ttl_client_secret, ttl_lock_id, ttl_username, ttl_password,
+        kk_client_id, kk_app_secret, kk_project_code,kk_redirect_uri, kk_uname, kk_password, tx_api1, tx_api2, tx_api3, status,
+        deleted, version,create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <resultMap id="csTearoomObj" type="com.io.yy.merchant.vo.CsMerchantQueryVo">
@@ -38,6 +38,9 @@
         <result column="usage_notice" property="usageNotice" javaType="java.lang.String"/>
         <result column="start_time" property="startTime" javaType="java.lang.String"/>
         <result column="end_time" property="endTime" javaType="java.lang.String"/>
+        <result column="ex_start_time" property="exStartTime" javaType="java.lang.String"/>
+        <result column="ex_end_time" property="exEndTime" javaType="java.lang.String"/>
+        <result column="op_description" property="opDescription" javaType="java.lang.String"/>
         <result column="status" property="status" javaType="java.lang.String"/>
         <result column="buy_record" property="buyRecord" javaType="java.lang.Integer"/>
         <collection property="tearoomList" ofType="com.io.yy.merchant.vo.CsTearoomQueryVo">

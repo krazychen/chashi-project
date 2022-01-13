@@ -119,6 +119,15 @@ public class CsMerchant extends BaseEntity {
     @ApiModelProperty(value = "结束营业时间")
     private String endTime;
 
+    @ApiModelProperty(value = "未营业开始时间")
+    private String exStartTime;
+
+    @ApiModelProperty(value = "未营业结束时间")
+    private String exEndTime;
+
+    @ApiModelProperty(value = "营业时间描述")
+    private String opDescription;
+
     @ApiModelProperty(value = "ttlock开放平台注册时分配的app_id")
     private String ttlClientId;
 
