@@ -5,11 +5,11 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, merchant_id, tearoom_id, room_name, wxuser_id, wxuser_phone, openid, order_name, order_date, order_timerage,
-        order_origin_timenum, membercard_order_id, order_mb_timenum, order_timenum, order_unit_origin_price, order_unit_price,
-        order_origin_price, coupon_released_id, order_cp_amount, order_mb_amount, order_price, out_trade_no, payment_status,
-        payment_msg, payment_type,used_status, source_type, status, ttl_lock_id, keyboard_pwd_id, keyboard_pwd,
-        rttl_lock_id, rkeyboard_pwd_id, rkeyboard_pwd, deleted, version, create_by,
-        create_time, update_by, update_time, corp_code, corp_name
+        next_order_date, next_order_timerage, order_origin_timenum, membercard_order_id, order_mb_timenum, order_timenum,
+        order_unit_origin_price, order_unit_price, order_origin_price, coupon_released_id, order_cp_amount,
+        order_mb_amount, order_price, out_trade_no, payment_status, payment_msg, payment_type,used_status,
+        source_type, status, ttl_lock_id, keyboard_pwd_id, keyboard_pwd, rttl_lock_id, rkeyboard_pwd_id,
+        rkeyboard_pwd, deleted, version, create_by, create_time, update_by, update_time, corp_code, corp_name
     </sql>
 
     <select id="getCsMerchantOrderById" resultType="com.io.yy.merchant.vo.CsMerchantOrderQueryVo">
@@ -89,12 +89,19 @@
     </update>
 
     <select id="getTimeRangeForWx" resultType="java.lang.String">
-        select cmo.order_timerage
+        select cmo.order_timerage AS order_timerage
         from cs_merchant_order cmo
         where 1=1
         and date(cmo.order_date) = date(#{param.orderDate})
         and cmo.`payment_status` = 2
         and cmo.tearoom_id = #{param.tearoomId}
+        UNION
+        select cmo.next_order_timerage AS order_timerage
+        from cs_merchant_order cmo
+        where 1=1
+          and date(cmo.next_order_date) = date(#{param.orderDate})
+          and cmo.`payment_status` = 2
+          and cmo.tearoom_id = #{param.tearoomId}
     </select>
 
     <update id="updatePaymentStatus">

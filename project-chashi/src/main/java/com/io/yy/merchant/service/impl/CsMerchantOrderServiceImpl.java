@@ -244,10 +244,23 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         startCal.set(Calendar.HOUR_OF_DAY, startMin);
         Date startDate = startCal.getTime();
 
-        int endMin = Integer.valueOf(times[times.length-1].split(":")[0]).intValue();
+        //如果下一天的有值，则结束时间按照下一天来
         Calendar endCal = Calendar.getInstance();
-        endCal.setTime(orderDate);
-        endCal.set(Calendar.HOUR_OF_DAY, endMin);
+        if(csMerchantOrderQueryVo.getNextOrderDate()!=null){
+            endCal.setTime(csMerchantOrderQueryVo.getNextOrderDate());
+            times=csMerchantOrderQueryVo.getNextOrderTimerage().split("-");
+            int endMin = Integer.valueOf(times[times.length-1].split(":")[0]).intValue();
+            endCal.set(Calendar.HOUR_OF_DAY, endMin);
+        }else{
+            int endMin = Integer.valueOf(times[times.length-1].split(":")[0]).intValue();
+            endCal.setTime(orderDate);
+            endCal.set(Calendar.HOUR_OF_DAY, endMin);
+        }
+
+//        int endMin = Integer.valueOf(times[times.length-1].split(":")[0]).intValue();
+//        Calendar endCal = Calendar.getInstance();
+//        endCal.setTime(orderDate);
+//        endCal.set(Calendar.HOUR_OF_DAY, endMin);
         Date endDate = endCal.getTime();
 
         Date nowDate = new Date();
@@ -596,11 +609,22 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         Calendar endC = Calendar.getInstance();
         // 清除所有:
         endC.clear();
-        endC.setTime(csMerchantOrder.getOrderDate());
-        String[] endTimeRangeArr = timeRangeArr[timeRangeArr.length-1].split(":");
-        endC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTimeRangeArr[0]));
-        endC.set(Calendar.MINUTE, Integer.parseInt(endTimeRangeArr[1]));
-        endC.set(Calendar.SECOND, 00);
+        //如果下一天的有值，则结束时间按照下一天来
+        if(csMerchantOrder.getNextOrderDate()!=null){
+            endC.setTime(csMerchantOrder.getNextOrderDate());
+            timeRangeArr = csMerchantOrder.getNextOrderTimerage().split("-");
+            String[] endTimeRangeArr = timeRangeArr[timeRangeArr.length-1].split(":");
+            endC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTimeRangeArr[0]));
+            endC.set(Calendar.MINUTE, Integer.parseInt(endTimeRangeArr[1]));
+            endC.set(Calendar.SECOND, 00);
+        }else{
+            endC.setTime(csMerchantOrder.getOrderDate());
+            String[] endTimeRangeArr = timeRangeArr[timeRangeArr.length-1].split(":");
+            endC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTimeRangeArr[0]));
+            endC.set(Calendar.MINUTE, Integer.parseInt(endTimeRangeArr[1]));
+            endC.set(Calendar.SECOND, 00);
+        }
+
         log.info("订单结束时间:============="+sdf.format(endC.getTime()));
 
         CsMerchantNotifyQueryParam csMerchantNotifyQueryParam  = new CsMerchantNotifyQueryParam();

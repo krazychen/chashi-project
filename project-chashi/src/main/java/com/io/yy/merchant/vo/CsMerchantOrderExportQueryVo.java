@@ -132,4 +132,12 @@ public class CsMerchantOrderExportQueryVo implements Serializable {
     @ApiModelProperty(value = "创建时间")
     @ExcelField(title="订单创建时间", type= ExcelField.Type.ALL ,fieldType= DateTimeType.class,align= ExcelField.Align.CENTER, sort=254)
     private Date createTime;
+
+    @ApiModelProperty(value = "下一个预定日期")
+    @ExcelField(title="下一个预定日期", type= ExcelField.Type.ALL ,fieldType= DateTimeType.class,align= ExcelField.Align.CENTER, sort=254)
+    private Date nextOrderDate;
+
+    @ApiModelProperty(value = "下一个预订时间段，多个用，隔开")
+    @ExcelField(title="下一个预订时间段", type= ExcelField.Type.ALL ,fieldType= DateTimeType.class,align= ExcelField.Align.CENTER, sort=254)
+    private String nextOrderTimerage;
 }

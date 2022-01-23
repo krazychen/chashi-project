@@ -49,6 +49,12 @@ public class CsMerchantOrderQueryVo implements Serializable {
     @ApiModelProperty(value = "预订时间段，多个用，隔开")
     private String orderTimerage;
 
+    @ApiModelProperty(value = "下一个预定日期")
+    private Date nextOrderDate;
+
+    @ApiModelProperty(value = "下一个预订时间段，多个用，隔开")
+    private String nextOrderTimerage;
+
     @ApiModelProperty(value = "总的预订时间段数")
     private Double orderOriginTimenum;
 

@@ -179,11 +179,21 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                 Calendar endC = Calendar.getInstance();
                 // 清除所有:
                 endC.clear();
-                endC.setTime(csMerchantOrder.getOrderDate());
-                String[] endTimeRangeArr = timeRangeArr[timeRangeArr.length-1].split(":");
-                endC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTimeRangeArr[0]));
-                endC.set(Calendar.MINUTE, Integer.parseInt(endTimeRangeArr[1]));
-                endC.set(Calendar.SECOND, 00);
+                if(csMerchantOrder.getNextOrderDate()!=null){
+                    endC.setTime(csMerchantOrder.getNextOrderDate());
+                    timeRangeArr = csMerchantOrder.getNextOrderTimerage().split("-");
+                    String[] endTimeRangeArr = timeRangeArr[timeRangeArr.length-1].split(":");
+                    endC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTimeRangeArr[0]));
+                    endC.set(Calendar.MINUTE, Integer.parseInt(endTimeRangeArr[1]));
+                    endC.set(Calendar.SECOND, 00);
+                }else{
+                    endC.setTime(csMerchantOrder.getOrderDate());
+                    String[] endTimeRangeArr = timeRangeArr[timeRangeArr.length-1].split(":");
+                    endC.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTimeRangeArr[0]));
+                    endC.set(Calendar.MINUTE, Integer.parseInt(endTimeRangeArr[1]));
+                    endC.set(Calendar.SECOND, 00);
+                }
+
                 dataMap = this.getBaojieDataMap(sdf.format(endC.getTime()),csMerchantOrder.getRoomName());
             }else{
                 map.put("template_id",notifyZhibaoID);
