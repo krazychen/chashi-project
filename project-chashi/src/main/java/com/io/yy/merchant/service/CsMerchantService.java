@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.io.yy.merchant.entity.CsMerchant;
 import com.io.yy.common.service.BaseService;
 import com.io.yy.merchant.param.CsMerchantQueryParam;
+import com.io.yy.merchant.param.CsTearoomQueryParam;
 import com.io.yy.merchant.vo.CsMerchantOrderTotalQueryVo;
 import com.io.yy.merchant.vo.CsMerchantQueryVo;
 import com.io.yy.common.vo.Paging;
@@ -157,4 +158,12 @@ public interface CsMerchantService extends BaseService<CsMerchant> {
      * @throws Exception
      */
     CsMerchantOrderTotalQueryVo getCsMerchantTotalStatical() throws Exception;
+
+    /**
+     * 更新营业状态
+     *
+     * @param csMerchantQueryParam
+     * @return
+     */
+    boolean updateReleaseStatus(CsMerchantQueryParam csMerchantQueryParam);
 }

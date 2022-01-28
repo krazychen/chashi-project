@@ -108,4 +108,13 @@ public interface CsMerchantMapper extends BaseMapper<CsMerchant> {
      * @return
      */
     CsMerchantOrderTotalQueryVo getCsMerchantTotalStatical();
+
+
+    /**
+     * 更新营业状态
+     *
+     * @param csMerchantQueryParam
+     * @return
+     */
+    Integer updateReleaseStatus(@Param("param") CsMerchantQueryParam csMerchantQueryParam);
 }

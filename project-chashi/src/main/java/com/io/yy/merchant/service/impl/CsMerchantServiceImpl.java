@@ -318,6 +318,11 @@ public class CsMerchantServiceImpl extends BaseServiceImpl<CsMerchantMapper, CsM
         return csMerchantMapper.getCsMerchantTotalStatical();
     }
 
+    @Override
+    public boolean updateReleaseStatus(CsMerchantQueryParam csMerchantQueryParam) {
+        return csMerchantMapper.updateReleaseStatus(csMerchantQueryParam)> 0;
+    }
+
     // 计算半径
 
     //地球半径常量，km

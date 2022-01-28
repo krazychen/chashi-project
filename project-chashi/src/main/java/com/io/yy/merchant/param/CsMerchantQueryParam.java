@@ -72,4 +72,7 @@ public class CsMerchantQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "微信公众号openid")
     private String openid;
+
+    @ApiModelProperty(value = "营业状态，0：歇业，1：营业")
+    private String releaseStatus;
 }

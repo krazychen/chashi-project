@@ -5,6 +5,7 @@ import com.io.yy.marketing.service.CsMemberCardService;
 import com.io.yy.marketing.vo.CsMemberCardQueryVo;
 import com.io.yy.marketing.vo.CsMembercardOrderQueryVo;
 import com.io.yy.merchant.entity.CsMerchant;
+import com.io.yy.merchant.param.CsTearoomQueryParam;
 import com.io.yy.merchant.service.CsMerchantService;
 import com.io.yy.merchant.param.CsMerchantQueryParam;
 import com.io.yy.merchant.vo.CsMerchantOrderTotalQueryVo;
@@ -366,6 +367,16 @@ public class CsMerchantController extends BaseController {
     public ApiResult<CsMerchantOrderTotalQueryVo> getCsMerchantTotalStatical() throws Exception {
         CsMerchantOrderTotalQueryVo csMerchantOrderTotalQueryVo = csMerchantService.getCsMerchantTotalStatical();
         return ApiResult.ok(csMerchantOrderTotalQueryVo);
+    }
+
+    /**
+     * 商家管理修改营业状态
+     */
+    @PostMapping("/updateReleaseStatus")
+    @RequiresPermissions("cs:merchant:info")
+    @ApiOperation(value = "修改CsMerchant营业状态", notes = "商家管理修改营业状态", response = ApiResult.class)
+    public ApiResult<Boolean> updateReleaseStatus(@Valid @RequestBody CsMerchantQueryParam csMerchantQueryParam) throws Exception {
+        return ApiResult.ok(csMerchantService.updateReleaseStatus(csMerchantQueryParam));
     }
 }
 
