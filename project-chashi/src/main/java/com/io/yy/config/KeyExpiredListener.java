@@ -402,7 +402,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                         StringUtils.isNotEmpty(csTearoomQueryVo.getSyProKey())&&
                         StringUtils.isNotEmpty(csTearoomQueryVo.getSySname())&&
                         StringUtils.isNotEmpty(csTearoomQueryVo.getSySid2())){
-                    String requestStr = csTearoomQueryVo.getSyUrl()+"?sid="+csTearoomQueryVo.getSySid2()+
+                    String requestStr = csTearoomQueryVo.getSyUrl()+"?sid="+csTearoomQueryVo.getSySid3()+
                             "&ProKey="+csTearoomQueryVo.getSyProKey()+
                             "&sname="+csTearoomQueryVo.getSySname();
                     OkHttpClient client = new OkHttpClient().newBuilder()
