@@ -401,7 +401,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                 if(StringUtils.isNotEmpty(csTearoomQueryVo.getSyUrl())&&
                         StringUtils.isNotEmpty(csTearoomQueryVo.getSyProKey())&&
                         StringUtils.isNotEmpty(csTearoomQueryVo.getSySname())&&
-                        StringUtils.isNotEmpty(csTearoomQueryVo.getSySid2())){
+                        StringUtils.isNotEmpty(csTearoomQueryVo.getSySid3())){
                     String requestStr = csTearoomQueryVo.getSyUrl()+"?sid="+csTearoomQueryVo.getSySid3()+
                             "&ProKey="+csTearoomQueryVo.getSyProKey()+
                             "&sname="+csTearoomQueryVo.getSySname();
