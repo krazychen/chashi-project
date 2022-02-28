@@ -244,28 +244,34 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                 csMerchantOrderMapper.updateUsedStatus(temp);
             }
 
-            //关闭空开
-            try {
-                CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
-                CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
-                if(StringUtils.isNotEmpty(csMerchantQueryVo.getKkClientId())&&StringUtils.isNotEmpty(csMerchantQueryVo.getKkRedirectUri())
-                        &&StringUtils.isNotEmpty(csMerchantQueryVo.getKkPassword())&&StringUtils.isNotEmpty(csMerchantQueryVo.getKkAppSecret())
-                        &&StringUtils.isNotEmpty(csMerchantQueryVo.getKkProjectCode())&&StringUtils.isNotEmpty(csMerchantQueryVo.getKkUname()))
-                {
-                    if(StringUtils.isNotEmpty(csTearoomQueryVo.getKkMac())&&StringUtils.isNotEmpty(csTearoomQueryVo.getKkOcSwitch())){
-                        String code = getCode(csMerchantQueryVo);
-                        String token = getToken(csMerchantQueryVo,code);
+            //如果有续单订单，则不关闭空开
+            QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapperXD=new QueryWrapper<CsMerchantOrder>();
+            csMerchantOrderQueryWrapperXD.eq("origin_order_id",id);
+            CsMerchantOrder csMerchantOrderXD = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
+            if(csMerchantOrderXD==null) {
 
-                        PUT_BOX_CONTROL_Switch(csMerchantQueryVo,csTearoomQueryVo, token,"close");
-                    }else{
-                        log.error(id+":茶室空开配置错误！！！");
+                //关闭空开
+                try {
+                    CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
+                    CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
+                    if (StringUtils.isNotEmpty(csMerchantQueryVo.getKkClientId()) && StringUtils.isNotEmpty(csMerchantQueryVo.getKkRedirectUri())
+                            && StringUtils.isNotEmpty(csMerchantQueryVo.getKkPassword()) && StringUtils.isNotEmpty(csMerchantQueryVo.getKkAppSecret())
+                            && StringUtils.isNotEmpty(csMerchantQueryVo.getKkProjectCode()) && StringUtils.isNotEmpty(csMerchantQueryVo.getKkUname())) {
+                        if (StringUtils.isNotEmpty(csTearoomQueryVo.getKkMac()) && StringUtils.isNotEmpty(csTearoomQueryVo.getKkOcSwitch())) {
+                            String code = getCode(csMerchantQueryVo);
+                            String token = getToken(csMerchantQueryVo, code);
+
+                            PUT_BOX_CONTROL_Switch(csMerchantQueryVo, csTearoomQueryVo, token, "close");
+                        } else {
+                            log.error(id + ":茶室空开配置错误！！！");
+                        }
+                    } else {
+                        log.error(id + ":商店空开配置错误！！！");
                     }
-                }else {
-                    log.error(id+":商店空开配置错误！！！");
-                }
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             redisTemplate.delete("SY1_isExist]"+csMerchantOrder.getId());
@@ -279,27 +285,29 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             csMerchantOrderQueryWrapper.eq("id",id);
             CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
 
-            try {
-                CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
-                CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
-                if(StringUtils.isNotEmpty(csMerchantQueryVo.getKkClientId())&&StringUtils.isNotEmpty(csMerchantQueryVo.getKkRedirectUri())
-                &&StringUtils.isNotEmpty(csMerchantQueryVo.getKkPassword())&&StringUtils.isNotEmpty(csMerchantQueryVo.getKkAppSecret())
-                &&StringUtils.isNotEmpty(csMerchantQueryVo.getKkProjectCode())&&StringUtils.isNotEmpty(csMerchantQueryVo.getKkUname()))
-                {
-                    if(StringUtils.isNotEmpty(csTearoomQueryVo.getKkMac())&&StringUtils.isNotEmpty(csTearoomQueryVo.getKkOcSwitch())){
-                        String code = getCode(csMerchantQueryVo);
-                        String token = getToken(csMerchantQueryVo,code);
+            //如果是续单订单，则不需要开启空开
+            if(StringUtils.isBlank(csMerchantOrder.getOriginOrderId())) {
+                try {
+                    CsMerchantQueryVo csMerchantQueryVo = csMerchantService.getCsMerchantById(csMerchantOrder.getMerchantId());
+                    CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
+                    if (StringUtils.isNotEmpty(csMerchantQueryVo.getKkClientId()) && StringUtils.isNotEmpty(csMerchantQueryVo.getKkRedirectUri())
+                            && StringUtils.isNotEmpty(csMerchantQueryVo.getKkPassword()) && StringUtils.isNotEmpty(csMerchantQueryVo.getKkAppSecret())
+                            && StringUtils.isNotEmpty(csMerchantQueryVo.getKkProjectCode()) && StringUtils.isNotEmpty(csMerchantQueryVo.getKkUname())) {
+                        if (StringUtils.isNotEmpty(csTearoomQueryVo.getKkMac()) && StringUtils.isNotEmpty(csTearoomQueryVo.getKkOcSwitch())) {
+                            String code = getCode(csMerchantQueryVo);
+                            String token = getToken(csMerchantQueryVo, code);
 
-                        PUT_BOX_CONTROL_Switch(csMerchantQueryVo,csTearoomQueryVo, token,"open");
-                    }else{
-                        log.error(id+":茶室空开配置错误！！！");
+                            PUT_BOX_CONTROL_Switch(csMerchantQueryVo, csTearoomQueryVo, token, "open");
+                        } else {
+                            log.error(id + ":茶室空开配置错误！！！");
+                        }
+                    } else {
+                        log.error(id + ":商店空开配置错误！！！");
                     }
-                }else {
-                    log.error(id+":商店空开配置错误！！！");
-                }
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             redisTemplate.delete(key);
@@ -354,37 +362,43 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             csMerchantOrderQueryWrapper.eq("id",id);
             CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
 
-            try {
-                CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
-                if(StringUtils.isNotEmpty(csTearoomQueryVo.getSyUrl())&&
-                        StringUtils.isNotEmpty(csTearoomQueryVo.getSyProKey())&&
-                        StringUtils.isNotEmpty(csTearoomQueryVo.getSySname())&&
-                        StringUtils.isNotEmpty(csTearoomQueryVo.getSySid2())){
-                    String requestStr = csTearoomQueryVo.getSyUrl()+"?sid="+csTearoomQueryVo.getSySid2()+
-                            "&ProKey="+csTearoomQueryVo.getSyProKey()+
-                            "&sname="+csTearoomQueryVo.getSySname();
-                    log.info("声音："+requestStr);
-                    OkHttpClient client = new OkHttpClient().newBuilder()
-                            .build();
-                    Request request = new Request.Builder()
-                            .url(requestStr)
-                            .method("GET", null)
-                            .build();
-                    Response response = client.newCall(request).execute();
-                    String responseBody = response.body().string();
-                    log.info("声音:"+responseBody);
-                    JSONObject jsonObject = JSON.parseObject(responseBody);
-                    String Success = jsonObject.getString("Success");
-                    if("true".equals(Success)){
-                        log.info(id+": 声音提醒正常");
-                    }else{
-                        log.error("声音提醒api存在问题，请检查！");
+            //如果有续单订单，则不关闭空开
+            QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapperXD=new QueryWrapper<CsMerchantOrder>();
+            csMerchantOrderQueryWrapperXD.eq("origin_order_id",id);
+            CsMerchantOrder csMerchantOrderXD = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
+            if(csMerchantOrderXD==null) {
+                try {
+                    CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
+                    if (StringUtils.isNotEmpty(csTearoomQueryVo.getSyUrl()) &&
+                            StringUtils.isNotEmpty(csTearoomQueryVo.getSyProKey()) &&
+                            StringUtils.isNotEmpty(csTearoomQueryVo.getSySname()) &&
+                            StringUtils.isNotEmpty(csTearoomQueryVo.getSySid2())) {
+                        String requestStr = csTearoomQueryVo.getSyUrl() + "?sid=" + csTearoomQueryVo.getSySid2() +
+                                "&ProKey=" + csTearoomQueryVo.getSyProKey() +
+                                "&sname=" + csTearoomQueryVo.getSySname();
+                        log.info("声音：" + requestStr);
+                        OkHttpClient client = new OkHttpClient().newBuilder()
+                                .build();
+                        Request request = new Request.Builder()
+                                .url(requestStr)
+                                .method("GET", null)
+                                .build();
+                        Response response = client.newCall(request).execute();
+                        String responseBody = response.body().string();
+                        log.info("声音:" + responseBody);
+                        JSONObject jsonObject = JSON.parseObject(responseBody);
+                        String Success = jsonObject.getString("Success");
+                        if ("true".equals(Success)) {
+                            log.info(id + ": 声音提醒正常");
+                        } else {
+                            log.error("声音提醒api存在问题，请检查！");
+                        }
+                    } else {
+                        log.error(id + ":声音提醒配置错误！！！");
                     }
-                }else{
-                    log.error(id+":声音提醒配置错误！！！");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
             redisTemplate.delete(key);
@@ -396,36 +410,42 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             csMerchantOrderQueryWrapper.eq("id",id);
             CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
 
-            try {
-                CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
-                if(StringUtils.isNotEmpty(csTearoomQueryVo.getSyUrl())&&
-                        StringUtils.isNotEmpty(csTearoomQueryVo.getSyProKey())&&
-                        StringUtils.isNotEmpty(csTearoomQueryVo.getSySname())&&
-                        StringUtils.isNotEmpty(csTearoomQueryVo.getSySid3())){
-                    String requestStr = csTearoomQueryVo.getSyUrl()+"?sid="+csTearoomQueryVo.getSySid3()+
-                            "&ProKey="+csTearoomQueryVo.getSyProKey()+
-                            "&sname="+csTearoomQueryVo.getSySname();
-                    OkHttpClient client = new OkHttpClient().newBuilder()
-                            .build();
-                    Request request = new Request.Builder()
-                            .url(requestStr)
-                            .method("GET", null)
-                            .build();
-                    Response response = client.newCall(request).execute();
-                    String responseBody = response.body().string();
-                    log.info(responseBody);
-                    JSONObject jsonObject = JSON.parseObject(responseBody);
-                    String Success = jsonObject.getString("Success");
-                    if("true".equals(Success)){
-                        log.info(id+": 声音提醒正常");
-                    }else{
-                        log.error("声音提醒api存在问题，请检查！");
+            //如果有续单订单，则不关闭空开
+            QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapperXD=new QueryWrapper<CsMerchantOrder>();
+            csMerchantOrderQueryWrapperXD.eq("origin_order_id",id);
+            CsMerchantOrder csMerchantOrderXD = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
+            if(csMerchantOrderXD==null) {
+                try {
+                    CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
+                    if (StringUtils.isNotEmpty(csTearoomQueryVo.getSyUrl()) &&
+                            StringUtils.isNotEmpty(csTearoomQueryVo.getSyProKey()) &&
+                            StringUtils.isNotEmpty(csTearoomQueryVo.getSySname()) &&
+                            StringUtils.isNotEmpty(csTearoomQueryVo.getSySid3())) {
+                        String requestStr = csTearoomQueryVo.getSyUrl() + "?sid=" + csTearoomQueryVo.getSySid3() +
+                                "&ProKey=" + csTearoomQueryVo.getSyProKey() +
+                                "&sname=" + csTearoomQueryVo.getSySname();
+                        OkHttpClient client = new OkHttpClient().newBuilder()
+                                .build();
+                        Request request = new Request.Builder()
+                                .url(requestStr)
+                                .method("GET", null)
+                                .build();
+                        Response response = client.newCall(request).execute();
+                        String responseBody = response.body().string();
+                        log.info(responseBody);
+                        JSONObject jsonObject = JSON.parseObject(responseBody);
+                        String Success = jsonObject.getString("Success");
+                        if ("true".equals(Success)) {
+                            log.info(id + ": 声音提醒正常");
+                        } else {
+                            log.error("声音提醒api存在问题，请检查！");
+                        }
+                    } else {
+                        log.error(id + ":声音提醒配置错误！！！");
                     }
-                }else{
-                    log.error(id+":声音提醒配置错误！！！");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
             redisTemplate.delete(key);

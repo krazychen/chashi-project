@@ -681,6 +681,13 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         redisTemplate.opsForValue().set("ORDER_SHENGYING2_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),fenzhong-Integer.parseInt(shengyintime2), TimeUnit.MINUTES);
         redisTemplate.opsForValue().set("ORDER_SHENGYING3_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),fenzhong-Integer.parseInt(shengyintime3), TimeUnit.MINUTES);
 
+        //如果是续单订单，则订单使用状态直接设置为已使用
+        if(StringUtils.isNotBlank(csMerchantOrder.getOriginOrderId())){
+            CsMerchantOrderQueryParam temp = new CsMerchantOrderQueryParam();
+            temp.setId(csMerchantOrder.getId());
+            temp.setUsedStatus("1");
+            csMerchantOrderMapper.updateUsedStatus(temp);
+        }
     }
 
     @Override

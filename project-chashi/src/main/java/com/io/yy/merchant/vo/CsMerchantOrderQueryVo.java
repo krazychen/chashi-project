@@ -40,6 +40,9 @@ public class CsMerchantOrderQueryVo implements Serializable {
     @ApiModelProperty(value = "微信用户openID")
     private String openid;
 
+    @ApiModelProperty(value = "续单前的原订单")
+    private String originOrderId;
+
     @ApiModelProperty(value = "商品名称，用茶室名称+预订手机+预订日期+uuid")
     private String orderName;
 

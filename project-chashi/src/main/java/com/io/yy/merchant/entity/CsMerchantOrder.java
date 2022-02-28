@@ -57,6 +57,9 @@ public class CsMerchantOrder extends BaseEntity {
     @NotNull(message = "微信用户openID不能为空")
     private String openid;
 
+    @ApiModelProperty(value = "续单前的原订单")
+    private String originOrderId;
+
     @ApiModelProperty(value = "商品名称，用茶室名称+预订手机+预订日期+uuid")
     private String orderName;
 
