@@ -247,7 +247,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             //如果有续单订单，则不关闭空开
             QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapperXD=new QueryWrapper<CsMerchantOrder>();
             csMerchantOrderQueryWrapperXD.eq("origin_order_id",id);
-            CsMerchantOrder csMerchantOrderXD = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
+            CsMerchantOrder csMerchantOrderXD = csMerchantOrderService.getOne(csMerchantOrderQueryWrapperXD);
             if(csMerchantOrderXD==null) {
 
                 //关闭空开
@@ -365,7 +365,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             //如果有续单订单，则不关闭空开
             QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapperXD=new QueryWrapper<CsMerchantOrder>();
             csMerchantOrderQueryWrapperXD.eq("origin_order_id",id);
-            CsMerchantOrder csMerchantOrderXD = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
+            CsMerchantOrder csMerchantOrderXD = csMerchantOrderService.getOne(csMerchantOrderQueryWrapperXD);
             if(csMerchantOrderXD==null) {
                 try {
                     CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
@@ -413,7 +413,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             //如果有续单订单，则不关闭空开
             QueryWrapper<CsMerchantOrder> csMerchantOrderQueryWrapperXD=new QueryWrapper<CsMerchantOrder>();
             csMerchantOrderQueryWrapperXD.eq("origin_order_id",id);
-            CsMerchantOrder csMerchantOrderXD = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
+            CsMerchantOrder csMerchantOrderXD = csMerchantOrderService.getOne(csMerchantOrderQueryWrapperXD);
             if(csMerchantOrderXD==null) {
                 try {
                     CsTearoomQueryVo csTearoomQueryVo = csTearoomService.getCsTearoomById(csMerchantOrder.getTearoomId());
