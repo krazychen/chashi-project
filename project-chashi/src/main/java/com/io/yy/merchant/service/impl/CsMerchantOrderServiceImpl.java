@@ -647,9 +647,9 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
                 }else if(notifyTime == 1){
                     // 消费前后X分钟
                     int fenzhong = DateUtils.differentMinute(new Date(),endC.getTime());
-                    if(cc.getNotifyFrontTime()!=0){
+                    if(cc.getNotifyFrontTime()!=null&&cc.getNotifyFrontTime()!=0){
                         redisTemplate.opsForValue().set("ORDER_NOTIFY]"+csMerchantOrder.getId()+"["+cc.getId(),cc.getId(),fenzhong-cc.getNotifyFrontTime(), TimeUnit.MINUTES);
-                    }else if (cc.getNotifyRearTime()!=0){
+                    }else if (cc.getNotifyRearTime()!=null&&cc.getNotifyRearTime()!=0){
                         redisTemplate.opsForValue().set("ORDER_NOTIFY]"+csMerchantOrder.getId()+"["+cc.getId(),cc.getId(),fenzhong+cc.getNotifyRearTime(), TimeUnit.MINUTES);
                     }
                 }
@@ -684,7 +684,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         //如果是续单订单，则订单使用状态直接设置为已使用
         if(StringUtils.isNotBlank(csMerchantOrder.getOriginOrderId())){
             CsMerchantOrderQueryParam temp = new CsMerchantOrderQueryParam();
-            temp.setId(csMerchantOrder.getId());
+            temp.setId(Long.valueOf(csMerchantOrder.getOriginOrderId()));
             temp.setUsedStatus("1");
             csMerchantOrderMapper.updateUsedStatus(temp);
         }
