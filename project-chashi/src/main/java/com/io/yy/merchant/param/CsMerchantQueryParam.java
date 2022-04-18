@@ -53,7 +53,7 @@ public class CsMerchantQueryParam extends OrderQueryParam {
     private String userLat;
 
     @ApiModelProperty(value = "附近的商店的默认公里数10KM")
-    private int distance = 10;
+    private int distance = 10000;
 
     @ApiModelProperty(value = "城市代码")
     private String cityCode;
