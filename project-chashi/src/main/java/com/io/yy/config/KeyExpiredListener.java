@@ -342,7 +342,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                     String Success = jsonObject.getString("Success");
                     if("true".equals(Success)){
                         log.info(id+": 声音提醒正常");
-                        redisTemplate.opsForValue().set("SY1_isExist]"+csMerchantOrder.getId(),csMerchantOrder.getId());
+                        redisTemplate.opsForValue().set("SY1_isExist]"+csMerchantOrder.getId(),csMerchantOrder.getId().toString());
                     }else{
                         log.error("声音提醒api存在问题，请检查！");
                     }

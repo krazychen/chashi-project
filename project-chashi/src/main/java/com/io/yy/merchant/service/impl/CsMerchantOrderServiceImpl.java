@@ -456,7 +456,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
             csMerchantOrderQueryWrapper.eq("id",csMerchantOrderQueryParam.getId());
             CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
 
-            String isExist = (String)redisTemplate.opsForValue().get("SY1_isExist]"+csMerchantOrder.getId());
+            String isExist = redisTemplate.opsForValue().get("SY1_isExist]"+csMerchantOrder.getId()).toString();
             if(StringUtils.isEmpty(isExist)){
                 List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
 
@@ -684,7 +684,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         //如果是续单订单，则订单使用状态直接设置为已使用
         if(StringUtils.isNotBlank(csMerchantOrder.getOriginOrderId())){
             CsMerchantOrderQueryParam temp = new CsMerchantOrderQueryParam();
-            temp.setId(Long.valueOf(csMerchantOrder.getOriginOrderId()));
+            temp.setId(Long.valueOf(csMerchantOrder.getMerchantId()));
             temp.setUsedStatus("1");
             csMerchantOrderMapper.updateUsedStatus(temp);
         }
