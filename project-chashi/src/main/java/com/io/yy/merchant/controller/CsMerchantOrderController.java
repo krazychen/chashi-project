@@ -157,6 +157,15 @@ public class CsMerchantOrderController extends BaseController {
     }
 
     /**
+     * 根据tearoomid和当前时间判断是否存在订单，有订单返回订单id，没有订单返回null
+     */
+    @PostMapping("/getOrderByCurrent")
+    @ApiOperation(value = " 根据tearoomid和当前时间判断是否存在订单，有订单返回订单id，没有订单返回null", notes = "判断当前时间是否有订单", response = ApiResult.class)
+    public ApiResult<Integer> getOrderByCurrent(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        return ApiResult.ok(csMerchantOrderService.getOrderByCurrent(csMerchantOrderQueryParam));
+    }
+
+    /**
      * 添加商店茶室订单记录 - 余额
      */
     @PostMapping("/addCsMerchantOrderForWx")

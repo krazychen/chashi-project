@@ -69,11 +69,29 @@ public class CsMerchantOrder extends BaseEntity {
     @ApiModelProperty(value = "预订时间段，多个用，隔开")
     private String orderTimerage;
 
+    @ApiModelProperty(value = "订单占用的开始时间")
+    private Date orderStartTime;
+
+    @ApiModelProperty(value = "订单占用的结束时间")
+    private Date orderEndTime;
+
+    @ApiModelProperty(value = "预订时间段,加上保洁时间的长度")
+    private String orderTimerageClean;
+
     @ApiModelProperty(value = "下一个预定日期")
     private Date nextOrderDate;
 
     @ApiModelProperty(value = "下一个预订时间段，多个用，隔开")
     private String nextOrderTimerage;
+
+    @ApiModelProperty(value = "下一天订单占用的开始时间")
+    private Date nextOrderStartTime;
+
+    @ApiModelProperty(value = "下一天订单占用的结束时间")
+    private Date nextOrderEndTime;
+
+    @ApiModelProperty(value = "下一天预订时间段,加上保洁时间的长度")
+    private String nextOrderTimerageClean;
 
     @ApiModelProperty(value = "总的预订时间段数")
     private Double orderOriginTimenum;

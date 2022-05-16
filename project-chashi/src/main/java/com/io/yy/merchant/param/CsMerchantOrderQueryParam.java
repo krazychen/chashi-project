@@ -84,4 +84,7 @@ public class CsMerchantOrderQueryParam extends OrderQueryParam {
 
     @ApiModelProperty(value = "状态，0：禁用，1：启用，2：锁定")
     private String status;
+
+    @ApiModelProperty(value = "当前时间")
+    private Date currentTime;
 }

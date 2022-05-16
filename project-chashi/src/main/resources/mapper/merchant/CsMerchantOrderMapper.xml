@@ -5,7 +5,9 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, merchant_id, tearoom_id, room_name, wxuser_id, wxuser_phone, openid, origin_order_id, order_name, order_date,
-        order_timerage, next_order_date, next_order_timerage, order_origin_timenum, membercard_order_id, order_mb_timenum,
+        order_timerage, order_start_time, order_end_time, order_timerage_clean,
+        next_order_date, next_order_timerage, next_order_start_time,next_order_end_time,next_order_timerage_clean,
+        order_origin_timenum, membercard_order_id, order_mb_timenum,
         order_timenum, order_unit_origin_price, order_unit_price, order_origin_price, coupon_released_id, order_cp_amount,
         order_mb_amount, order_price, out_trade_no, payment_status, payment_msg, payment_type,used_status,
         source_type, status, ttl_lock_id, keyboard_pwd_id, keyboard_pwd, rttl_lock_id, rkeyboard_pwd_id,
@@ -29,8 +31,9 @@
     <select id="getCsMerchantOrderPageList" resultType="com.io.yy.merchant.vo.CsMerchantOrderQueryVo">
         select
         cmo.id AS id, cmo.out_trade_no,merchant_id, tearoom_id, room_name, wxuser_id, wxuser_phone, cmo.openid, origin_order_id,
-        order_name, order_date, order_timerage, next_order_date,next_order_timerage,order_origin_timenum,
-        membercard_order_id, order_mb_timenum,order_timenum, order_unit_origin_price, order_unit_price, order_origin_price, coupon_released_id, order_cp_amount,
+        order_name, order_date, order_timerage, order_start_time, order_end_time, order_timerage_clean,
+        next_order_date,next_order_timerage,next_order_start_time,next_order_end_time,next_order_timerage_clean,
+        order_origin_timenum, membercard_order_id, order_mb_timenum,order_timenum, order_unit_origin_price, order_unit_price, order_origin_price, coupon_released_id, order_cp_amount,
         order_mb_amount, order_price,out_trade_no, payment_status, payment_type,used_status, source_type, cmo.status, cmo.deleted, cmo.version, cmo.create_by,
         cmo.create_time,cmo.update_by, cmo.update_time, wu.nickname AS nickname,cm.address
         from cs_merchant_order cmo
@@ -103,6 +106,20 @@
           and date(cmo.next_order_date) = date(#{param.orderDate})
           and cmo.`payment_status` = 2
           and cmo.tearoom_id = #{param.tearoomId}
+    </select>
+
+    <select id="getOrderByCurrent" resultType="java.lang.Integer ">
+        SELECT id FROM cs_merchant_order cmo
+        WHERE
+        (
+        (cmo.order_start_time <![CDATA[ <= ]]> #{param.currentTime}
+        AND
+        cmo.order_end_time <![CDATA[ >= ]]> #{param.currentTime}
+        OR
+        (cmo.next_order_start_time <![CDATA[ <= ]]> #{param.currentTime}
+        AND
+        cmo.next_order_end_time <![CDATA[ >= ]]> #{param.currentTime}
+        AND tearoom_id = #{param.tearoomId}
     </select>
 
     <update id="updatePaymentStatus">

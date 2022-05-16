@@ -93,6 +93,14 @@ public interface CsMerchantOrderService extends BaseService<CsMerchantOrder> {
     String getTimeRangeForWx(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 
     /**
+     * 根据当前时间获取是否有订单，有订单返回订单id，没有订单返回null
+     *
+     * @param csMerchantOrderQueryParam
+     * @return
+     */
+    Integer getOrderByCurrent(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
+
+    /**
      * 更新支付状态
      *
      * @param csMerchantOrderQueryParam

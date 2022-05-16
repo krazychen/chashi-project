@@ -164,6 +164,11 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         return timeRanges;
     }
 
+    @Override
+    public Integer getOrderByCurrent(CsMerchantOrderQueryParam csMerchantOrderQueryParam) {
+        return csMerchantOrderMapper.getOrderByCurrent(csMerchantOrderQueryParam);
+    }
+
     /**
      * 更新支付状态
      *
@@ -456,7 +461,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
             csMerchantOrderQueryWrapper.eq("id",csMerchantOrderQueryParam.getId());
             CsMerchantOrder csMerchantOrder = csMerchantOrderService.getOne(csMerchantOrderQueryWrapper);
 
-            String isExist = redisTemplate.opsForValue().get("SY1_isExist]"+csMerchantOrder.getId()).toString();
+            String isExist = (String) redisTemplate.opsForValue().get("SY1_isExist]"+csMerchantOrder.getId());
             if(StringUtils.isEmpty(isExist)){
                 List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
 
