@@ -108,7 +108,7 @@
           and cmo.tearoom_id = #{param.tearoomId}
     </select>
 
-    <select id="getOrderByCurrent" resultType="java.lang.Integer ">
+    <select id="getOrderByCurrent" resultType="java.lang.Integer">
         SELECT id FROM cs_merchant_order cmo
         WHERE
         (
