@@ -165,7 +165,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
     }
 
     @Override
-    public Integer getOrderByCurrent(CsMerchantOrderQueryParam csMerchantOrderQueryParam) {
+    public Long getOrderByCurrent(CsMerchantOrderQueryParam csMerchantOrderQueryParam) {
         return csMerchantOrderMapper.getOrderByCurrent(csMerchantOrderQueryParam);
     }
 

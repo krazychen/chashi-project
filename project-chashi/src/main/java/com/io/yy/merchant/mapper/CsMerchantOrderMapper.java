@@ -79,7 +79,7 @@ public interface CsMerchantOrderMapper extends BaseMapper<CsMerchantOrder> {
      * @param csMerchantOrderQueryParam
      * @return
      */
-    Integer getOrderByCurrent(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
+    Long getOrderByCurrent(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 
     /**
      * 更新支付状态
