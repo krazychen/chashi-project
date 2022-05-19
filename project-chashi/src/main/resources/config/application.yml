@@ -229,6 +229,7 @@ whyy-system:
       /csMerchantOrder/lockKeyForWx/**=anon
       /csMerchantOrder/openLock/**=anon
       /csMerchantOrder/openRoomLock/**=anon
+      /csMerchantOrder/getOrderByCurrent/**=anon
     # 权限配置
     permission:
       # 排除登陆登出相关
