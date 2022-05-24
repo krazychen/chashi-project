@@ -663,7 +663,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         }
 
         //设置订单结束状态的定时器，用来进行订单使用状态的控制
-        int fenzhong = DateUtils.differentMinute(new Date(),endC.getTime());
+        int fenzhong = DateUtils.differentMinute(new Date(),endC.getTime())+1;
         redisTemplate.opsForValue().set("ORDER_END_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),fenzhong, TimeUnit.MINUTES);
 
         List<SysConfigDataRedisVo> sysConfigDataList = ConfigDataUtil.getAllSysConfigData();
