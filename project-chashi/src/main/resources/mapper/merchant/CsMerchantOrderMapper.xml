@@ -114,11 +114,11 @@
         (
         (cmo.order_start_time <![CDATA[ <= ]]> #{param.currentTime}
         AND
-        cmo.order_end_time <![CDATA[ >= ]]> #{param.currentTime}
+        cmo.order_end_time <![CDATA[ >= ]]> #{param.currentTime})
         OR
         (cmo.next_order_start_time <![CDATA[ <= ]]> #{param.currentTime}
         AND
-        cmo.next_order_end_time <![CDATA[ >= ]]> #{param.currentTime}
+        cmo.next_order_end_time <![CDATA[ >= ]]> #{param.currentTime}))
         AND tearoom_id = #{param.tearoomId}
     </select>
 
