@@ -93,7 +93,7 @@
     </update>
 
     <select id="getTimeRangeForWx" resultType="java.lang.String">
-        select cmo.order_timerage AS order_timerage
+        select cmo.order_timerage_clean AS order_timerage
         from cs_merchant_order cmo
         where 1=1
         and date(cmo.order_date) = date(#{param.orderDate})
