@@ -157,6 +157,15 @@ public class CsMerchantOrderController extends BaseController {
     }
 
     /**
+     * 根据tearoomid和预订日期获取当前茶室含保洁时间已经被预定的时间段，返回是时间段的一个包含","的字符串
+     */
+    @PostMapping("/getTimeRangeCleanForWx")
+    @ApiOperation(value = "获取当前茶室含保洁时间已经被预定的时间段，返回是时间段的一个包含\",\"的字符串", notes = "获取当前茶室已经被预定的时间段", response = ApiResult.class)
+    public ApiResult<String> getTimeRangeCleanForWx(@Valid @RequestBody CsMerchantOrderQueryParam csMerchantOrderQueryParam) throws Exception {
+        return ApiResult.ok(csMerchantOrderService.getTimeRangeCleanForWx(csMerchantOrderQueryParam));
+    }
+
+    /**
      * 根据tearoomid和当前时间判断是否存在订单，有订单返回订单id，没有订单返回null
      */
     @PostMapping("/getOrderByCurrent")

@@ -72,6 +72,13 @@ public interface CsMerchantOrderMapper extends BaseMapper<CsMerchantOrder> {
      */
     List<String> getTimeRangeForWx(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 
+    /**
+     * 根据tearoomid和预订日期获取当前茶室含保洁时间已经被预定的时间段，返回是时间段list 的一个包含","的字符串
+     *
+     * @param csMerchantOrderQueryParam
+     * @return
+     */
+    List<String> getTimeRangeCleanForWx(@Param("param") CsMerchantOrderQueryParam csMerchantOrderQueryParam);
 
     /**
      * 根据当前时间获取是否有订单，有订单返回订单id，没有订单返回null
