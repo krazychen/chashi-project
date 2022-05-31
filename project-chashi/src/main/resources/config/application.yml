@@ -223,6 +223,7 @@ whyy-system:
       /csMembercardOrder/saveMembercardOrder=anon
       /csRechargeSetting/getSettingListForWx=anon
       /csMerchantOrder/getTimeRangeForWx=anon
+      /csMerchantOrder/getTimeRangeCleanForWx=anon
       /csMerchantOrder/addCsMerchantOrderForWx=anon
       /csMerchantOrder/getCsMerchantOrderListForWx=anon
       /csMerchantOrder/infoForWx/**=anon
