@@ -122,13 +122,6 @@
           AND (DATE(cmo.next_order_date) =  date(#{param.orderDate})  OR DATE_FORMAT(cmo.next_order_start_time,'%Y-%m-%d')=  date(#{param.orderDate}) )
           AND cmo.`payment_status` = 2
           AND cmo.tearoom_id = #{param.tearoomId}
-
-        select cmo.order_timerage_clean AS order_timerage
-        from cs_merchant_order cmo
-        where 1=1
-          and (date(cmo.order_date) = date(#{param.orderDate}) or DATE(cmo.next_order_date) = date(#{param.orderDate}) )
-          and cmo.`payment_status` = 2
-          and cmo.tearoom_id = #{param.tearoomId}
     </select>
 
     <select id="getOrderByCurrent" resultType="java.lang.Long">
