@@ -96,6 +96,9 @@ public class WeixinController extends WeixinSupport {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private CsMerchantNotifyService csMerchantNotifyService;
+
     /**
      * 发起会员卡微信支付
      *
@@ -1077,6 +1080,28 @@ public class WeixinController extends WeixinSupport {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        //删除相关的提醒
+        redisTemplate.delete("ORDER_KONGTAI_USED]"+csMerchantOrder.getId());
+        redisTemplate.delete("ORDER_SHENGYING2_USED]"+csMerchantOrder.getId());
+        redisTemplate.delete("ORDER_SHENGYING3_USED]"+csMerchantOrder.getId());
+
+        CsMerchantNotifyQueryParam csMerchantNotifyQueryParam  = new CsMerchantNotifyQueryParam();
+        csMerchantNotifyQueryParam.setMerchantId(csMerchantOrder.getMerchantId());
+        csMerchantNotifyQueryParam.setOrderDate(csMerchantOrder.getOrderDate());
+        List<CsMerchantNotifyQueryVo> notifyList = null;
+        try {
+            notifyList = csMerchantNotifyService.getCsMerchantNotifyPageList(csMerchantNotifyQueryParam).getRecords();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(notifyList!=null&&notifyList.size()>0){
+            // 根据通知类型，设置不同的rediskey
+            notifyList.stream().forEach(cc-> {
+                // redisTemplate.delete("ORDER_NOTIFY]"+csMerchantOrder.getId()+"["+cc.getId());
+
+            });
         }
 
         return flag;
