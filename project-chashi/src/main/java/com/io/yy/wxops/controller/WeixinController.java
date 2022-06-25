@@ -1238,7 +1238,7 @@ public class WeixinController extends WeixinSupport {
         //sb为微信返回的xml
         String notityXml = sb.toString();
         String resXml = "";
-        logger.debug("接收到的报文：" + notityXml);
+        logger.info("接收到的报文：" + notityXml);
 
         Map map = PayUtil.doXMLParse(notityXml);
 
@@ -1274,7 +1274,10 @@ public class WeixinController extends WeixinSupport {
                     CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
                     csMembercardOrderQueryParam.setOutTradeNo(outTradeNo);
                     csMembercardOrderQueryParam.setPaymentStatus(2);
-                    csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
+                    boolean flag = csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
+                    if(flag){
+                        redisTemplate.delete("CARD_ORDER_"+outTradeNo);
+                    }
                 }
                 // 如果是充值订单,更新充值订单的付款状态
                 if(StringUtils.isNotBlank(outTradeNo)&&outTradeNo.indexOf("rech_")!=-1){
@@ -1290,6 +1293,8 @@ public class WeixinController extends WeixinSupport {
                         wxUserQueryParam.setBalance(csRechargeRecordQueryVo.getRechargeFinal());
                         wxUserQueryParam.setIntegral(csRechargeRecordQueryVo.getIntegral());
                         wxUserService.updateBalanceAIntegral(wxUserQueryParam);
+
+                        redisTemplate.delete("RECHARGE_ORDER_"+outTradeNo);
                     }
                 }
 
@@ -1326,7 +1331,7 @@ public class WeixinController extends WeixinSupport {
                 CsMembercardOrderQueryParam csMembercardOrderQueryParam = new CsMembercardOrderQueryParam();
                 csMembercardOrderQueryParam.setOutTradeNo(outTradeNo);
                 csMembercardOrderQueryParam.setPaymentStatus(1);
-                csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
+                boolean flag = csMembercardOrderService.updatePaymentStatus(csMembercardOrderQueryParam);
             }
             // 如果是充值订单,更新充值订单的付款状态
             if(StringUtils.isNotBlank(outTradeNo)&&outTradeNo.indexOf("rech_")!=-1) {
