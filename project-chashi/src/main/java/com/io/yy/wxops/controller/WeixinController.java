@@ -1265,7 +1265,7 @@ public class WeixinController extends WeixinSupport {
         if ("SUCCESS".equals(returnCode)) {
             //验证签名是否正确
             if (PayUtil.verify(PayUtil.createLinkString(map), (String) map.get("sign"), key, "utf-8")) {
-                logger.debug("微信回调开始业务代码处理:"+outTradeNo);
+                logger.info("微信回调开始业务代码处理:"+outTradeNo);
 
                 /**此处添加自己的业务逻辑代码start**/
 
