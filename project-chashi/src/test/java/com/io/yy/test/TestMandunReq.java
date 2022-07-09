@@ -1,6 +1,7 @@
 package com.io.yy.test;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.io.yy.util.lang.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +21,8 @@ public class TestMandunReq {
         String token = tmr.getToken(tmr.getCode());
 //        tmr.GET_BOXES(token);
 //        tmr.GET_BOX_CHANNELS_OC(token);
-        tmr.PUT_BOX_CONTROL_Switch(token,"close");
-//        tmr.GET_BOX_CHANNELS_OC(token);
+//        tmr.PUT_BOX_CONTROL_Switch(token,"close");
+        tmr.GET_BOX_CHANNELS_OC(token);
 //        log.info(tmr.getToken(tmr.getCode()));
 
     }
@@ -128,6 +129,7 @@ public class TestMandunReq {
         packageParams.put("timestamp", sdf.format(nowDate));
         packageParams.put("projectCode", "P00000020772");
         packageParams.put("mac", "187ED5340D3C");
+        packageParams.put("addr", "1");
 
         String reqMessage = concatSignString(packageParams);
         String sigeMessage = concatMessageString(packageParams);
@@ -149,7 +151,16 @@ public class TestMandunReq {
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
         log.info(responseBody);
-
+        JSONObject jsonObject = JSON.parseObject(responseBody);
+        String success = jsonObject.getString("success");
+        JSONArray dataArray = JSON.parseArray(jsonObject.getString("data"));
+        JSONObject dataObject = JSON.parseObject(dataArray.getString(0));
+        if ("true".equals(success)) {
+            log.info(dataObject.toString());
+            log.info(String.valueOf(dataObject.getBoolean("oc")));
+        } else {
+            log.error(jsonObject.getString("message") );
+        }
     }
 
     private void PUT_BOX_CONTROL_Switch(String token,String operation) throws Exception{

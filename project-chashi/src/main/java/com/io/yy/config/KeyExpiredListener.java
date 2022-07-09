@@ -2,6 +2,7 @@ package com.io.yy.config;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.io.yy.marketing.entity.CsMembercardConsum;
@@ -678,6 +679,53 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             }
         }
         return token;
+    }
+
+    private boolean get_switch_status(CsMerchantQueryVo csMerchantQueryVo, CsTearoomQueryVo csTearoomQueryVo, String token, String operation) throws Exception{
+        Date nowDate = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        Map<String, String> packageParams = new HashMap<String, String>();
+        packageParams.put("client_id", csMerchantQueryVo.getKkClientId());
+        packageParams.put("method", "GET_BOX_CHANNELS_OC");
+        packageParams.put("access_token", token);
+        packageParams.put("timestamp", sdf.format(nowDate));
+        packageParams.put("projectCode", csMerchantQueryVo.getKkProjectCode());
+        packageParams.put("mac", csTearoomQueryVo.getKkMac());
+        packageParams.put("addr", csTearoomQueryVo.getKkOcSwitch());
+
+        String reqMessage = concatSignString(packageParams);
+        String sigeMessage = concatMessageString(packageParams);
+        log.info(sigeMessage);
+        sigeMessage+=csMerchantQueryVo.getKkAppSecret();
+        String sign = MD5(sigeMessage);
+        reqMessage=reqMessage+"&sign="+sign;
+        log.info(reqMessage);
+
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        RequestBody body = RequestBody.create(mediaType, reqMessage);
+        Request request = new Request.Builder()
+                .url("https://open.snd02.com:443/invoke/router.as")
+                .method("POST", body)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        Response response = client.newCall(request).execute();
+        String responseBody = response.body().string();
+        log.info(responseBody);
+        JSONObject jsonObject = JSON.parseObject(responseBody);
+        String success = jsonObject.getString("success");
+        JSONArray dataArray = JSON.parseArray(jsonObject.getString("data"));
+        JSONObject dataObject = JSON.parseObject(dataArray.getString(0));
+        if ("true".equals(success)) {
+//            log.info(dataObject.toString());
+//            log.info(String.valueOf(dataObject.getBoolean("oc")));
+            return dataObject.getBoolean("oc");
+        } else {
+            log.error(jsonObject.getString("message") );
+            return false;
+        }
     }
 
     private void PUT_BOX_CONTROL_Switch(CsMerchantQueryVo csMerchantQueryVo, CsTearoomQueryVo csTearoomQueryVo, String token, String operation) throws Exception{

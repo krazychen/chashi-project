@@ -694,7 +694,14 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         // 对于立即使用的，如果分钟小于0，则默认为1
         int kktime = kongkaifengzhong-Integer.parseInt(kongkaitime);
         if(kktime <=0){
-            redisTemplate.opsForValue().set("ORDER_KONGTAI_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),10, TimeUnit.SECONDS);
+            //因保洁时间内点击立即预定与非保洁时间点击立即预定，都会出现小于空开开启时间的问题，会出现先开灯，上一个订单结束把灯关掉
+            // 先统一再判断订单开始时间1分钟是不是负数，不是就开始2分钟启动空开，否则还是10S
+            int kktime2 = kongkaifengzhong-1;
+            if(kktime2 <=0){
+                redisTemplate.opsForValue().set("ORDER_KONGTAI_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),10, TimeUnit.SECONDS);
+            }else{
+                redisTemplate.opsForValue().set("ORDER_KONGTAI_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),kktime2, TimeUnit.MINUTES);
+            }
         }else{
             redisTemplate.opsForValue().set("ORDER_KONGTAI_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),kktime, TimeUnit.MINUTES);
         }
