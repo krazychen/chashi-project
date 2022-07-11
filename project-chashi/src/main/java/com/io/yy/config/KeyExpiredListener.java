@@ -681,7 +681,7 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
         return token;
     }
 
-    private boolean get_switch_status(CsMerchantQueryVo csMerchantQueryVo, CsTearoomQueryVo csTearoomQueryVo, String token, String operation) throws Exception{
+    private boolean get_switch_status(CsMerchantQueryVo csMerchantQueryVo, CsTearoomQueryVo csTearoomQueryVo, String token) throws Exception{
         Date nowDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 

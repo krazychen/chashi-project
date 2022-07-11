@@ -1,6 +1,7 @@
 package com.io.yy.merchant.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.io.yy.marketing.entity.CsMembercardConsum;
@@ -421,6 +422,30 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         temp.setId(csMerchantOrderQueryParam.getId());
         temp.setUsedStatus("1");
         csMerchantOrderMapper.updateUsedStatus(temp);
+        //判断是否有通电，没通电就通下电；
+        try {
+            CsTearoomQueryVo csTearoomQueryVo = csTearoomMapper.getCsTearoomById(csMerchantOrderQueryParam.getTearoomId());
+            if (StringUtils.isNotEmpty(csMerchantQueryVo.getKkClientId()) && StringUtils.isNotEmpty(csMerchantQueryVo.getKkRedirectUri())
+                    && StringUtils.isNotEmpty(csMerchantQueryVo.getKkPassword()) && StringUtils.isNotEmpty(csMerchantQueryVo.getKkAppSecret())
+                    && StringUtils.isNotEmpty(csMerchantQueryVo.getKkProjectCode()) && StringUtils.isNotEmpty(csMerchantQueryVo.getKkUname())) {
+                if (StringUtils.isNotEmpty(csTearoomQueryVo.getKkMac()) && StringUtils.isNotEmpty(csTearoomQueryVo.getKkOcSwitch())) {
+                    String code = getCode(csMerchantQueryVo);
+                    String doorToken = getToken(csMerchantQueryVo, code);
+
+                    boolean isopen = get_switch_status(csMerchantQueryVo,csTearoomQueryVo,doorToken);
+                    if(!isopen){
+                        PUT_BOX_CONTROL_Switch(csMerchantQueryVo, csTearoomQueryVo, doorToken, "open");
+                    }
+                } else {
+                    log.error(csMerchantOrderQueryParam.getId() + ":茶室空开配置错误！！！");
+                }
+            } else {
+                log.error(csMerchantOrderQueryParam.getId() + ":商店空开配置错误！！！");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return rtnMessage;
     }
 
@@ -690,13 +715,14 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
 
         // 设置电控的定时器
         String kongkaitime = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("kongkaitime")).collect(Collectors.toList()).get(0).getConfigValue();
+        String lijikongkaitime = sysConfigDataList.stream().filter(item -> item.getConfigKey().equals("lijikongkaitime")).collect(Collectors.toList()).get(0).getConfigValue();
         int kongkaifengzhong = DateUtils.differentMinute(new Date(),startC.getTime());
         // 对于立即使用的，如果分钟小于0，则默认为1
         int kktime = kongkaifengzhong-Integer.parseInt(kongkaitime);
         if(kktime <=0){
             //因保洁时间内点击立即预定与非保洁时间点击立即预定，都会出现小于空开开启时间的问题，会出现先开灯，上一个订单结束把灯关掉
             // 先统一再判断订单开始时间1分钟是不是负数，不是就开始2分钟启动空开，否则还是10S
-            int kktime2 = kongkaifengzhong-1;
+            int kktime2 = kongkaifengzhong-Integer.parseInt(lijikongkaitime);
             if(kktime2 <=0){
                 redisTemplate.opsForValue().set("ORDER_KONGTAI_USED]"+csMerchantOrder.getId(),csMerchantOrder.getId(),10, TimeUnit.SECONDS);
             }else{
@@ -836,6 +862,219 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
             redisTemplate.opsForValue().set("TTLOCK_TOKEN",token,expires_in, TimeUnit.SECONDS);
         }
         return token;
+    }
+
+    private String getCode(CsMerchantQueryVo csMerchantQueryVo) throws Exception{
+
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        RequestBody body = RequestBody.create(mediaType, "response_type=code" +
+                "&client_id=" + csMerchantQueryVo.getKkClientId()+
+                "&redirect_uri=" + csMerchantQueryVo.getKkRedirectUri()+
+                "&uname=" + csMerchantQueryVo.getKkUname() +
+                "&passwd=" + csMerchantQueryVo.getKkPassword());
+        Request request = new Request.Builder()
+                .url("https://open.snd02.com:443/oauth/authverify2.as")
+                .method("POST", body)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        Response response = client.newCall(request).execute();
+        String responseBody = response.body().string();
+        log.info(responseBody);
+        JSONObject jsonObject = JSON.parseObject(responseBody);
+        String success = jsonObject.getString("success");
+        String code = null;
+        if("true".equals(success)){
+            code= jsonObject.getString("code");
+        }
+        return code;
+    }
+
+    private String getToken(CsMerchantQueryVo csMerchantQueryVo, String code) throws Exception{
+
+        // 获取曼顿空开的redis key，若不存在则需要去取key；
+        String token = (String)redisTemplate.opsForValue().get("KK_TOKEN");
+        if(StringUtils.isEmpty(token)) {
+
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .build();
+            MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+
+            String client_secret = MD5(csMerchantQueryVo.getKkClientId() + "authorization_code"
+                    + csMerchantQueryVo.getKkRedirectUri()
+                    + code + csMerchantQueryVo.getKkAppSecret());
+            log.info(client_secret);
+            RequestBody body = RequestBody.create(mediaType, "client_id=" + csMerchantQueryVo.getKkClientId() +
+                    "&client_secret=" + client_secret +
+                    "&grant_type=authorization_code" +
+                    "&redirect_uri=" + csMerchantQueryVo.getKkRedirectUri() +
+                    "&code=" + code +
+                    "&response_type=code");
+            Request request = new Request.Builder()
+                    .url("https://open.snd02.com:443/oauth/token.as")
+                    .method("POST", body)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .build();
+            Response response = client.newCall(request).execute();
+            String responseBody = response.body().string();
+            log.info(responseBody);
+            JSONObject jsonObject = JSON.parseObject(responseBody);
+            String success = jsonObject.getString("success");
+            JSONObject dataObject = JSON.parseObject(jsonObject.getString("data"));
+            if ("true".equals(success)) {
+                token = dataObject.getString("accessToken");
+                Long expires_in = dataObject.getLong("expiresIn");
+                redisTemplate.opsForValue().set("KK_TOKEN",token,expires_in, TimeUnit.SECONDS);
+            } else {
+                log.error(dataObject.getString("description") + ":" + dataObject.getString("error"));
+            }
+        }
+        return token;
+    }
+
+    private boolean get_switch_status(CsMerchantQueryVo csMerchantQueryVo, CsTearoomQueryVo csTearoomQueryVo, String token) throws Exception{
+        Date nowDate = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        Map<String, String> packageParams = new HashMap<String, String>();
+        packageParams.put("client_id", csMerchantQueryVo.getKkClientId());
+        packageParams.put("method", "GET_BOX_CHANNELS_OC");
+        packageParams.put("access_token", token);
+        packageParams.put("timestamp", sdf.format(nowDate));
+        packageParams.put("projectCode", csMerchantQueryVo.getKkProjectCode());
+        packageParams.put("mac", csTearoomQueryVo.getKkMac());
+        packageParams.put("addr", csTearoomQueryVo.getKkOcSwitch());
+
+        String reqMessage = concatSignString(packageParams);
+        String sigeMessage = concatMessageString(packageParams);
+        log.info(sigeMessage);
+        sigeMessage+=csMerchantQueryVo.getKkAppSecret();
+        String sign = MD5(sigeMessage);
+        reqMessage=reqMessage+"&sign="+sign;
+        log.info(reqMessage);
+
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        RequestBody body = RequestBody.create(mediaType, reqMessage);
+        Request request = new Request.Builder()
+                .url("https://open.snd02.com:443/invoke/router.as")
+                .method("POST", body)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        Response response = client.newCall(request).execute();
+        String responseBody = response.body().string();
+        log.info(responseBody);
+        JSONObject jsonObject = JSON.parseObject(responseBody);
+        String success = jsonObject.getString("success");
+        JSONArray dataArray = JSON.parseArray(jsonObject.getString("data"));
+        JSONObject dataObject = JSON.parseObject(dataArray.getString(0));
+        if ("true".equals(success)) {
+//            log.info(dataObject.toString());
+//            log.info(String.valueOf(dataObject.getBoolean("oc")));
+            return dataObject.getBoolean("oc");
+        } else {
+            log.error(jsonObject.getString("message") );
+            return false;
+        }
+    }
+
+    private void PUT_BOX_CONTROL_Switch(CsMerchantQueryVo csMerchantQueryVo, CsTearoomQueryVo csTearoomQueryVo, String token, String operation) throws Exception{
+
+        Date nowDate = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        Map<String, String> packageParams = new HashMap<String, String>();
+        packageParams.put("client_id", csMerchantQueryVo.getKkClientId());
+        packageParams.put("method", "PUT_BOX_CONTROL");
+        packageParams.put("access_token", token);
+        packageParams.put("timestamp", sdf.format(nowDate));
+        packageParams.put("projectCode", csMerchantQueryVo.getKkProjectCode());
+        packageParams.put("mac", csTearoomQueryVo.getKkMac());
+        packageParams.put("cmd", "OCSWITCH");
+        packageParams.put("value1", operation);
+        packageParams.put("value2", csTearoomQueryVo.getKkOcSwitch());
+
+        String reqMessage = concatSignString(packageParams);
+        String sigeMessage = concatMessageString(packageParams);
+        log.info(sigeMessage);
+        sigeMessage+=csMerchantQueryVo.getKkAppSecret();
+        String sign = MD5(sigeMessage);
+        reqMessage=reqMessage+"&sign="+sign;
+        log.info(reqMessage);
+
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        RequestBody body = RequestBody.create(mediaType, reqMessage);
+        Request request = new Request.Builder()
+                .url("https://open.snd02.com:443/invoke/router.as")
+                .method("POST", body)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        Response response = client.newCall(request).execute();
+        String responseBody = response.body().string();
+        log.info(responseBody);
+        JSONObject jsonObject = JSON.parseObject(responseBody);
+        String success = jsonObject.getString("success");
+        JSONObject dataObject = JSON.parseObject(jsonObject.getString("data"));
+        if ("true".equals(success)) {
+            log.info(dataObject.getString("message") );
+        } else {
+            log.error(dataObject.getString("message") );
+        }
+
+    }
+
+    static char[] hc = "0123456789abcdef".toCharArray();
+
+    public static String MD5(String param) throws Exception{
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.reset();
+        md.update(param.getBytes("utf-8"));
+        byte[] d = md.digest();
+        StringBuilder r = new StringBuilder(d.length*2);
+        for (byte b : d) {
+            r.append(hc[(b >> 4) & 0xF]);
+            r.append(hc[(b & 0xF)]);
+        }
+        return r.toString();
+    }
+
+    public static String concatMessageString(Map<String, String> map) {
+        Map<String, String> paramterMap = new HashMap<>();
+        map.forEach((key, value) -> paramterMap.put(key, value));
+        // 按照key升续排序，然后拼接参数
+        Set<String> keySet = paramterMap.keySet();
+        String[] keyArray = keySet.toArray(new String[keySet.size()]);
+        Arrays.sort(keyArray);
+        StringBuilder sb = new StringBuilder();
+
+        for (String k : keyArray) {
+            sb.append(map.get(k));
+        }
+        return sb.toString();
+    }
+
+    public static String concatSignString(Map<String, String> map) {
+        Map<String, String> paramterMap = new HashMap<>();
+        map.forEach((key, value) -> paramterMap.put(key, value));
+        // 按照key升续排序，然后拼接参数
+        Set<String> keySet = paramterMap.keySet();
+        String[] keyArray = keySet.toArray(new String[keySet.size()]);
+        Arrays.sort(keyArray);
+        StringBuilder sb = new StringBuilder();
+
+        for (String k : keyArray) {
+            if (StringUtils.isEmpty(sb.toString())) {
+                sb.append("");
+            } else {
+                sb.append("&");
+            }
+            sb.append(k).append("=").append(map.get(k));
+        }
+        return sb.toString();
     }
 
 }
