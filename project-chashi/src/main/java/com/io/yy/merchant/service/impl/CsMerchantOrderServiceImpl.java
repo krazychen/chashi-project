@@ -432,10 +432,17 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
                     String code = getCode(csMerchantQueryVo);
                     String doorToken = getToken(csMerchantQueryVo, code);
 
-                    boolean isopen = get_switch_status(csMerchantQueryVo,csTearoomQueryVo,doorToken);
-                    if(!isopen){
-                        PUT_BOX_CONTROL_Switch(csMerchantQueryVo, csTearoomQueryVo, doorToken, "open");
+                    String addrs = csTearoomQueryVo.getKkOcSwitch();
+                    String[] addrA = addrs.split(",");
+                    for(int i =0;i<addrA.length;i++){
+                        boolean isopen=get_switch_status(csMerchantQueryVo,csTearoomQueryVo,doorToken,addrA[i]);
+                        if(!isopen){
+                            PUT_BOX_CONTROL_Switch(csMerchantQueryVo, csTearoomQueryVo, doorToken, "open");
+                        }
                     }
+//                    if(!isopen){
+//                        PUT_BOX_CONTROL_Switch(csMerchantQueryVo, csTearoomQueryVo, doorToken, "open");
+//                    }
                 } else {
                     log.error(csMerchantOrderQueryParam.getId() + ":茶室空开配置错误！！！");
                 }
@@ -933,7 +940,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         return token;
     }
 
-    private boolean get_switch_status(CsMerchantQueryVo csMerchantQueryVo, CsTearoomQueryVo csTearoomQueryVo, String token) throws Exception{
+    private boolean get_switch_status(CsMerchantQueryVo csMerchantQueryVo, CsTearoomQueryVo csTearoomQueryVo, String token, String addr) throws Exception{
         Date nowDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -944,7 +951,7 @@ public class CsMerchantOrderServiceImpl extends BaseServiceImpl<CsMerchantOrderM
         packageParams.put("timestamp", sdf.format(nowDate));
         packageParams.put("projectCode", csMerchantQueryVo.getKkProjectCode());
         packageParams.put("mac", csTearoomQueryVo.getKkMac());
-        packageParams.put("addr", csTearoomQueryVo.getKkOcSwitch());
+        packageParams.put("addr", addr);
 
         String reqMessage = concatSignString(packageParams);
         String sigeMessage = concatMessageString(packageParams);

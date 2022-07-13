@@ -129,7 +129,7 @@ public class TestMandunReq {
         packageParams.put("timestamp", sdf.format(nowDate));
         packageParams.put("projectCode", "P00000020772");
         packageParams.put("mac", "187ED5340D3C");
-        packageParams.put("addr", "1");
+        packageParams.put("addr", "6,10");
 
         String reqMessage = concatSignString(packageParams);
         String sigeMessage = concatMessageString(packageParams);
